@@ -1,0 +1,15 @@
+﻿@inject DistrictViewModel model
+
+<div class="dropdown show">
+    <a class="nav-link text-dark dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" asp-area="" asp-controller="Schools" asp-action="AllSchoolsByDistrict">
+        Училища
+    </a>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        @{
+            foreach (var item in model.Districts)
+            {
+                <a class="dropdown-item" href="~/Schools/AllSchoolsByDistrict">Район "@item"</a>
+            }
+        }
+    </div>
+</div>

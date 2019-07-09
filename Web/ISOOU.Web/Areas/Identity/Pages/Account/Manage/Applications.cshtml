@@ -1,0 +1,53 @@
+﻿@page
+@model ApplicationsDataModel
+@{
+    ViewData["Title"] = "Кандидатури";
+    ViewData["ActivePage"] = ManageNavPages.Applications;
+}
+
+<h4>@ViewData["Title"]</h4>
+
+<div class="row">
+    <div class="col-md-6">
+        <h6>НЕ СТЕ КЛАСИРАНИ НА ТОЗИ ЕТАП!</h6>
+        <p><strong>Кандидатури за следващото класиране</strong></p>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Желание</th>
+                        <th>Училище</th>
+                        <th>Точки</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>107</td>
+                        <td>12</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>122</td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>120</td>
+                        <td>8</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+        <p>
+            <a id="add-application" asp-page="AddApplication" class="btn btn-secondary px-4 py-3 mt-3">Добави</a>
+        </p>
+    <br/>
+        <p>
+            <a id="delete-application" asp-page="DeleteApplication" class="btn btn-secondary px-4 py-3 mt-3">Изтрий</a>
+        </p>
+    </div>
+</div>
+
+           

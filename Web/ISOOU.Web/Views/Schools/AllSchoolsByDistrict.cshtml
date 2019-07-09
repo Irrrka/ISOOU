@@ -1,0 +1,88 @@
+﻿@inject SchoolsViewModel models
+@inject SchoolViewModel school
+@{
+
+    ViewData["Title"] = "Район " + school.District;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <section class="ftco-section ftco-counter img" id="section-counter" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
+        <div class="container bg">
+                <table class="table px-4 py-3">
+                    <thead class="py-2 bg">
+                        <tr>
+                            <th scope="col">НАИМЕНОВАНИЕ</th>
+                            <th scope="col">ДИРЕКТОР</th>
+                            <th scope="col">АДРЕС</th>
+                            <th scope="col">ТЕЛЕФОН</th>
+                            <th scope="col">Е-MAIL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (int i = 0; i < models.Schools.Count(); i++)
+                            {
+                                <tr height="21" style="height:21px;">
+                                    <td height="21" style="height:21px;border-top:none;">
+                                        <a href=@models.Schools[i].UrlOfSchool target="_blank">@models.Schools[i].Name</a>
+                                    </td>
+                                    <td style="border-top:none;border-left:none;">@models.Schools[i].Director</td>
+                                    <td style="border-top:none;border-left:none;">
+                                        <a href="@models.Schools[i].UrlOfMap" target="_blank">@models.Schools[i].Address</a>
+                                    </td>
+                                    <td style="border-top:none;border-left:none;">@models.Schools[i].PhoneNumber</td>
+                                    <td style="border-top:none;border-left:none;">@models.Schools[i].Email</td>
+                                </tr>
+                            }
+                        }
+                        <!--
+    <tr height="21" style="height:21px;">
+        <td height="21" style="height:21px;border-top:none;">
+            <a href="http://www.50ou-vasil-levski.com/" target="_blank">50 ОУ "Васил Левски"</a>
+        </td>
+        <td style="border-top:none;border-left:none;">Йордан Калчев</td>
+        <td style="border-top:none;border-left:none;"><a href="https://www.google.com/maps/d/viewer?mid=1xYlSUjydIF6BL8ONgmjDwTpoymw&amp;ll=42.62938840000001%2C23.30952339999999&amp;z=20" target="_blank">кв. "Драгалевци", ул. "Бела Дона" № 1</a></td>
+        <td style="border-top:none;border-left:none;">967-11-81</td>
+        <td style="border-top:none;border-left:none;">vlevski_50ou@mail.bg</td>
+    </tr>
+    <tr height="21" style="height:21px;">
+        <td height="21" style="height:21px;border-top:none;"><a href="http://www.52ou.org/" target="_blank">52 ОУ "Цанко Церковски"</a></td>
+        <td style="border-top:none;border-left:none;">Данчо Калапиш</td>
+        <td style="border-top:none;border-left:none;"><a href="https://www.google.com/maps/d/viewer?mid=1xYlSUjydIF6BL8ONgmjDwTpoymw&amp;ll=42.65082930000001%2C23.26575230000003&amp;z=20" target="_blank">кв. "Бояна", бул. "Александър Пушкин" № 112</a></td>
+        <td style="border-top:none;border-left:none;">855-20-54</td>
+        <td style="border-top:none;border-left:none;">e52_ou@abv.bg</td>
+    </tr>
+    <tr height="21" style="height:21px;">
+        <td height="21" style="height:21px;border-top:none;"><a href="http://64oucarsimeon.org/" target="_blank">64 ОУ "Цар Симеон Велики"</a></td>
+        <td style="border-top:none;border-left:none;">Тереза Иванова</td>
+        <td style="border-top:none;border-left:none;"><a href="https://www.google.com/maps/d/viewer?mid=1xYlSUjydIF6BL8ONgmjDwTpoymw&amp;ll=42.61647237707421%2C23.33654585218426&amp;z=19" target="_blank">кв. "Симеоново", ул. "Симеоновско шосе" № 1</a></td>
+        <td style="border-top:none;border-left:none;">961-34-36</td>
+        <td style="border-top:none;border-left:none;">carsimeon.veliki@abv.bg</td>
+    </tr>
+    <tr height="21" style="height:21px;">
+        <td height="21" style="height:21px;border-top:none;"><a href="http://www.86ou-vladaya.com/" target="_blank">86 ОУ "Св. Kлимент Охридски"</a></td>
+        <td style="border-top:none;border-left:none;">Виктория Тодорова</td>
+        <td style="border-top:none;border-left:none;"><a href="https://www.google.com/maps/d/viewer?mid=1xYlSUjydIF6BL8ONgmjDwTpoymw&amp;ll=42.63007716818645%2C23.19609686759793&amp;z=19" target="_blank">с. Владая, ул. "Брезова гора" № 1</a></td>
+        <td style="border-top:none;border-left:none;">999-16-15</td>
+        <td style="border-top:none;border-left:none;">klohridski@abv.b</td>
+    </tr>
+    <tr height="21" style="height:21px;">
+        <td height="21" style="height:21px;border-top:none;"><a href="http://www.2ro-sou-bg.com/" target="_blank">2 СУ "Акад. Емилиян Станев"</a></td>
+        <td style="border-top:none;border-left:none;">Елеонора Лилова</td>
+        <td style="border-top:none;border-left:none;"><a href="https://www.google.com/maps/d/edit?mid=1xYlSUjydIF6BL8ONgmjDwTpoymw&amp;ll=42.66902915087162%2C23.273559583253586&amp;z=19" target="_blank">ж.к. "Бъкстон", ул. "Ген. Суворов" № 36</a></td>
+        <td style="border-top:none;border-left:none;">856-71-79</td>
+        <td style="border-top:none;border-left:none;">2sou.sofia@gmail.com</td>
+    </tr>
+    <tr height="21" style="height:21px;">
+        <td height="21" style="height:21px;border-top:none;"><a href="http://26coy.net/" target="_blank">26 СУ "Йордан Йовков"</a></td>
+        <td style="border-top:none;border-left:none;">Елка Илиева</td>
+        <td style="border-top:none;border-left:none;"><a href="https://www.google.com/maps/d/viewer?mid=1xYlSUjydIF6BL8ONgmjDwTpoymw&amp;ll=42.66436728237838%2C23.245676631946708&amp;z=19" target="_blank">кв. "Княжево", ул. "Кореняците" № 40</a></td>
+        <td style="border-top:none;border-left:none;">857-30-23</td>
+        <td style="border-top:none;border-left:none;">coy26@abv.bg</td>
+    </tr>
+        -->
+                    </tbody>
+            </table>
+        </div>
+    </section>
+

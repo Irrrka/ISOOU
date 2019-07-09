@@ -1,0 +1,158 @@
+﻿@using ISOOU.Common;
+
+@inject FilterSchoolsViewModel models
+@inject DistrictViewModel district
+@inject FilterCandidateInputModel filterModel
+@{
+    ViewData["Title"] = "Свободни места по район";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ 
+     var earliestCandidate = DateTime.Now.Year - GlobalConstants.CandidateEarlyFirstClass;
+     var latestCandidate = DateTime.Now.Year - GlobalConstants.CandidateFourthClass;
+}
+@if (this.User.Identity.IsAuthenticated)
+{
+    <section class="ftco-section ftco-counter img" id="section-counter" style="background-image: url(/images/line_paper.jpg);" data-stellar-background-ratio="0.5">
+        <div class="container bg">
+
+            <div class="container bg">
+                <a class="nav-link text-dark dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" asp-area="" asp-controller="Schools" asp-action="Filter">
+                    @filterModel.YearOfBirth
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    @{
+                        //var earliestCandidate = DateTime.Now.Year - GlobalConstants.CandidateEarlyFirstClass;
+                        //var latestCandidate = DateTime.Now.Year - GlobalConstants.CandidateFourthClass;
+
+                        for (int year = earliestCandidate; year <= latestCandidate; year++)
+                        {
+                            <a class="dropdown-item" href="~/Schools/Filter">@year</a>
+                        }
+                    }
+                </div>
+                <div class="dropdown show">
+                    <a class="nav-link text-dark dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" asp-area="" asp-controller="Schools" asp-action="Filter">
+                        Район "@filterModel.District"
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        @{
+                            foreach (var item in district.Districts)
+                            {
+                                <a class="dropdown-item" href="~/Schools/Filter">Район "@item"</a>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <form asp-controller="Schools" asp-action="Filter" class="btn btn-secondary px-4 py-3 mt-3">Филтър</form>
+
+            @if (filterModel == null)
+            {
+                <p><strong>Изберете година на раждане на детето и район по постоянен адрес, за да видите свободните места.</strong></p>
+            }
+            @if (filterModel != null)
+            {
+                <table class="table px-4 py-3">
+                    <thead class="py-2 bg">
+                        <tr>
+                            <th scope="col">УЧИЛИЩЕ</th>
+                            <th scope="col">БРОЙ МЕСТА</th>
+                            <th scope="col">АДРЕС</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (int i = 0; i < models.Schools.Count(); i++)
+                            {
+                                <tr height="21" style="height:21px;">
+                                    <td height="21" style="height:21px;border-top:none;">
+                                        <a href="@models.Schools[i].UrlOfSchool" target="_blank">@models.Schools[i].Name</a>
+                                    </td>
+                                    <td style="border-top:none;border-left:none;">@models.Schools[i].FreePlaces</td>
+                                    <td style="border-top:none;border-left:none;">
+                                        <a href="@models.Schools[i].UrlOfMap" target="_blank">@models.Schools[i].Address</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            }
+
+        </div>
+    </section>
+}
+@if (!this.User.Identity.IsAuthenticated)
+{
+    <section class="ftco-section ftco-counter img" id="section-counter" style="background-image: url(/images/line_paper.jpg);" data-stellar-background-ratio="0.5">
+        <div class="container bg">
+
+            <div class="container bg">
+                <div class="dropdown show">
+                    <a class="nav-link text-dark dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" asp-area="" asp-controller="Schools" asp-action="Filter">
+                        Набор
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        @{
+                            for (int year = earliestCandidate; year <= latestCandidate; year++)
+                            {
+                                <a class="dropdown-item" href="~/Schools/Filter">@year</a>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="dropdown show">
+                    <a class="nav-link text-dark dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" asp-area="" asp-controller="Schools" asp-action="Filter">
+                        Район
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        @{
+                            foreach (var item in district.Districts)
+                            {
+                                <a class="dropdown-item" href="~/Schools/Filter">Район "@item"</a>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <form asp-controller="Schools" asp-action="Filter" class="btn btn-secondary px-4 py-3 mt-3">Филтър</form>
+
+            @if (filterModel == null)
+            {
+                <p><strong>Изберете година на раждане на детето и район по постоянен адрес, за да видите свободните места.</strong></p>
+            }
+            @if (filterModel != null)
+            {
+                <table class="table px-4 py-3">
+                    <thead class="py-2 bg">
+                        <tr>
+                            <th scope="col">УЧИЛИЩЕ</th>
+                            <th scope="col">БРОЙ МЕСТА</th>
+                            <th scope="col">АДРЕС</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (int i = 0; i < models.Schools.Count(); i++)
+                            {
+                                <tr height="21" style="height:21px;">
+                                    <td height="21" style="height:21px;border-top:none;">
+                                        <a href="@models.Schools[i].UrlOfSchool" target="_blank">@models.Schools[i].Name</a>
+                                    </td>
+                                    <td style="border-top:none;border-left:none;">@models.Schools[i].FreePlaces</td>
+                                    <td style="border-top:none;border-left:none;">
+                                        <a href="@models.Schools[i].UrlOfMap" target="_blank">@models.Schools[i].Address</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </section>
+}
