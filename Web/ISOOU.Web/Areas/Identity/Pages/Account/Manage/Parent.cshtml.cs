@@ -18,23 +18,18 @@
     {
         private readonly UserManager<SystemUser> userManager;
         private readonly SignInManager<SystemUser> signInManager;
-        private readonly IEmailSender emailSender;
 
         public ParentModel(
             UserManager<SystemUser> userManager,
-            SignInManager<SystemUser> signInManager,
-            IEmailSender emailSender)
+            SignInManager<SystemUser> signInManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
-            this.emailSender = emailSender;
         }
 
-        public string Username { get; set; }
+        //public string Username { get; set; }
 
         public string FirstName { get; set; }
-
-        public string MiddleName { get; set; }
 
         public string LastName { get; set; }
 
@@ -42,25 +37,13 @@
 
         public string UCN { get; set; }
 
-        public string MothersFullName { get; set; }
-
-        public string MothersPhoneNumber { get; set; }
-
-        public string MothersEGN { get; set; }
-
-        public string MothersWork { get; set; }
-
-        public string FathersFullName { get; set; }
-
-        public string FathersPhoneNumber { get; set; }
-
-        public string FathersEGN { get; set; }
-
-        public string FathersWork { get; set; }
+        public string PhoneNumber { get; set; }
 
         public AddressDetails Address { get; set; }
 
-        public bool IsEmailConfirmed { get; set; }
+        public string NameOfWork { get; set; }
+
+        public AddressDetails PlaceOfWork { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -80,15 +63,13 @@
             var email = await this.userManager.GetEmailAsync(user);
             var phoneNumber = await this.userManager.GetPhoneNumberAsync(user);
 
-            this.Username = userName;
+            //this.Username = userName;
 
             this.Input = new InputModel
             {
                 Email = email,
                 PhoneNumber = phoneNumber,
             };
-
-            this.IsEmailConfirmed = await this.userManager.IsEmailConfirmedAsync(user);
 
             return this.Page();
         }
@@ -154,10 +135,6 @@
                 pageHandler: null,
                 values: new { userId = userId, code = code },
                 protocol: this.Request.Scheme);
-            await this.emailSender.SendEmailAsync(
-                email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
             this.StatusMessage = "Verification email sent. Please check your email.";
             return this.RedirectToPage();
@@ -165,13 +142,24 @@
 
         public class InputModel
         {
-            [Required]
             [EmailAddress]
             public string Email { get; set; }
 
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            public string FirstName { get; set; }
+
+            public string LastName { get; set; }
+
+            public string UCN { get; set; }
+
+            public AddressDetails Address { get; set; }
+
+            public string NameOfWork { get; set; }
+
+            public AddressDetails PlaceOfWork { get; set; }
         }
     }
 }

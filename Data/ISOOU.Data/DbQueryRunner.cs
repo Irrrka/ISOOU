@@ -9,12 +9,12 @@
 
     public class DbQueryRunner : IDbQueryRunner
     {
-        public DbQueryRunner(ISOOUContext context)
+        public DbQueryRunner(ISOOUDbContext context)
         {
             this.Context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public ISOOUContext Context { get; set; }
+        public ISOOUDbContext Context { get; set; }
 
         public Task RunQueryAsync(string query, params object[] parameters)
         {

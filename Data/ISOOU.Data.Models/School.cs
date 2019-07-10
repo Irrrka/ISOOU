@@ -10,8 +10,9 @@
 
         public School()
         {
-            this.Candidates = new HashSet<SystemUser>();
-            this.NecessaryDocuments = new HashSet<DocumentSubmission>();
+            this.Classes = new HashSet<Class>();
+            this.Candidates = new HashSet<Children_Schools>();
+            this.NecessaryDocuments = new HashSet<NecessaryDocuments_Schools>();
         }
 
         public int Id { get; set; }
@@ -20,7 +21,9 @@
 
         public string Name { get; set; }
 
-        public AddressDetails Address { get; set; }
+        public int AddressDetailsId { get; set; }
+
+        public AddressDetails AddressDetails { get; set; }
 
         public SystemUser Director { get; set; }
 
@@ -30,54 +33,54 @@
 
         public int CandidateId { get; set; }
 
-        public ICollection<SystemUser> Candidates { get; set; }
+        public ICollection<Children_Schools> Candidates { get; set; }
 
-        public AddmissionProcedure Procedure { get; set; }
+        public AdmissionProcedure Procedure { get; set; }
+
+        public AdmissionCriteria AdmissionCriteria { get; set; }
 
         public int NecessaryDocumentId { get; set; }
 
-        public ICollection<DocumentSubmission> NecessaryDocuments { get; set; }
+        public ICollection<NecessaryDocuments_Schools> NecessaryDocuments { get; set; }
 
-        public int NumberOfClasses { get; set; } = 4;
+        public ICollection<Class> Classes { get; set; }
 
-        public int StudentsPerClass { get; set; } = 18;
+        public int FreePlaces => this.CalculateFreePlaces();
 
-        //TODO
-        public int FreePlaces => this.CalculateFreePlaces(this.Candidates.FirstOrDefault());
-
-        private int CalculateFreePlaces(SystemUser candidate)
+        private int CalculateFreePlaces()
         {
             int result = 0;
+            result = this.Classes.Sum(c => c.NumberOfCandidates);
 
-            if (candidate.YearOfBirth == (DateTime.Now.Year - 6))
-            {
-                this.coefOfYear = 2;
-                result = this.NumberOfClasses * this.StudentsPerClass * this.coefOfYear;
-            }
+            //if (this.Candidates.Where(y=>y.YearOfBirth == DateTime.Now.Year - 6))
+            //{
+            //    this.coefOfYear = 2;
+            //    result = this.NumberOfClasses * this.StudentsPerClass * this.coefOfYear;
+            //}
 
-            if (candidate.YearOfBirth == (DateTime.Now.Year - 7))
-            {
-                this.coefOfYear = 3;
-                result = this.NumberOfClasses * this.StudentsPerClass * this.coefOfYear;
-            }
+            //if (candidate.YearOfBirth == (DateTime.Now.Year - 7))
+            //{
+            //    this.coefOfYear = 3;
+            //    result = this.NumberOfClasses * this.StudentsPerClass * this.coefOfYear;
+            //}
 
-            if (candidate.YearOfBirth == (DateTime.Now.Year - 8))
-            {
-                this.coefOfYear = 1;
-                result = this.NumberOfClasses * this.StudentsPerClass * this.coefOfYear;
-            }
+            //if (candidate.YearOfBirth == (DateTime.Now.Year - 8))
+            //{
+            //    this.coefOfYear = 1;
+            //    result = this.NumberOfClasses * this.StudentsPerClass * this.coefOfYear;
+            //}
 
-            if (candidate.YearOfBirth == (DateTime.Now.Year - 9))
-            {
-                this.coefOfYear = 1;
-                result = this.NumberOfClasses * this.StudentsPerClass * this.coefOfYear;
-            }
+            //if (candidate.YearOfBirth == (DateTime.Now.Year - 9))
+            //{
+            //    this.coefOfYear = 1;
+            //    result = this.NumberOfClasses * this.StudentsPerClass * this.coefOfYear;
+            //}
 
-            if (candidate.YearOfBirth == (DateTime.Now.Year - 10))
-            {
-                this.coefOfYear = 1;
-                result = this.NumberOfClasses * this.StudentsPerClass * this.coefOfYear;
-            }
+            //if (candidate.YearOfBirth == (DateTime.Now.Year - 10))
+            //{
+            //    this.coefOfYear = 1;
+            //    result = this.NumberOfClasses * this.StudentsPerClass * this.coefOfYear;
+            //}
 
             return result;
         }

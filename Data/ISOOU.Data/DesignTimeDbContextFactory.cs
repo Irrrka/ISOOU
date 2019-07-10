@@ -7,16 +7,16 @@
     using Microsoft.EntityFrameworkCore.Diagnostics;
     using Microsoft.Extensions.Configuration;
 
-    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ISOOUContext>
+    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ISOOUDbContext>
     {
-        public ISOOUContext CreateDbContext(string[] args)
+        public ISOOUDbContext CreateDbContext(string[] args)
         {
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
-            var builder = new DbContextOptionsBuilder<ISOOUContext>();
+            var builder = new DbContextOptionsBuilder<ISOOUDbContext>();
 
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
@@ -25,7 +25,7 @@
             // Stop client query evaluation
             builder.ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning));
 
-            return new ISOOUContext(builder.Options);
+            return new ISOOUDbContext(builder.Options);
         }
     }
 }

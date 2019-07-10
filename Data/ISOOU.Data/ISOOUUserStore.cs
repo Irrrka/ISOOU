@@ -10,7 +10,7 @@
     public class ISOOUUserStore : UserStore<
         SystemUser,
         ApplicationRole,
-        ISOOUContext,
+        ISOOUDbContext,
         string,
         IdentityUserClaim<string>,
         IdentityUserRole<string>,
@@ -18,7 +18,7 @@
         IdentityUserToken<string>,
         IdentityRoleClaim<string>>
     {
-        public ISOOUUserStore(ISOOUContext context, IdentityErrorDescriber describer = null)
+        public ISOOUUserStore(ISOOUDbContext context, IdentityErrorDescriber describer = null)
             : base(context, describer)
         {
         }

@@ -5,6 +5,6 @@
 
     public interface ISeeder
     {
-        Task SeedAsync(ISOOUContext dbContext, IServiceProvider serviceProvider);
+        Task SeedAsync(ISOOUDbContext dbContext, IServiceProvider serviceProvider);
     }
 }

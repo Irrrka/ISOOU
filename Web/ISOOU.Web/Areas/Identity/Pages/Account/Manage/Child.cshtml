@@ -1,11 +1,9 @@
 ﻿@page
-@model IndexModel
+@model ChildModel
 @{
     ViewData["Title"] = "Деца";
     ViewData["ActivePage"] = ManageNavPages.Child;
 }
-
-<h4>@ViewData["Title"]</h4>
 <partial name="_StatusMessage" for="StatusMessage" />
 <div class="row">
     <div class="col-md-6">
@@ -44,38 +42,14 @@
                 <input asp-for="Address.Quarter" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="MothersFullName">Име и фамилия на майката</label>
-                <input asp-for="MothersFullName" class="form-control" />
+                <label asp-for="MothersFullName">Майка</label>
+                <input asp-for="MothersFullName" class="form-control" value="Ирррка" disabled />
             </div>
             <div class="form-group">
-                <label asp-for="MothersPhoneNumber">Телефонен номер на майката</label>
-                <input asp-for="MothersPhoneNumber" class="form-control" />
+                <label asp-for="FathersFullName">Баща</label>
+                <input asp-for="FathersFullName" class="form-control" value="Джово" disabled/>
             </div>
-            <div class="form-group">
-                <label asp-for="MothersEGN">ЕГН на майката</label>
-                <input asp-for="MothersEGN" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="MothersWork">Месторабота на майката</label>
-                <input asp-for="MothersWork" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="FathersFullName">Име и фамилия на бащата</label>
-                <input asp-for="FathersFullName" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="FathersPhoneNumber">Телефонен номер на бащата</label>
-                <input asp-for="FathersPhoneNumber" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="FathersEGN">ЕГН на бащата</label>
-                <input asp-for="FathersEGN" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="FathersWork">Месторабота на бащата</label>
-                <input asp-for="FathersWork" class="form-control" />
-            </div>
-            <button id="update-profile-button" type="submit" class="btn btn-secondary px-4 py-3 mt-3">Save</button>
+            <button id="update-profile-button" type="submit" class="btn btn-secondary px-5 py-3">Запиши дете</button>
         </form>
     </div>
 </div>

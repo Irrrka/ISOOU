@@ -9,7 +9,7 @@
 
     public class ISOOUContextSeeder : ISeeder
     {
-        public async Task SeedAsync(ISOOUContext dbContext, IServiceProvider serviceProvider)
+        public async Task SeedAsync(ISOOUDbContext dbContext, IServiceProvider serviceProvider)
         {
             if (dbContext == null)
             {

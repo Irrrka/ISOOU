@@ -9,12 +9,12 @@
 
     public class ISOOURoleStore : RoleStore<
         ApplicationRole,
-        ISOOUContext,
+        ISOOUDbContext,
         string,
         IdentityUserRole<string>,
         IdentityRoleClaim<string>>
     {
-        public ISOOURoleStore(ISOOUContext context, IdentityErrorDescriber describer = null)
+        public ISOOURoleStore(ISOOUDbContext context, IdentityErrorDescriber describer = null)
             : base(context, describer)
         {
         }

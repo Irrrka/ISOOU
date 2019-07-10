@@ -12,7 +12,7 @@
     public class EfDeletableEntityRepository<TEntity> : EfRepository<TEntity>, IDeletableEntityRepository<TEntity>
         where TEntity : class, IDeletableEntity
     {
-        public EfDeletableEntityRepository(ISOOUContext context)
+        public EfDeletableEntityRepository(ISOOUDbContext context)
             : base(context)
         {
         }

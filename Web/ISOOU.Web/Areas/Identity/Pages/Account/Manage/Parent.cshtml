@@ -1,8 +1,8 @@
 ﻿@page
-@model IndexModel
+@model ParentModel
 @{
-    ViewData["Title"] = "Деца";
-    ViewData["ActivePage"] = ManageNavPages.Child;
+    ViewData["Title"] = "Родители";
+    ViewData["ActivePage"] = ManageNavPages.Parent;
 }
 
 <h4>@ViewData["Title"]</h4>
@@ -14,10 +14,6 @@
             <div class="form-group">
                 <label asp-for="FirstName">Име</label>
                 <input asp-for="FirstName" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="MiddleName">Презиме</label>
-                <input asp-for="MiddleName" class="form-control" />
             </div>
             <div class="form-group">
                 <label asp-for="LastName">Фамилия</label>
@@ -44,38 +40,18 @@
                 <input asp-for="Address.Quarter" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="MothersFullName">Име и фамилия на майката</label>
-                <input asp-for="MothersFullName" class="form-control" />
+                <label asp-for="PhoneNumber">Телефонен номер</label>
+                <input asp-for="PhoneNumber" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="MothersPhoneNumber">Телефонен номер на майката</label>
-                <input asp-for="MothersPhoneNumber" class="form-control" />
+                <label asp-for="NameOfWork">Месторабота</label>
+                <input asp-for="NameOfWork" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="MothersEGN">ЕГН на майката</label>
-                <input asp-for="MothersEGN" class="form-control" />
+                <label asp-for="PlaceOfWork.District">Месторабота - район</label>
+                <input asp-for="PlaceOfWork.District" class="form-control" />
             </div>
-            <div class="form-group">
-                <label asp-for="MothersWork">Месторабота на майката</label>
-                <input asp-for="MothersWork" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="FathersFullName">Име и фамилия на бащата</label>
-                <input asp-for="FathersFullName" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="FathersPhoneNumber">Телефонен номер на бащата</label>
-                <input asp-for="FathersPhoneNumber" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="FathersEGN">ЕГН на бащата</label>
-                <input asp-for="FathersEGN" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="FathersWork">Месторабота на бащата</label>
-                <input asp-for="FathersWork" class="form-control" />
-            </div>
-            <button id="update-profile-button" type="submit" class="btn btn-secondary px-4 py-3 mt-3">Save</button>
+            <button id="update-profile-button" type="submit" class="btn btn-secondary px-4 py-3 mt-3">Запиши родител</button>
         </form>
     </div>
 </div>

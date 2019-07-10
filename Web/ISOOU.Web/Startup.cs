@@ -11,6 +11,7 @@
     using ISOOU.Services.Data;
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Messaging;
+    using ISOOU.Web.Areas.Identity.Pages.Account.Manage;
     using ISOOU.Web.ViewModels;
 
     using Microsoft.AspNetCore.Builder;
@@ -39,7 +40,7 @@
         {
             // Framework services
             // TODO: Add pooling when this bug is fixed: https://github.com/aspnet/EntityFrameworkCore/issues/9741
-            services.AddDbContext<ISOOUContext>(
+            services.AddDbContext<ISOOUDbContext>(
                 options => options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
 
             services
@@ -51,7 +52,7 @@
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequiredLength = 6;
                 })
-                .AddEntityFrameworkStores<ISOOUContext>()
+                .AddEntityFrameworkStores<ISOOUDbContext>()
                 .AddUserStore<ISOOUUserStore>()
                 .AddRoleStore<ISOOURoleStore>()
                 .AddDefaultTokenProviders()
@@ -103,12 +104,14 @@
             // Entity services
             services.AddTransient<ISchoolsService, SchoolsService>();
             services.AddSingleton<DistrictViewModel>();
-            services.AddSingleton<SchoolViewModel>();
-            services.AddSingleton<SchoolsViewModel>();
-            services.AddSingleton<FilterSchoolsViewModel>();
-            services.AddSingleton<FilterCandidateInputModel>();
-            services.AddSingleton<StatusCandidateViewModel>();
-            services.AddSingleton<StatusCandidatesViewModel>();
+            services.AddTransient<SchoolViewModel>();
+            services.AddTransient<SchoolsViewModel>();
+            services.AddTransient<FilterSchoolsViewModel>();
+            services.AddTransient<FilterCandidateInputModel>();
+            services.AddTransient<StatusCandidateViewModel>();
+            services.AddTransient<StatusCandidatesViewModel>();
+            services.AddTransient<ParentModel>();
+            services.AddTransient<ChildModel>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -119,7 +122,7 @@
             // Seed data on application startup
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
-                var dbContext = serviceScope.ServiceProvider.GetRequiredService<ISOOUContext>();
+                var dbContext = serviceScope.ServiceProvider.GetRequiredService<ISOOUDbContext>();
 
                 if (env.IsDevelopment())
                 {

@@ -1,52 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ISOOU.Data.Models
+﻿namespace ISOOU.Data.Models
 {
+    using System.Collections.Generic;
+
     public class SystemUser : ApplicationUser
     {
         public SystemUser()
         {
+            this.Children = new HashSet<Child>();
+            this.Parents = new HashSet<Parent>();
             this.Questions = new HashSet<Question>();
-            this.Schools = new List<School>();
         }
 
-        public string FirstName { get; set; }
+        public int ChildrenId { get; set; }
 
-        public string MiddleName { get; set; }
+        public ICollection<Child> Children { get; set; }
 
-        public string LastName { get; set; }
+        public int ParentId { get; set; }
 
-        public string FullName => this.FirstName + " " + this.LastName;
+        public ICollection<Parent> Parents { get; set; }
 
-        public string UCN { get; set; } //8207116355
-
-        //TODO method to calculate unique number
-        public string UniqueNumber => 
-            (this.UCN.ToCharArray()[6]* this.UCN.ToCharArray()[7] + this.UCN.ToCharArray()[8] * this.UCN.ToCharArray()[9] + (this.UCN.ToCharArray()[6] + this.UCN.ToCharArray()[7]) + (this.UCN.ToCharArray()[8] + this.UCN.ToCharArray()[9])).ToString();
-
-        public int YearOfBirth { get; set; }
-
-        public string MothersFullName { get; set; }
-
-        public string MothersPhoneNumber { get; set; }
-
-        public string MothersEGN { get; set; }
-
-        public string FathersFullName { get; set; }
-
-        public string FathersPhoneNumber { get; set; }
-
-        public string FathersEGN { get; set; }
-
-        public AddressDetails Address { get; set; }
-
-        public ICollection<School> Schools { get; set; }
-
-        public CandidateStatus Status { get; set; }
-
-        public AdmissionCriteria Criteria { get; set; }
+        //UserRole-Director
+        //public School School { get; set; }
 
         public int QuestionId { get; set; }
 

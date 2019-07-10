@@ -21,24 +21,24 @@
         // GET: SchoolsByDistrict
         public ActionResult AllSchoolsByDistrict(string district)
         {
-            var schoolsFromDb = this.schoolsService.GetSchoolsByDistrict(district);
-            List<SchoolViewModel> schools = schoolsFromDb
-                .Select(sc => new SchoolViewModel
-                {
-                    District = district,
-                    Name = sc.Ref + " ОУ " + sc.Name,
-                    Director = sc.Director.FirstName + " " + sc.Director.LastName,
-                    Address = sc.Address.Permanent,
-                    Email = sc.Director.Email,
-                    PhoneNumber = sc.Director.PhoneNumber.ToString(),
-                    UrlOfSchool = sc.URLOfSchool,
-                }).ToList();
+            //var schoolsFromDb = this.schoolsService.GetSchoolsByDistrict(district);
+            //List<SchoolViewModel> schools = schoolsFromDb
+            //    .Select(sc => new SchoolViewModel
+            //    {
+            //        District = district,
+            //        Name = sc.Ref + " ОУ " + sc.Name,
+            //        Director = sc.Director.FirstName + " " + sc.Director.LastName,
+            //        Address = sc.Address.Permanent,
+            //        Email = sc.Director.Email,
+            //        PhoneNumber = sc.Director.PhoneNumber.ToString(),
+            //        UrlOfSchool = sc.URLOfSchool,
+            //    }).ToList();
 
             SchoolsViewModel model = new SchoolsViewModel();
-            foreach (var school in schools)
-            {
-                model.Schools.Add(school);
-            }
+            //foreach (var school in schools)
+            //{
+            //    model.Schools.Add(school);
+            //}
 
             return this.View(model);
         }
@@ -52,19 +52,19 @@
         // GET: AllAdmittedCandidates
         public ActionResult AllAdmittedCandidates()
         {
-            List<SystemUser> candidatesFromDb = this.schoolsService.GetAllAdmittedCandidates();
-            List<StatusCandidateViewModel> candidates = candidatesFromDb
-                .Select(c => new StatusCandidateViewModel
-                {
-                    Name = (c.FirstName.ToCharArray()[0] + c.MiddleName.ToCharArray()[0] + c.LastName.ToCharArray()[0]).ToString(),
-                    UniqueNumber = c.UniqueNumber,
-                }).ToList();
+            //List<SystemUser> candidatesFromDb = this.schoolsService.GetAllAdmittedCandidates();
+            //List<StatusCandidateViewModel> candidates = candidatesFromDb
+            //    .Select(c => new StatusCandidateViewModel
+            //    {
+            //        Name = (c.FirstName.ToCharArray()[0] + c.MiddleName.ToCharArray()[0] + c.LastName.ToCharArray()[0]).ToString(),
+            //        UniqueNumber = c.UniqueNumber,
+            //    }).ToList();
 
             StatusCandidatesViewModel model = new StatusCandidatesViewModel();
-            foreach (var candidate in candidates)
-            {
-                model.StatusCandidates.Add(candidate);
-            }
+            //foreach (var candidate in candidates)
+            //{
+            //    model.StatusCandidates.Add(candidate);
+            //}
 
             return this.View(model);
         }
@@ -72,19 +72,19 @@
         // GET: AllNotAdmittedCandidates
         public ActionResult AllNotAdmittedCandidates()
         {
-            List<SystemUser> candidatesFromDb = this.schoolsService.GetAllNotAdmittedCandidates();
-            List<StatusCandidateViewModel> candidates = candidatesFromDb
-                .Select(c => new StatusCandidateViewModel
-                {
-                    Name = (c.FirstName.ToCharArray()[0] + c.MiddleName.ToCharArray()[0] + c.LastName.ToCharArray()[0]).ToString(),
-                    UniqueNumber = c.UniqueNumber,
-                }).ToList();
+            //List<SystemUser> candidatesFromDb = this.schoolsService.GetAllNotAdmittedCandidates();
+            //List<StatusCandidateViewModel> candidates = candidatesFromDb
+            //    .Select(c => new StatusCandidateViewModel
+            //    {
+            //        Name = (c.FirstName.ToCharArray()[0] + c.MiddleName.ToCharArray()[0] + c.LastName.ToCharArray()[0]).ToString(),
+            //        UniqueNumber = c.UniqueNumber,
+            //    }).ToList();
 
             StatusCandidatesViewModel model = new StatusCandidatesViewModel();
-            foreach (var candidate in candidates)
-            {
-                model.StatusCandidates.Add(candidate);
-            }
+            //foreach (var candidate in candidates)
+            //{
+            //    model.StatusCandidates.Add(candidate);
+            //}
 
             return this.View(model);
         }
@@ -100,8 +100,8 @@
             var schoolsFromDb = this.schoolsService.GetFreePlacesByYearAndByDistrict(model.YearOfBirth, model.District)
                 .Select(sc => new FilterSchoolViewModel
                  {
-                     District = sc.Address.District,
-                     Address = sc.Address.Permanent,
+                     District = sc.AddressDetails.District,
+                     Address = sc.AddressDetails.Permanent,
                      Name = sc.Ref + " ОУ " + sc.Name,
                      UrlOfSchool = sc.URLOfSchool,
                      UrlOfMap = sc.URLOfMap,

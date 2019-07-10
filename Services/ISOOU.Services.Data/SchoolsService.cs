@@ -9,9 +9,9 @@
 
     public class SchoolsService : ISchoolsService
     {
-        private readonly ISOOUContext context;
+        private readonly ISOOUDbContext context;
 
-        public SchoolsService(ISOOUContext context)
+        public SchoolsService(ISOOUDbContext context)
         {
             this.context = context;
         }
@@ -19,7 +19,7 @@
         public List<School> GetSchoolsByDistrict(string district)
         {
             List<School> schools = this.context.Schools
-                .Where(sc => sc.Address.District == district).ToList();
+                .Where(sc => sc.AddressDetails.District == district).ToList();
             return schools;
         }
 
@@ -32,12 +32,9 @@
         //TODO
         public List<School> GetFreePlacesByYearAndByDistrict(int year, string district)
         {
-            List<School> schoolsFromDb = this.context.Schools
-                .Where(y => y.Candidates.FirstOrDefault().YearOfBirth == year)
-                .Where(d => d.Address.District == district)
-                .ToList();
+           
 
-            return schoolsFromDb;
+            return null;
         }
 
         public bool CreateFilter(int year, string district)
@@ -48,26 +45,26 @@
 
         public List<SystemUser> GetAllAdmittedCandidates()
         {
-            List<SystemUser> admittedCandidatesFromDb = this.context
-                .Candidates
-                .Where(c => c.Status.ToString() == nameof(CandidateStatus.Admitted))
-                .OrderBy(s => s.Schools
-                .OrderBy(a => a.Address.District)
-                .ThenBy(n => n.Ref)).ToList();
+            //List<SystemUser> admittedCandidatesFromDb = this.context
+            //    .Candidates
+            //    .Where(c => c.Status.ToString() == nameof(CandidateStatus.Admitted))
+            //    .OrderBy(s => s.Schools
+            //    .OrderBy(a => a.Address.District)
+            //    .ThenBy(n => n.Ref)).ToList();
 
-            return admittedCandidatesFromDb;
+            return null;
         }
 
         public List<SystemUser> GetAllNotAdmittedCandidates()
         {
-            List<SystemUser> notAdmittedCandidatesFromDb = this.context
-                 .Candidates
-                .Where(c => c.Status.ToString() == nameof(CandidateStatus.NotAdmitted))
-                .OrderBy(s => s.Schools
-                .OrderBy(a => a.Address.District)
-                .ThenBy(n => n.Ref)).ToList();
+            //List<SystemUser> notAdmittedCandidatesFromDb = this.context
+            //     .Candidates
+            //    .Where(c => c.Status.ToString() == nameof(CandidateStatus.NotAdmitted))
+            //    .OrderBy(s => s.Schools
+            //    .OrderBy(a => a.Address.District)
+            //    .ThenBy(n => n.Ref)).ToList();
 
-            return notAdmittedCandidatesFromDb;
+            return null;
         }
     }
 }

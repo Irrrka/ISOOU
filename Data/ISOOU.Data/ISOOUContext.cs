@@ -12,29 +12,35 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
-    public class ISOOUContext : IdentityDbContext<SystemUser, ApplicationRole, string>
+    public class ISOOUDbContext : IdentityDbContext<SystemUser, ApplicationRole, string>
     {
         private static readonly MethodInfo SetIsDeletedQueryFilterMethod =
-            typeof(ISOOUContext).GetMethod(
+            typeof(ISOOUDbContext).GetMethod(
                 nameof(SetIsDeletedQueryFilter),
                 BindingFlags.NonPublic | BindingFlags.Static);
 
-        public ISOOUContext(DbContextOptions<ISOOUContext> options)
+        public ISOOUDbContext(DbContextOptions<ISOOUDbContext> options)
             : base(options)
         {
         }
 
         public DbSet<Setting> Settings { get; set; }
 
-        public DbSet<SystemUser> Candidates { get; set; }
+        public DbSet<SystemUser> SystemUsers { get; set; }
+
+        public DbSet<Child> Children { get; set; }
+
+        public DbSet<Parent> Parents { get; set; }
 
         public DbSet<School> Schools { get; set; }
 
-        public DbSet<AddmissionProcedure> Procedures { get; set; }
+        public DbSet<Class> Classes { get; set; }
 
-        public DbSet<AddressDetails> Addresses { get; set; }
+        public DbSet<AdmissionProcedure> AdmissionProcedures { get; set; }
 
-        public DbSet<AdmissionCriteria> Criterias { get; set; }
+        public DbSet<AddressDetails> AddressDetails { get; set; }
+
+        public DbSet<AdmissionCriteria> AdmissionCriterias { get; set; }
 
         public DbSet<DocumentSubmission> DocumentSubmissions { get; set; }
 
@@ -61,29 +67,27 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<SystemUser>()
-                .HasMany(s => s.Schools);
+            builder.Entity<Parent>()
+               .HasMany(c => c.Children)
+               .WithOne()
+               .HasForeignKey(fk => fk.ChildId);
+            builder.Entity<Child>()
+               .HasMany(c => c.Parents)
+               .WithOne()
+               .HasForeignKey(fk => fk.ParentId);
+            builder.Entity<Children_Parents>()
+               .HasKey(fk => new { fk.ChildId, fk.ParentId });
 
             builder.Entity<School>()
-                .HasMany(s => s.Candidates);
-
-            builder.Entity<School>()
-                .HasOne(s => s.Director);
-
-            builder.Entity<School>()
-                .HasOne(p => p.Procedure);
-
-            builder.Entity<School>()
-                .HasOne(a => a.Address);
-
-            builder.Entity<SystemUser>()
-                .HasOne(a => a.Address);
-
-            builder.Entity<SystemUser>()
-                .HasMany(q => q.Questions);
-
-            builder.Entity<SystemUser>()
-               .HasOne(c => c.Criteria);
+               .HasMany(c => c.Candidates)
+               .WithOne()
+               .HasForeignKey(fk => fk.CandidateId);
+            builder.Entity<Child>()
+               .HasMany(c => c.Schools)
+                .WithOne()
+               .HasForeignKey(fk => fk.SchoolId);
+            builder.Entity<Children_Schools>()
+               .HasKey(fk => new { fk.SchoolId, fk.CandidateId });
 
             // Needed for Identity models configuration
             base.OnModelCreating(builder);
