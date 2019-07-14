@@ -11,10 +11,10 @@
 
     public class SchoolsService : ISchoolsService
     {
-        private readonly IRepository<ISOOUDbContext> repository;
+        private readonly IRepository<School> repository;
         private readonly IDistrictsService districtsService;
 
-        public SchoolsService(IRepository<ISOOUDbContext> repository, IDistrictsService districtsService)
+        public SchoolsService(IRepository<School> repository, IDistrictsService districtsService)
         {
             this.repository = repository;
             this.districtsService = districtsService;
@@ -25,8 +25,7 @@
             DistrictViewModel currDistrict = this.districtsService
                                                 .GetDistrictByValue<DistrictViewModel>(value);
             var schools = this.repository.All()
-                .Select(s => s.Schools
-                            .Where(d => d.Address.District.Name == currDistrict.Name))
+                .Where(d => d.Address.District.Name == currDistrict.Name)
                 .To<TSchoolViewModel>()
                 .ToList();
 

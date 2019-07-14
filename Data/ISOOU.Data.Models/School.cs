@@ -1,5 +1,6 @@
 ﻿namespace ISOOU.Data.Models
 {
+    using ISOOU.Data.Common.Models;
     using System;
     using System.Collections.Generic;
     using System.Linq;
