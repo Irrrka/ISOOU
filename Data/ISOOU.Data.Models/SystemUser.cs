@@ -11,19 +11,10 @@
             this.Questions = new HashSet<Question>();
         }
 
-        public int ChildrenId { get; set; }
+        public virtual ICollection<Child> Children { get; set; }
 
-        public ICollection<Child> Children { get; set; }
+        public virtual ICollection<Parent> Parents { get; set; }
 
-        public int ParentId { get; set; }
-
-        public ICollection<Parent> Parents { get; set; }
-
-        //UserRole-Director
-        //public School School { get; set; }
-
-        public int QuestionId { get; set; }
-
-        public ICollection<Question> Questions { get; set; }
+        public virtual ICollection<Question> Questions { get; set; }
     }
 }

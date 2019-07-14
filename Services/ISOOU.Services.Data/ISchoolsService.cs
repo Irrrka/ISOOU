@@ -1,19 +1,16 @@
-﻿using ISOOU.Data.Models;
-using System.Collections.Generic;
-
-namespace ISOOU.Services.Data
+﻿namespace ISOOU.Services.Data
 {
+    using System.Collections.Generic;
+
+    using ISOOU.Data.Models;
+
     public interface ISchoolsService
     {
-        List<School> GetSchoolsByDistrict(string district);
-
-        List<School> GetFreePlacesByYearAndByDistrict(int year, string district);
-
-        //TODO or delete
-        bool CreateFilter(int year, string district);
+        IEnumerable<TSchoolViewModel> GetAllSchoolsByDistrict<TSchoolViewModel>(int value);
 
         List<SystemUser> GetAllAdmittedCandidates();
 
         List<SystemUser> GetAllNotAdmittedCandidates();
+
     }
 }

@@ -11,21 +11,22 @@
         public School()
         {
             this.Classes = new HashSet<Class>();
-            this.Candidates = new HashSet<Children_Schools>();
-            this.NecessaryDocuments = new HashSet<NecessaryDocuments_Schools>();
+            this.Candidates = new HashSet<Candidates_Schools>();
         }
 
         public int Id { get; set; }
 
-        public string Ref { get; set; }
-
         public string Name { get; set; }
 
-        public int AddressDetailsId { get; set; }
+        public virtual AddressDetails Address { get; set; }
 
-        public AddressDetails AddressDetails { get; set; }
+        public virtual District District { get; set; }
 
-        public SystemUser Director { get; set; }
+        public string Email { get; set; }
+
+        public string PhoneNumber { get; set; }
+
+        public string DirectorName { get; set; }
 
         public string URLOfSchool { get; set; }
 
@@ -33,24 +34,16 @@
 
         public int CandidateId { get; set; }
 
-        public ICollection<Children_Schools> Candidates { get; set; }
+        public virtual ICollection<Candidates_Schools> Candidates { get; set; }
 
-        public AdmissionProcedure Procedure { get; set; }
-
-        public AdmissionCriteria AdmissionCriteria { get; set; }
-
-        public int NecessaryDocumentId { get; set; }
-
-        public ICollection<NecessaryDocuments_Schools> NecessaryDocuments { get; set; }
-
-        public ICollection<Class> Classes { get; set; }
+        public virtual ICollection<Class> Classes { get; set; }
 
         public int FreePlaces => this.CalculateFreePlaces();
 
         private int CalculateFreePlaces()
         {
             int result = 0;
-            result = this.Classes.Sum(c => c.NumberOfCandidates);
+            result = this.Classes.Sum(c => c.NumberOfStudents);
 
             //if (this.Candidates.Where(y=>y.YearOfBirth == DateTime.Now.Year - 6))
             //{

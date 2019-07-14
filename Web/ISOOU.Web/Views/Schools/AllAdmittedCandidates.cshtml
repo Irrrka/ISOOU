@@ -1,7 +1,5 @@
-﻿@inject StatusCandidatesViewModel candidates
-@inject StatusCandidateViewModel candidate
-@inject SchoolsViewModel schools
-@inject SchoolViewModel school
+﻿@inject IEnumerable<StatusCandidateViewModel> candidates
+@inject IEnumerable<SchoolViewModel> schools
 @{
 
     ViewData["Title"] = "Приети ученици по училище";
@@ -20,17 +18,22 @@
                     </thead>
                     <tbody>
                         @{
-                            for (int i = 0; i < candidates.StatusCandidates.Count(); i++)
+                            foreach(var school in schools)
                             {
+                                foreach (var candidate in candidates)
+                                {
                                 <tr height="21" style="height:21px;">
                                     <td height="21" style="height:21px;border-top:none;">
-                                        <a href="#" target="_blank">@candidate.Name</a>
+                                        <a href="/Identity/Account/Manage/Index" target="_blank">@candidate.Name</a>
                                     </td>
-                                    <td style="border-top:none;border-left:none;">@candidate.UniqueNumber</td>
+                                    <td style="border-top:none;border-left:none;">
+                                        <a href="/Identity/Account/Manage/Index" target="_blank">@candidate.UniqueNumber</a>
+                                    </td>
                                     <td style="border-top:none;border-left:none;">
                                         <a href="@school.UrlOfSchool" target="_blank">@candidate.SchoolName</a>
                                     </td>
                                 </tr>
+                                }
                             }
                         }
                     </tbody>

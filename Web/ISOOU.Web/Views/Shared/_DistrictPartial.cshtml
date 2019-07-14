@@ -1,4 +1,4 @@
-﻿@inject DistrictViewModel model
+﻿@inject AllDistrictsViewModel allDistricts
 
 <div class="dropdown show">
     <a class="nav-link text-dark dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" asp-area="" asp-controller="Schools" asp-action="AllSchoolsByDistrict">
@@ -6,9 +6,10 @@
     </a>
     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
         @{
-            foreach (var item in model.Districts)
+            foreach (var district in allDistricts.Districts)
             {
-                <a class="dropdown-item" href="~/Schools/AllSchoolsByDistrict">Район "@item.ToString()"</a>
+                var value = @district.Key;
+                <a class="dropdown-item" href="~/Schools/AllSchoolsByDistrict/@value">Район "@district.Value"</a>
             }
         }
     </div>

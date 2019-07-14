@@ -11,10 +11,6 @@
     public class AdministrationController : BaseController
     {
 
-        // GET: Schools/Create
-        public ActionResult CreateSchool()
-        {
-            return View();
-        }
+        
     }
 }

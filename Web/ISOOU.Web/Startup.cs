@@ -85,6 +85,8 @@
                     options.ConsentCookie.Name = ".AspNetCore.ConsentCookie";
                 });
 
+            
+
             services.AddSingleton(this.configuration);
 
             // Identity stores
@@ -103,9 +105,9 @@
 
             // Entity services
             services.AddTransient<ISchoolsService, SchoolsService>();
-            services.AddSingleton<DistrictViewModel>();
-            services.AddTransient<SchoolViewModel>();
-            services.AddTransient<SchoolsViewModel>();
+            services.AddTransient<IDistrictsService, DistrictsService>();
+            services.AddSingleton<AllDistrictsViewModel>();
+            services.AddSingleton<SchoolViewModel>();
             services.AddTransient<FilterSchoolsViewModel>();
             services.AddTransient<FilterCandidateInputModel>();
             services.AddTransient<StatusCandidateViewModel>();
@@ -153,6 +155,51 @@
                 routes.MapRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
+
+            //var dataText = System.IO.File.ReadAllText(@"schoolsseeddata.txt");
+
+            //private async Task CreateRoles(IServiceProvider serviceProvider)
+            //{
+            //    //initializing custom roles 
+            //    var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            //    var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            //    string[] roleNames = { "Admin", "Store-Manager", "Member" };
+            //    IdentityResult roleResult;
+
+            //    foreach (var roleName in roleNames)
+            //    {
+            //        var roleExist = await RoleManager.RoleExistsAsync(roleName);
+            //        // ensure that the role does not exist
+            //        if (!roleExist)
+            //        {
+            //            //create the roles and seed them to the database: 
+            //            roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+            //        }
+            //    }
+
+            //// find the user with the admin email 
+            //var _user = await UserManager.FindByEmailAsync("admin@email.com");
+
+            //// check if the user exists
+            //if (_user == null)
+            //{
+            //    //Here you could create the super admin who will maintain the web app
+            //    var poweruser = new ApplicationUser
+            //    {
+            //        UserName = "Admin",
+            //        Email = "admin@email.com",
+            //    };
+            //    string adminPassword = "p@$$w0rd";
+
+            //    var createPowerUser = await UserManager.CreateAsync(poweruser, adminPassword);
+            //    if (createPowerUser.Succeeded)
+            //    {
+            //        //here we tie the new user to the role
+            //        await UserManager.AddToRoleAsync(poweruser, "Admin");
+
+            //    }
+            //}
+            //}
         }
     }
 }

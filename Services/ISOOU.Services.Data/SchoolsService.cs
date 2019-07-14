@@ -4,43 +4,33 @@
     using System.Linq;
 
     using ISOOU.Data;
+    using ISOOU.Data.Common.Repositories;
     using ISOOU.Data.Models;
-    using ISOOU.Data.Models.Enums;
+    using ISOOU.Services.Mapping;
+    using ISOOU.Web.ViewModels;
 
     public class SchoolsService : ISchoolsService
     {
-        private readonly ISOOUDbContext context;
+        private readonly IRepository<ISOOUDbContext> repository;
+        private readonly IDistrictsService districtsService;
 
-        public SchoolsService(ISOOUDbContext context)
+        public SchoolsService(IRepository<ISOOUDbContext> repository, IDistrictsService districtsService)
         {
-            this.context = context;
+            this.repository = repository;
+            this.districtsService = districtsService;
         }
 
-        public List<School> GetSchoolsByDistrict(string district)
+        public IEnumerable<TSchoolViewModel> GetAllSchoolsByDistrict<TSchoolViewModel>(int value)
         {
-            List<School> schools = this.context.Schools
-                .Where(sc => sc.AddressDetails.District == district).ToList();
+            DistrictViewModel currDistrict = this.districtsService
+                                                .GetDistrictByValue<DistrictViewModel>(value);
+            var schools = this.repository.All()
+                .Select(s => s.Schools
+                            .Where(d => d.Address.District.Name == currDistrict.Name))
+                .To<TSchoolViewModel>()
+                .ToList();
+
             return schools;
-        }
-
-        public List<SchoolsDistrict> GetAllDisctricts()
-        {
-            //TODO
-            return null;
-        }
-
-        //TODO
-        public List<School> GetFreePlacesByYearAndByDistrict(int year, string district)
-        {
-           
-
-            return null;
-        }
-
-        public bool CreateFilter(int year, string district)
-        { 
-            //TODO or delete
-            return true;
         }
 
         public List<SystemUser> GetAllAdmittedCandidates()
@@ -57,13 +47,6 @@
 
         public List<SystemUser> GetAllNotAdmittedCandidates()
         {
-            //List<SystemUser> notAdmittedCandidatesFromDb = this.context
-            //     .Candidates
-            //    .Where(c => c.Status.ToString() == nameof(CandidateStatus.NotAdmitted))
-            //    .OrderBy(s => s.Schools
-            //    .OrderBy(a => a.Address.District)
-            //    .ThenBy(n => n.Ref)).ToList();
-
             return null;
         }
     }

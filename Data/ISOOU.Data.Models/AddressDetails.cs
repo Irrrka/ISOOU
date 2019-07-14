@@ -13,7 +13,7 @@
 
         public string Current { get; set; }
 
-        public string District { get; set; }
+        public virtual District District { get; set; }
 
         public string Quarter { get; set; }
     }

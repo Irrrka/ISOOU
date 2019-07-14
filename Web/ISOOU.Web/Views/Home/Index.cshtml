@@ -1,4 +1,9 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using ISOOU.Data.Models
+
+@inject SignInManager<SystemUser> SignInManager
+@inject UserManager<SystemUser> UserManager
+@{
     this.ViewData["Title"] = "Информационна Система за Обслужване на Общинските Училища";
 }
 
@@ -14,7 +19,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="slider-item" style="background-image:url(images/bg_2.jpg);">
                 <div class="overlay"></div>
                 <div class="container">
@@ -49,7 +53,8 @@
                             </div>
                             <div class="media-body p-2 mt-3">
                                 <h3 class="heading">Критерии за прием</h3>
-                                <p>Следете сайтовете на избраните от вас училища, за да разберете какви са критериите им за прием.
+                                <p>
+                                    Следете сайтовете на избраните от вас училища, за да разберете какви са критериите им за прием.
                                 </p>
                             </div>
                         </div>

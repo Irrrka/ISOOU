@@ -21,7 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\ISOOU.Data.Common\ISOOU.Data.Common.csproj" />
     <ProjectReference Include="..\..\Data\ISOOU.Data.Models\ISOOU.Data.Models.csproj" />
-    <ProjectReference Include="..\..\Data\ISOOU.Data\ISOOU.Data.csproj" />
+    <ProjectReference Include="..\..\Web\ISOOU.Web.ViewModels\ISOOU.Web.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

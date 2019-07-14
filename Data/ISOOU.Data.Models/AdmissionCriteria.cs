@@ -4,6 +4,6 @@
     {
         public int Id { get; set; }
 
-        public int Score { get; set; } = 0;
+        public int Scores { get; set; } = 0;
     }
 }
