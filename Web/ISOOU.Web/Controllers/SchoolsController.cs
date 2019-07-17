@@ -1,81 +1,77 @@
 ﻿namespace ISOOU.Web.Controllers
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using Microsoft.AspNetCore.Mvc;
-
+    using ISOOU.Data.Models;
     using ISOOU.Services.Data;
     using ISOOU.Web.ViewModels;
-    using ISOOU.Data.Models;
+    using ISOOU.Web.ViewModels.Schools;
+    using Microsoft.AspNetCore.Mvc;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     public class SchoolsController : Controller
     {
         private readonly ISchoolsService schoolsService;
+        private readonly IDistrictsService districtsService;
+        private readonly ISearchSpotsService searchSpotsService;
+        private readonly ICandidatesService candidatesService;
 
-        public SchoolsController(ISchoolsService schoolsService)
+        public SchoolsController(ISchoolsService schoolsService, ICandidatesService candidatesService, IDistrictsService districtsService, ISearchSpotsService searchSpotsService)
         {
             this.schoolsService = schoolsService;
+            this.candidatesService = candidatesService;
+            this.districtsService = districtsService;
+            this.searchSpotsService = searchSpotsService;
         }
 
         [HttpGet("/Schools/AllSchoolsByDistrict/{value}")]
-        public IActionResult AllSchoolsByDistrict(int value)
+        public async Task<IActionResult> AllSchoolsByDistrict(int value)
         {
-            var schools = this.schoolsService.GetAllSchoolsByDistrict<SchoolViewModel>(value);
+            var schools = await this.schoolsService.GetAllSchoolsByDistrictValue(value);
             return this.View(schools);
         }
 
         public IActionResult AllAdmittedCandidates()
         {
-            //List<SystemUser> candidatesFromDb = this.schoolsService.GetAllAdmittedCandidates();
-            //List<StatusCandidateViewModel> candidates = candidatesFromDb
-            //    .Select(c => new StatusCandidateViewModel
-            //    {
-            //        Name = (c.FirstName.ToCharArray()[0] + c.MiddleName.ToCharArray()[0] + c.LastName.ToCharArray()[0]).ToString(),
-            //        UniqueNumber = c.UniqueNumber,
-            //    }).ToList();
-
-            StatusCandidatesViewModel model = new StatusCandidatesViewModel();
-            //foreach (var candidate in candidates)
-            //{
-            //    model.StatusCandidates.Add(candidate);
-            //}
-
-            return this.View(model);
-        }
-
-        public IActionResult Filter()
-        {
             return this.View();
         }
 
-        //TODO InputModel?
-        [HttpPost]
-        public ActionResult Filter(FilterCandidateInputModel model)
+        public async Task<IActionResult> SearchSpots()
         {
-            this.schoolsService.CreateFilter(model.YearOfBirth, model.District);
-
-            var schoolsFromDb = this.schoolsService.GetFreePlacesByYearAndByDistrict(model.YearOfBirth, model.District)
-                .Select(sc => new FilterSchoolViewModel
-                 {
-                     District = sc.District.Name,
-                     Address = sc.Address.Permanent,
-                     Name = sc.Name,
-                     UrlOfSchool = sc.URLOfSchool,
-                     UrlOfMap = sc.URLOfMap,
-                     FreePlaces = sc.FreePlaces,
-                 }).ToList();
-
-            FilterSchoolsViewModel models = new FilterSchoolsViewModel();
-            foreach (var school in schoolsFromDb)
+            var districtViewModels = await this.districtsService.GetAllDistrictsAsync();
+            var searchViewModels = districtViewModels.Select(m => new SearchSpotsViewModel
             {
-                models.Schools.Add(school);
-            }
+                District = m.Name,
+            }).ToList();
+            this.ViewData["Districts"] = searchViewModels;
+            var yearsViewModels = this.searchSpotsService.GetAllPossibleYears();
+            this.ViewData["Years"] = yearsViewModels;
 
-            return this.View(models);
+            return this.View();
         }
 
-        public ActionResult Details(int id)
+        [HttpPost]
+        public async Task<IActionResult> SearchSpots(SearchSpotsViewModel model)
+        {
+            var models = await this.searchSpotsService.GetSearchResultAsync(model.District, model.YearOfBirth);
+            return this.View("SpotsByYearAndByDistrict", models);
+        }
+
+        public async Task<IActionResult> All()
+        {
+            var schools = await this.schoolsService.GetAllSchoolsAsync();
+
+            return this.View(schools);
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            await this.All();
+            return this.View("All");
+        }
+
+
+        public async Task<IActionResult> Details(int id)
         {
             return View();
         }

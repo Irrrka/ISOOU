@@ -26,7 +26,6 @@
             return this.View();
         }
 
-        //TODO
         public IActionResult Helper()
         {
             return this.View();
@@ -42,7 +41,7 @@
             return this.View();
         }
 
-        //TODO
+        //TODO calendar
         public IActionResult ContactForm()
         {
             return this.View();

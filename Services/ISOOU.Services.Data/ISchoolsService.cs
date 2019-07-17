@@ -1,16 +1,25 @@
 ﻿namespace ISOOU.Services.Data
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
-    using ISOOU.Data.Models;
+    using ISOOU.Web.ViewModels;
+    using ISOOU.Web.ViewModels.Schools;
 
     public interface ISchoolsService
     {
-        IEnumerable<TSchoolViewModel> GetAllSchoolsByDistrict<TSchoolViewModel>(int value);
+        Task<IEnumerable<SchoolViewModel>> GetAllSchoolsByDistrictValue(int value);
 
-        List<SystemUser> GetAllAdmittedCandidates();
+        Task<IEnumerable<SchoolClassesViewModel>> GetAllSchoolsByDistrictName(string districtName);
 
-        List<SystemUser> GetAllNotAdmittedCandidates();
+        Task<IEnumerable<AllSchoolsViewModel>> GetAllSchoolsAsync();
 
+        Task<BaseSchoolModel> GetSchoolByName(string name);
+
+        IEnumerable<ClassViewModel> GetAllClasses();
+
+        //Task<List<SystemUser>> GetAllAdmittedCandidates();
+
+        //Task<List<SystemUser>> GetAllNotAdmittedCandidates();
     }
 }

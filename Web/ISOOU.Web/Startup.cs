@@ -1,7 +1,7 @@
 ﻿namespace ISOOU.Web
 {
     using System.Reflection;
-
+    using AutoMapper;
     using ISOOU.Data;
     using ISOOU.Data.Common;
     using ISOOU.Data.Common.Repositories;
@@ -13,7 +13,7 @@
     using ISOOU.Services.Messaging;
     using ISOOU.Web.Areas.Identity.Pages.Account.Manage;
     using ISOOU.Web.ViewModels;
-
+    using ISOOU.Web.ViewModels.Schools;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -42,6 +42,11 @@
             // TODO: Add pooling when this bug is fixed: https://github.com/aspnet/EntityFrameworkCore/issues/9741
             services.AddDbContext<ISOOUDbContext>(
                 options => options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddTransient<ISchoolsService, SchoolsService>();
+            services.AddTransient<IDistrictsService, DistrictsService>();
+            services.AddTransient<ICandidatesService, CandidatesService>();
+            services.AddTransient<ISearchSpotsService, SearchSpotsService>();
 
             services
                 .AddIdentity<SystemUser, ApplicationRole>(options =>
@@ -85,8 +90,6 @@
                     options.ConsentCookie.Name = ".AspNetCore.ConsentCookie";
                 });
 
-            
-
             services.AddSingleton(this.configuration);
 
             // Identity stores
@@ -104,22 +107,23 @@
             services.AddTransient<ISettingsService, SettingsService>();
 
             // Entity services
-            services.AddTransient<ISchoolsService, SchoolsService>();
-            services.AddTransient<IDistrictsService, DistrictsService>();
-            services.AddSingleton<AllDistrictsViewModel>();
-            services.AddSingleton<SchoolViewModel>();
-            services.AddTransient<FilterSchoolsViewModel>();
-            services.AddTransient<FilterCandidateInputModel>();
+            services.AddTransient<AllDistrictsViewModel>();
+            services.AddTransient<AllSchoolsViewModel>();
+            services.AddTransient<BaseSchoolModel>();
+            services.AddTransient<DistrictViewModel>();
+            services.AddTransient<SchoolViewModel>();
             services.AddTransient<StatusCandidateViewModel>();
             services.AddTransient<StatusCandidatesViewModel>();
-            services.AddTransient<ParentModel>();
-            services.AddTransient<ChildModel>();
+            services.AddTransient<SchoolClassesViewModel>();
+            services.AddTransient<ClassViewModel>();
+            services.AddTransient<SearchResultViewModel>();
+            services.AddTransient<SearchSpotsViewModel>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
+            AutoMapperConfig.RegisterMappings(typeof(SchoolViewModel).GetTypeInfo().Assembly);
 
             // Seed data on application startup
             using (var serviceScope = app.ApplicationServices.CreateScope())
@@ -156,50 +160,6 @@
                 routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
 
-            //var dataText = System.IO.File.ReadAllText(@"schoolsseeddata.txt");
-
-            //private async Task CreateRoles(IServiceProvider serviceProvider)
-            //{
-            //    //initializing custom roles 
-            //    var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            //    var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            //    string[] roleNames = { "Admin", "Store-Manager", "Member" };
-            //    IdentityResult roleResult;
-
-            //    foreach (var roleName in roleNames)
-            //    {
-            //        var roleExist = await RoleManager.RoleExistsAsync(roleName);
-            //        // ensure that the role does not exist
-            //        if (!roleExist)
-            //        {
-            //            //create the roles and seed them to the database: 
-            //            roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
-            //        }
-            //    }
-
-            //// find the user with the admin email 
-            //var _user = await UserManager.FindByEmailAsync("admin@email.com");
-
-            //// check if the user exists
-            //if (_user == null)
-            //{
-            //    //Here you could create the super admin who will maintain the web app
-            //    var poweruser = new ApplicationUser
-            //    {
-            //        UserName = "Admin",
-            //        Email = "admin@email.com",
-            //    };
-            //    string adminPassword = "p@$$w0rd";
-
-            //    var createPowerUser = await UserManager.CreateAsync(poweruser, adminPassword);
-            //    if (createPowerUser.Succeeded)
-            //    {
-            //        //here we tie the new user to the role
-            //        await UserManager.AddToRoleAsync(poweruser, "Admin");
-
-            //    }
-            //}
-            //}
         }
     }
 }

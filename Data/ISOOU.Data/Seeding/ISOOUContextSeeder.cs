@@ -27,9 +27,9 @@
                           {
                               new RolesSeeder(),
                               new SettingsSeeder(),
-                             // new ClassesSeeder(),
-                             // new DistrictsSeeder(),
-                             // new SchoolsSeeder(),
+                              //new ClassesSeeder(),
+                              //new DistrictsSeeder(),
+                              //new SchoolsSeeder(),
                           };
 
             foreach (var seeder in seeders)

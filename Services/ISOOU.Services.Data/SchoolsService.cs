@@ -2,51 +2,80 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
-    using ISOOU.Data;
     using ISOOU.Data.Common.Repositories;
     using ISOOU.Data.Models;
     using ISOOU.Services.Mapping;
     using ISOOU.Web.ViewModels;
+    using ISOOU.Web.ViewModels.Schools;
+    using Microsoft.EntityFrameworkCore;
 
     public class SchoolsService : ISchoolsService
     {
-        private readonly IRepository<School> repository;
+        private readonly IRepository<School> schoolRepository;
+        private readonly IRepository<Class> classRepository;
         private readonly IDistrictsService districtsService;
 
-        public SchoolsService(IRepository<School> repository, IDistrictsService districtsService)
+        public SchoolsService(IRepository<School> schoolRepository, IRepository<Class> classRepository, IDistrictsService districtsService)
         {
-            this.repository = repository;
+            this.schoolRepository = schoolRepository;
+            this.classRepository = classRepository;
             this.districtsService = districtsService;
         }
 
-        public IEnumerable<TSchoolViewModel> GetAllSchoolsByDistrict<TSchoolViewModel>(int value)
+        public async Task<IEnumerable<SchoolViewModel>> GetAllSchoolsByDistrictValue(int value)
         {
-            DistrictViewModel currDistrict = this.districtsService
-                                                .GetDistrictByValue<DistrictViewModel>(value);
-            var schools = this.repository.All()
+            DistrictViewModel currDistrict = await this.districtsService
+                                        .GetDistrictByValue<DistrictViewModel>(value);
+
+            var schools = await this.schoolRepository
+                .All()
                 .Where(d => d.Address.District.Name == currDistrict.Name)
-                .To<TSchoolViewModel>()
-                .ToList();
+                .To<SchoolViewModel>()
+                .ToListAsync();
 
             return schools;
         }
 
-        public List<SystemUser> GetAllAdmittedCandidates()
+        public async Task<IEnumerable<SchoolClassesViewModel>> GetAllSchoolsByDistrictName(string districtName)
         {
-            //List<SystemUser> admittedCandidatesFromDb = this.context
-            //    .Candidates
-            //    .Where(c => c.Status.ToString() == nameof(CandidateStatus.Admitted))
-            //    .OrderBy(s => s.Schools
-            //    .OrderBy(a => a.Address.District)
-            //    .ThenBy(n => n.Ref)).ToList();
+            var schools = await this.schoolRepository
+                .All()
+                .Where(d => d.Address.District.Name == districtName)
+                .To<SchoolClassesViewModel>()
+                .ToListAsync();
 
-            return null;
+            return schools;
         }
 
-        public List<SystemUser> GetAllNotAdmittedCandidates()
+        public async Task<IEnumerable<AllSchoolsViewModel>> GetAllSchoolsAsync()
         {
-            return null;
+            var schools = await this.schoolRepository.All()
+                .To<AllSchoolsViewModel>()
+                .OrderBy(d => d.Name)
+                .ToListAsync();
+
+            return schools;
         }
+
+        public async Task<BaseSchoolModel> GetSchoolByName(string name)
+        {
+            var school = await this.schoolRepository
+                .All()
+                .To<BaseSchoolModel>()
+                .FirstOrDefaultAsync(sch => sch.Name == name);
+
+            return school;
+        }
+
+        public IEnumerable<ClassViewModel> GetAllClasses()
+        {
+            var classes = this.classRepository.All();
+            var classesViewModel = classes.To<ClassViewModel>().ToList();
+
+            return classesViewModel;
+        }
+
     }
 }
