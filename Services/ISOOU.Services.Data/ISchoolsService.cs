@@ -16,7 +16,11 @@
 
         Task<BaseSchoolModel> GetSchoolByName(string name);
 
+        Task<BaseSchoolModel> GetSchoolById(int id);
+
         IEnumerable<ClassViewModel> GetAllClasses();
+
+        Task<SchoolDetailsWithSpotsAndCandidatesViewModel> GetSchoolsDetailsForSpotsAndCandidates(BaseSchoolModel school);
 
         //Task<List<SystemUser>> GetAllAdmittedCandidates();
 

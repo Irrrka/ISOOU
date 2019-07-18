@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using ISOOU.Data;
     using ISOOU.Data.Common.Repositories;
     using ISOOU.Data.Models;
     using ISOOU.Services.Mapping;
@@ -14,11 +14,14 @@
     public class SchoolsService : ISchoolsService
     {
         private readonly IRepository<School> schoolRepository;
+        private readonly IRepository<ISOOUDbContext> allRepository;
         private readonly IRepository<Class> classRepository;
+
         private readonly IDistrictsService districtsService;
 
-        public SchoolsService(IRepository<School> schoolRepository, IRepository<Class> classRepository, IDistrictsService districtsService)
+        public SchoolsService(IRepository<ISOOUDbContext> allRepository, IRepository<School> schoolRepository, IRepository<Class> classRepository, IDistrictsService districtsService)
         {
+            this.allRepository = allRepository;
             this.schoolRepository = schoolRepository;
             this.classRepository = classRepository;
             this.districtsService = districtsService;
@@ -69,6 +72,16 @@
             return school;
         }
 
+        public async Task<BaseSchoolModel> GetSchoolById(int id)
+        {
+            var school = await this.schoolRepository
+                .All()
+                .To<BaseSchoolModel>()
+                .FirstOrDefaultAsync(sch => sch.Id == id);
+
+            return school;
+        }
+
         public IEnumerable<ClassViewModel> GetAllClasses()
         {
             var classes = this.classRepository.All();
@@ -77,5 +90,35 @@
             return classesViewModel;
         }
 
+        public async Task<SchoolDetailsWithSpotsAndCandidatesViewModel> GetSchoolsDetailsForSpotsAndCandidates(BaseSchoolModel school)
+        {
+            var schoolModel = await this.schoolRepository
+               .All()
+               .To<SchoolDetailsWithSpotsAndCandidatesViewModel>()
+               .FirstOrDefaultAsync(sch => sch.Id == school.Id);
+
+            schoolModel.PossibleYears = FreeSpots.GetAllPossibleYears().ToList();
+            schoolModel.AdmissionProcedureStatus = AdmissionProcedureStatus.Finished.ToString();
+            schoolModel.AdmittedCandidatesUniqueNumber = new List<string> { "YM", "KM" };
+            schoolModel.NotAdmittedCandidatesUniqueNumber = new List<string> { "IM", "IM" };
+            schoolModel.AdmissionProcedureStatus = AdmissionProcedureStatus.Finished.ToString();
+            
+            
+            //SchoolDetailsWithSpotsAndCandidatesViewModel model =
+            //    new SchoolDetailsWithSpotsAndCandidatesViewModel
+            //        {
+            //        Name = schoolFromDb.Name,
+            //        AddressPermanent = schoolFromDb.Address.Permanent,
+            //        DistrictName = schoolFromDb.District.Name,
+            //        DirectorName = schoolFromDb.DirectorName,
+            //        PhoneNumber = schoolFromDb.PhoneNumber,
+            //        Email = schoolFromDb.Email,
+            //        URLOfMap = schoolFromDb.URLOfMap,
+            //        URLOfSchool = schoolFromDb.URLOfSchool,
+            //        AdmissionProcedureStatus = schoolFromDb.AdmissionProcedure.Status.ToString(),
+            //        PossibleYears = FreeSpots.GetAllPossibleYears().ToList(),
+            //        };
+            return schoolModel;
+        }
     }
 }

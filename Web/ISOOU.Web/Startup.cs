@@ -9,6 +9,7 @@
     using ISOOU.Data.Repositories;
     using ISOOU.Data.Seeding;
     using ISOOU.Services.Data;
+    using ISOOU.Services.Data.Contracts;
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Messaging;
     using ISOOU.Web.Areas.Identity.Pages.Account.Manage;
@@ -47,6 +48,7 @@
             services.AddTransient<IDistrictsService, DistrictsService>();
             services.AddTransient<ICandidatesService, CandidatesService>();
             services.AddTransient<ISearchSpotsService, SearchSpotsService>();
+            services.AddTransient<ISystemUsersService, SystemUsersService>();
 
             services
                 .AddIdentity<SystemUser, ApplicationRole>(options =>

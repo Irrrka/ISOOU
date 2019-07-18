@@ -8,6 +8,11 @@ namespace ISOOU.Common
         public const string AdministratorRoleName = "Administrator";
         public const string DirectorRoleName = "Director";
         public const string UserRoleName = "Family";
+        //AdminRoleDetails
+        public const string AdministratorUsername = "Admin";
+        public const string AdministratorEmail = "admin@admin.com";
+        public const string AdministratorPassword = "Parol@123";
+        public const string AdministratorFullName = "AdminAdminov";
 
         // Schools
         public const int YoungestCandidate = 6;

@@ -6,11 +6,24 @@
     <title>@this.ViewData["Title"] - ИСООУ</title>
 
     <environment names="Development">
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+                crossorigin="anonymous"></script>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <link href="https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,500,600,700,800,900" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Fredericka+the+Great" rel="stylesheet">
 
         <link rel="stylesheet" href="~/css/open-iconic-bootstrap.min.css">
         <link rel="stylesheet" href="~/css/animate.css">
+        <link rel="stylesheet" href="~/css/dncalendar-skin.css">
 
         <link rel="stylesheet" href="~/css/owl.carousel.min.css">
         <link rel="stylesheet" href="~/css/owl.theme.default.min.css">
@@ -58,7 +71,7 @@
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1 justify-content-md-start">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Schools" asp-action="SearchSpots">Свободни места</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Schools" asp-action="SearchFreeSpots">Свободни места</a>
                         </li>
                         <li class="nav-item">
                             <partial name="_DistrictPartial" />
@@ -120,7 +133,8 @@
         <script src="~/js/aos.js" asp-append-version="true"></script>
         <script src="~/js/jquery.animateNumber.min.js" asp-append-version="true"></script>
         <script src="~/js/scrollax.min.js" asp-append-version="true"></script>
-        <script src="~/js/google-map.js"></script>
+        <script src="~/js/google-map.js" asp-append-version="true"></script>
+        <script src="~/js/dncalendar.js" asp-append-version="true"></script>
         <script src="~/js/main.js" asp-append-version="true"></script>
         <script src="~/lib/jquery/dist/jquery.js" asp-append-version="true"></script>
         <script src="~/lib/jquery-validation/dist/jquery.validate.js" asp-append-version="true"></script>

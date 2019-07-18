@@ -1,9 +1,18 @@
 ﻿namespace ISOOU.Web.Controllers
 {
+    using ISOOU.Services.Data.Contracts;
+    using ISOOU.Web.ViewModels.Home;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseController
     {
+        private readonly ISystemUsersService systemUsersService;
+
+        public HomeController(ISystemUsersService systemUsersService)
+        {
+            this.systemUsersService = systemUsersService;
+        }
+
         public IActionResult Index()
         {
             return this.View();
@@ -44,6 +53,13 @@
         //TODO calendar
         public IActionResult ContactForm()
         {
+            return this.View();
+        }
+
+        [HttpPost]
+        public IActionResult ContactForm(ContactFormInputModel model)
+        {
+            this.systemUsersService.CreateMessage(model);
             return this.View();
         }
 

@@ -1,10 +1,14 @@
-﻿namespace ISOOU.Data.Models
-{
-    public class Question
-    {
-        public int Id { get; set; }
+﻿using ISOOU.Data.Common.Models;
 
-        public string Text { get; set; }
+namespace ISOOU.Data.Models
+{
+    public class Question : BaseModel<int>
+    {
+        public string Subject { get; set; }
+
+        public string Content { get; set; }
+
+        public string SystemUserId { get; set; }
 
         public virtual SystemUser User { get; set; }
     }

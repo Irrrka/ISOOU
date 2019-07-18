@@ -11,6 +11,8 @@
             this.Questions = new HashSet<Question>();
         }
 
+        public string FullName { get; set; }
+
         public virtual ICollection<Child> Children { get; set; }
 
         public virtual ICollection<Parent> Parents { get; set; }

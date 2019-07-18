@@ -34,5 +34,7 @@
         public virtual ICollection<Class> Classes { get; set; }
 
         public int FreePlaces { get; set; }
+
+        public virtual AdmissionProcedure AdmissionProcedure { get; set; }
     }
 }

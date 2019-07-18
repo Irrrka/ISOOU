@@ -1,33 +1,37 @@
-﻿@{
+﻿@using ISOOU.Web.ViewModels.Home
+
+@model ContactFormInputModel
+@{
     this.ViewData["Title"] = "Обратна връзка";
 }
-
-
 <section class="ftco-section ftco-no-pt ftco-no-pb contact-section">
     <div class="container">
+        <div id="map"></div>
         <div class="row d-flex align-items-stretch no-gutters">
             <div class="col-md-6 p-4 p-md-5 order-md-last bg-light">
-                <form action="#">
+                <form asp-area="" asp-controller="Home" asp-action="ContactForm" method="post">
+                    <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Име и Фамилия">
+                        <label asp-for="@Model.Email">Е-поща</label>
+                        <input asp-for="@Model.Email" class="form-control" />
+                        <span asp-validation-for="@Model.Email" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Е-поща">
+                        <label asp-for="@Model.Subject">Тема</label>
+                        <input asp-for="@Model.Subject" class="form-control" />
+                        <span asp-validation-for="@Model.Subject" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Тема">
+                        <label asp-for="@Model.Content">Съобщение</label>
+                        <textarea asp-for="@Model.Content" class="form-control"></textarea>
+                        <span asp-validation-for="@Model.Content" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <textarea name="" id="" cols="30" rows="7" class="form-control" placeholder="Съобщение"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" value="ИЗПРАТИ" class="btn btn-secondary py-3 px-5">
+                        <input type="submit" class="btn btn-secondary py-3 px-4" value="Изпрати" />
                     </div>
                 </form>
             </div>
             <div class="col-md-6 d-flex align-items-stretch">
-                <script src="~/js/fetch-schools.js" asp-append-version="true"></script>
-                <div id="map"></div>
             </div>
         </div>
     </div>

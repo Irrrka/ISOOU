@@ -1,13 +1,12 @@
 ﻿namespace ISOOU.Web.Controllers
 {
+    using System.Linq;
+    using System.Threading.Tasks;
     using ISOOU.Data.Models;
     using ISOOU.Services.Data;
     using ISOOU.Web.ViewModels;
     using ISOOU.Web.ViewModels.Schools;
     using Microsoft.AspNetCore.Mvc;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class SchoolsController : Controller
     {
@@ -36,7 +35,7 @@
             return this.View();
         }
 
-        public async Task<IActionResult> SearchSpots()
+        public async Task<IActionResult> SearchFreeSpots()
         {
             var districtViewModels = await this.districtsService.GetAllDistrictsAsync();
             var searchViewModels = districtViewModels.Select(m => new SearchSpotsViewModel
@@ -44,14 +43,14 @@
                 District = m.Name,
             }).ToList();
             this.ViewData["Districts"] = searchViewModels;
-            var yearsViewModels = this.searchSpotsService.GetAllPossibleYears();
+            var yearsViewModels = FreeSpots.GetAllPossibleYears();
             this.ViewData["Years"] = yearsViewModels;
 
             return this.View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> SearchSpots(SearchSpotsViewModel model)
+        public async Task<IActionResult> SearchFreeSpots(SearchSpotsViewModel model)
         {
             var models = await this.searchSpotsService.GetSearchResultAsync(model.District, model.YearOfBirth);
             return this.View("SpotsByYearAndByDistrict", models);
@@ -70,10 +69,14 @@
             return this.View("All");
         }
 
-
+        [HttpGet("/Schools/Details/{id}")]
         public async Task<IActionResult> Details(int id)
         {
-            return View();
+            var school = await this.schoolsService.GetSchoolById(id);
+            SchoolDetailsWithSpotsAndCandidatesViewModel model = 
+                new SchoolDetailsWithSpotsAndCandidatesViewModel();
+                    model = await this.schoolsService.GetSchoolsDetailsForSpotsAndCandidates(school);
+            return this.View(model);
         }
 
     }
