@@ -30,6 +30,7 @@
                               //new ClassesSeeder(),
                               //new DistrictsSeeder(),
                               //new SchoolsSeeder(),
+                              new UsersSeeder(),
                           };
 
             foreach (var seeder in seeders)
@@ -38,7 +39,6 @@
                 await dbContext.SaveChangesAsync();
                 logger.LogInformation($"Seeder {seeder.GetType().Name} done.");
             }
-
         }
     }
 }
