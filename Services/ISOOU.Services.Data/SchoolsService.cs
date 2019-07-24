@@ -1,11 +1,14 @@
 ﻿namespace ISOOU.Services.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using ISOOU.Data;
     using ISOOU.Data.Common.Repositories;
     using ISOOU.Data.Models;
+    using ISOOU.Services.Data.Contracts;
+
     using ISOOU.Services.Mapping;
     using ISOOU.Web.ViewModels;
     using ISOOU.Web.ViewModels.Schools;
@@ -34,9 +37,14 @@
 
             var schools = await this.schoolRepository
                 .All()
-                .Where(d => d.Address.District.Name == currDistrict.Name)
+                .Where(d => d.District.Name == currDistrict.Name)
                 .To<SchoolViewModel>()
                 .ToListAsync();
+
+            if (schools == null)
+            {
+                throw new NullReferenceException();
+            }
 
             return schools;
         }
@@ -45,9 +53,14 @@
         {
             var schools = await this.schoolRepository
                 .All()
-                .Where(d => d.Address.District.Name == districtName)
+                .Where(d => d.District.Name == districtName)
                 .To<SchoolClassesViewModel>()
                 .ToListAsync();
+
+            if (schools == null)
+            {
+                throw new NullReferenceException();
+            }
 
             return schools;
         }
@@ -59,6 +72,26 @@
                 .OrderBy(d => d.Name)
                 .ToListAsync();
 
+            if (schools == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            return schools;
+        }
+
+        public async Task<IEnumerable<AdmissionProcedureSchoolViewModel>> GetSchoolsForAdmissionProcedureAsync()
+        {
+            var schools = await this.schoolRepository.All()
+                .To<AdmissionProcedureSchoolViewModel>()
+                .OrderBy(d => d.SchoolName)
+                .ToListAsync();
+
+            if (schools == null)
+            {
+                throw new NullReferenceException();
+            }
+
             return schools;
         }
 
@@ -68,6 +101,11 @@
                 .All()
                 .To<BaseSchoolModel>()
                 .FirstOrDefaultAsync(sch => sch.Name == name);
+
+            if (school == null)
+            {
+                throw new NullReferenceException();
+            }
 
             return school;
         }
@@ -79,12 +117,23 @@
                 .To<BaseSchoolModel>()
                 .FirstOrDefaultAsync(sch => sch.Id == id);
 
+            if (school == null)
+            {
+                throw new NullReferenceException();
+            }
+
             return school;
         }
 
         public IEnumerable<ClassViewModel> GetAllClasses()
         {
             var classes = this.classRepository.All();
+
+            if (classes == null)
+            {
+                throw new NullReferenceException();
+            }
+
             var classesViewModel = classes.To<ClassViewModel>().ToList();
 
             return classesViewModel;
@@ -96,6 +145,11 @@
                .All()
                .To<SchoolDetailsWithSpotsAndCandidatesViewModel>()
                .FirstOrDefaultAsync(sch => sch.Id == school.Id);
+
+            if (schoolModel == null)
+            {
+                throw new NullReferenceException();
+            }
 
             schoolModel.PossibleYears = FreeSpots.GetAllPossibleYears().ToList();
             schoolModel.AdmissionProcedureStatus = AdmissionProcedureStatus.Finished.ToString();

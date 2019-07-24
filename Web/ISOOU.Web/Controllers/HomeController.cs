@@ -1,18 +1,13 @@
 ﻿namespace ISOOU.Web.Controllers
 {
     using ISOOU.Services.Data.Contracts;
+    using ISOOU.Services.Data;
     using ISOOU.Web.ViewModels.Home;
     using Microsoft.AspNetCore.Mvc;
+    using System.Threading.Tasks;
 
     public class HomeController : BaseController
     {
-        private readonly ISystemUsersService systemUsersService;
-
-        public HomeController(ISystemUsersService systemUsersService)
-        {
-            this.systemUsersService = systemUsersService;
-        }
-
         public IActionResult Index()
         {
             return this.View();
@@ -40,11 +35,6 @@
             return this.View();
         }
 
-        public IActionResult QA()
-        {
-            return this.View();
-        }
-
         public IActionResult Laws()
         {
             return this.View();
@@ -57,10 +47,16 @@
         }
 
         [HttpPost]
-        public IActionResult ContactForm(ContactFormInputModel model)
+        public async Task<IActionResult> ContactForm(ContactFormInputModel model)
         {
-            this.systemUsersService.CreateMessage(model);
-            return this.View();
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            //    await this.usersService.CreateMessage(model);
+            //    model.StatusMessage = "Благодарим за обратната връзка!";
+            return this.Redirect("ContactForm");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

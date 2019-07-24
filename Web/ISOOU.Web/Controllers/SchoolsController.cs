@@ -3,6 +3,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using ISOOU.Data.Models;
+    using ISOOU.Services.Data.Contracts;
     using ISOOU.Services.Data;
     using ISOOU.Web.ViewModels;
     using ISOOU.Web.ViewModels.Schools;
@@ -52,6 +53,11 @@
         [HttpPost]
         public async Task<IActionResult> SearchFreeSpots(SearchSpotsViewModel model)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
             var models = await this.searchSpotsService.GetSearchResultAsync(model.District, model.YearOfBirth);
             return this.View("SpotsByYearAndByDistrict", models);
         }

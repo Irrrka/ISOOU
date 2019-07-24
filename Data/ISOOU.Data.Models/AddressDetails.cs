@@ -1,20 +1,26 @@
 ﻿namespace ISOOU.Data.Models
 {
-    public class AddressDetails
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    using ISOOU.Data.Common.Models;
+    using ISOOU.Data.Models.Enums;
+
+    public class AddressDetails : BaseModel<int>
     {
-        public AddressDetails()
-        {
-            this.Current = this.Permanent;
-        }
+        public CityName PermanentCity { get; set; }
 
-        public int Id { get; set; }
+        public CityName CurrentCity { get; set; }
 
-        public string Permanent { get; set; }
+        public string PermanentAddress { get; set; }
 
-        public string Current { get; set; }
+        public string CurrentAddress { get; set; }
 
-        public virtual District District { get; set; }
+        public int CurrentDistrictId { get; set; }
 
-        public string Quarter { get; set; }
+        public virtual District CurrentDistrict { get; set; }
+
+        public int PermanentDistrictId { get; set; }
+
+        public virtual District PermanentDistrict { get; set; }
     }
 }

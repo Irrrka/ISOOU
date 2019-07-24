@@ -1,6 +1,7 @@
 ﻿namespace ISOOU.Data.Models
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
     using ISOOU.Data.Common.Models;
@@ -9,32 +10,38 @@
     {
         public School()
         {
-            this.Classes = new HashSet<Class>();
-            this.Candidates = new HashSet<Candidates_Schools>();
+            this.Classes = new HashSet<SchoolClass>();
         }
 
+        [Required]
         public string Name { get; set; }
 
-        public virtual AddressDetails Address { get; set; }
+        [Required]
+        public string Address { get; set; }
 
+        public int DistrictId { get; set; }
+
+        [Required]
         public virtual District District { get; set; }
 
+        [Required]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
+        [Required]
+        [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
 
+        [Required]
         public string DirectorName { get; set; }
 
+        [DataType(DataType.Url)]
         public string URLOfSchool { get; set; }
 
+        [DataType(DataType.Url)]
         public string URLOfMap { get; set; }
 
-        public virtual ICollection<Candidates_Schools> Candidates { get; set; }
+        public virtual ICollection<SchoolClass> Classes { get; set; }
 
-        public virtual ICollection<Class> Classes { get; set; }
-
-        public int FreePlaces { get; set; }
-
-        public virtual AdmissionProcedure AdmissionProcedure { get; set; }
     }
 }

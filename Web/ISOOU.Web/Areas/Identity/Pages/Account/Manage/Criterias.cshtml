@@ -1,43 +1,37 @@
 ﻿@page
-@model CriteriasDataModel
+@model CriteriaModel
 @{
-    ViewData["Title"] = "Criterias";
+    ViewData["Title"] = "Критерии и точки по правилата за прием";
     ViewData["ActivePage"] = ManageNavPages.Criterias;
 }
 
 <h4>@ViewData["Title"]</h4>
-
-        <div class="container">
-            <h2>@this.User.Identity.Name - Критерии и точки по правилата за прием</h2>
-            <p>Критерии, по които се извършва балообразуването.</p>
-
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Критерий</th>
-                            <th>Референтна стойност</th>
-                            <th>Точки</th>
-                            <th>Данни</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Постоянен адрес на територията на административния район на училището</td>
-                            <td>3</td>
-                            <td>3</td>
+<div class="container">
+    <h4>ViewData["Title"]</h4>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Критерий</th>
+                    <th>Точки</th>
+                    <th>Данни</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    @{
+                        var i = 0;
+                        foreach (var kvp in Model.Input.ScoresByCriteria)
+                        {
+                            i++;
+                            <td>@i</td>
+                            <td>@kvp.Key</td>
+                            <td>@kvp.Value</td>
                             <td>Лозенец</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Работещ родител</td>
-                            <td>4</td>
-                            <td>4</td>
-                            <td>Двама</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                        }
+                    }
+            </tbody>
+        </table>
+    </div>
+</div>

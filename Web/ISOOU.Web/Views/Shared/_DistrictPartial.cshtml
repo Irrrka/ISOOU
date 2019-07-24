@@ -1,4 +1,6 @@
-﻿@inject AllDistrictsViewModel allDistricts
+﻿@using ISOOU.Web.ViewModels.Districts;
+
+@inject AllDistrictsViewModel allDistricts
 
 <div class="dropdown show">
     <a class="nav-link text-dark dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" asp-area="" asp-controller="Schools" asp-action="AllSchoolsByDistrict">
@@ -10,7 +12,7 @@
             foreach (var district in allDistricts.Districts)
             {
                 var value = @district.Key;
-                <a class="dropdown-item" href="~/Schools/AllSchoolsByDistrict/@value">Район "@district.Value"</a>
+                <a href="~/Schools/AllSchoolsByDistrict/@value">Район "@district.Value"</a>
             }
         }
     </div>

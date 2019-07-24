@@ -1,4 +1,6 @@
 ﻿@page
+@inject UserManager<SystemUser> UserManager
+
 @model IndexModel
 @{
     ViewData["Title"] = "Профил";
@@ -7,32 +9,52 @@
 
 <partial name="_StatusMessage" for="StatusMessage" />
 
-<div class="container">
-    @{
-        for (int i = 0; i < 1; i++)
-        {
-            <h3>Родители:</h3>
+@{ 
+if (Model.Input!=null)
+    {
+    <div class="row justify-content-between">
+        <div class="col-md-6 d-flex justify-content-around">
+            <h4>Деца:</h4>
             <table class="table px-4 py-3">
                 <tr height="18" style="height:18px;">
-                    <td>Ирина Маринова</td>
-                </tr>
-                <tr height="18" style="height:18px;">
-                    <td>Ивайло Маринов</td>
+                    @{
+                        for (int i = 0; i < Model.Input.Children.Count; i++)
+                        {
+                            <td>@Model.Input.Children[i].FullName</td>
+                        }
+                    }
                 </tr>
             </table>
-        }
-        <hr class="alert-heading" />
-        for (int i = 0; i < 1; i++)
-        {
-            <h3>Деца:</h3>
+            <hr />
+            <h4>Родители:</h4>
             <table class="table px-4 py-3">
                 <tr height="18" style="height:18px;">
-                    <td>Явор Маринов</td>
-                </tr>
-                <tr height="18" style="height:18px;">
-                    <td>Калин Маринов</td>
+                    @{
+                        for (int i = 0; i < Model.Input.Parents.Count; i++)
+                        {
+                            <td>@Model.Input.Parents[i].FullName</td>
+                        }
+                    }
                 </tr>
             </table>
-        }
+        </div>
+    </div>
     }
-</div>
+    else
+    {
+    <div class="container">
+        <hr/>
+        <div class="row">
+            <div class="col-md-12 d-flex">
+                <div class="container-fluid d-flex justify-content-around">
+                    <a class="btn btn-secondary py-3 px-4" id="child" asp-page="./ChildInput/">Добави дете</a>
+                </div>
+                <div class="container-fluid d-flex justify-content-around">
+                    <a class="btn btn-secondary py-3 px-4" id="parent" asp-page="./ParentInput/">Добави родител</a>
+                </div>
+            </div>
+        </div>
+        <hr/>
+    </div>
+    }
+}

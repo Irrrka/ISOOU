@@ -24,12 +24,22 @@ namespace ISOOU.Common
         public const string ChineseLanguage = "Китайски език";
         public const string RussianLanguage = "Руски език";
         public static readonly int InitialSpots = 18;
-        public static readonly string ACode = "A";
-        public static readonly string BCode = "B";
-        public static readonly string CCode = "C";
-        public static readonly string DCode = "D";
         public static readonly int MinCoefOfAdmissionYear = 0;
         public static readonly int MaxCoefOfAdmissionYear = 4;
+
+        //Criterias
+        public static readonly int HasNoParentCriteria = 6;
+        public static readonly int HasOneParentCriteria = 3;
+        public static readonly int HasVisitKGCriteria = 1;
+        public static readonly int HasManyBrothersorSistersCriteria = 2;
+        public static readonly int ChilrenNumber = 3;
+        public static readonly int HasManyBrothersOrSistersCriteria = 3;
+        public static readonly int HasSENCriteria = 7;
+        public static readonly int HasHronicDeseasCriteria = 3;
+        public static readonly int ParentHasWorkCriteria = 2;
+        public static readonly int ParentHasWorkInDistrictCriteria = 1;
+        public static readonly int ParentPermanentCitySofia = 2;
+        public static readonly int ParentCurrentCitySofia = 1;
 
         // ExceptionMessages
         public static readonly string NullReferenceDistrictName = "Моля изберете район";

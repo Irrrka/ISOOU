@@ -12,6 +12,7 @@
     using ISOOU.Data.Repositories;
     using ISOOU.Data.Seeding;
     using ISOOU.Services.Data;
+    using ISOOU.Services.Data.Contracts;
     using ISOOU.Services.Messaging;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.UI.Services;

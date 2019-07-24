@@ -4,6 +4,8 @@
 
     using ISOOU.Data.Common.Repositories;
     using ISOOU.Data.Models;
+    using ISOOU.Services.Data.Contracts;
+
 
     public class SettingsService : ISettingsService
     {

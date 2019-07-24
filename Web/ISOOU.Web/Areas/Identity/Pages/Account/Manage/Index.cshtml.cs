@@ -1,66 +1,34 @@
 ﻿namespace ISOOU.Web.Areas.Identity.Pages.Account.Manage
 {
-    using System;
-    using System.ComponentModel.DataAnnotations;
-    using System.Text.Encodings.Web;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
-
+    using ISOOU.Data.Common.Repositories;
     using ISOOU.Data.Models;
 
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
+    using Microsoft.EntityFrameworkCore;
 
 #pragma warning disable SA1649 // File name should match first type name
     public class IndexModel : PageModel
 #pragma warning restore SA1649 // File name should match first type name
     {
         private readonly UserManager<SystemUser> userManager;
-        private readonly SignInManager<SystemUser> signInManager;
-        private readonly IEmailSender emailSender;
+        private readonly IRepository<SystemUser> userRepository;
 
         public IndexModel(
             UserManager<SystemUser> userManager,
-            SignInManager<SystemUser> signInManager,
-            IEmailSender emailSender)
+            IRepository<SystemUser> userRepository)
         {
             this.userManager = userManager;
-            this.signInManager = signInManager;
-            this.emailSender = emailSender;
+            this.userRepository = userRepository;
         }
 
-        public string Username { get; set; }
+        public int Id { get; set; }
 
-        public string FirstName { get; set; }
-
-        public string MiddleName { get; set; }
-
-        public string LastName { get; set; }
-
-        public string FullName => this.FirstName + " " + this.LastName;
-
-        public string UCN { get; set; }
-
-        public string MothersFullName { get; set; }
-
-        public string MothersPhoneNumber { get; set; }
-
-        public string MothersEGN { get; set; }
-
-        public string MothersWork { get; set; }
-
-        public string FathersFullName { get; set; }
-
-        public string FathersPhoneNumber { get; set; }
-
-        public string FathersEGN { get; set; }
-
-        public string FathersWork { get; set; }
-
-        public AddressDetails Address { get; set; }
-
-        public bool IsEmailConfirmed { get; set; }
+        public string FullName { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -76,102 +44,31 @@
                 return this.NotFound($"Unable to load user with ID '{this.userManager.GetUserId(this.User)}'.");
             }
 
-            var userName = await this.userManager.GetUserNameAsync(user);
-            var email = await this.userManager.GetEmailAsync(user);
-            var phoneNumber = await this.userManager.GetPhoneNumberAsync(user);
+            List<Parent> parents = (await this.userRepository.All().ToListAsync())
+                .FirstOrDefault(u => u.UserName == user.UserName)
+                .Parents
+                .ToList();
 
-            this.Username = userName;
+            List<Child> children = (await this.userRepository.All().ToListAsync())
+               .FirstOrDefault(u => u.UserName == user.UserName)
+               .Children
+               .ToList();
 
-            this.Input = new InputModel
+            var model = new InputModel
             {
-                Email = email,
-                PhoneNumber = phoneNumber,
+                Children = children,
+                Parents = parents,
             };
-
-            this.IsEmailConfirmed = await this.userManager.IsEmailConfirmedAsync(user);
 
             return this.Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.Page();
-            }
-
-            var user = await this.userManager.GetUserAsync(this.User);
-            if (user == null)
-            {
-                return this.NotFound($"Unable to load user with ID '{this.userManager.GetUserId(this.User)}'.");
-            }
-
-            var email = await this.userManager.GetEmailAsync(user);
-            if (this.Input.Email != email)
-            {
-                var setEmailResult = await this.userManager.SetEmailAsync(user, this.Input.Email);
-                if (!setEmailResult.Succeeded)
-                {
-                    var userId = await this.userManager.GetUserIdAsync(user);
-                    throw new InvalidOperationException($"Unexpected error occurred setting email for user with ID '{userId}'.");
-                }
-            }
-
-            var phoneNumber = await this.userManager.GetPhoneNumberAsync(user);
-            if (this.Input.PhoneNumber != phoneNumber)
-            {
-                var setPhoneResult = await this.userManager.SetPhoneNumberAsync(user, this.Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
-                {
-                    var userId = await this.userManager.GetUserIdAsync(user);
-                    throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
-                }
-            }
-
-            await this.signInManager.RefreshSignInAsync(user);
-            this.StatusMessage = "Your profile has been updated";
-            return this.RedirectToPage();
-        }
-
-        public async Task<IActionResult> OnPostSendVerificationEmailAsync()
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.Page();
-            }
-
-            var user = await this.userManager.GetUserAsync(this.User);
-            if (user == null)
-            {
-                return this.NotFound($"Unable to load user with ID '{this.userManager.GetUserId(this.User)}'.");
-            }
-
-            var userId = await this.userManager.GetUserIdAsync(user);
-            var email = await this.userManager.GetEmailAsync(user);
-            var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
-            var callbackUrl = this.Url.Page(
-                "/Account/ConfirmEmail",
-                pageHandler: null,
-                values: new { userId = userId, code = code },
-                protocol: this.Request.Scheme);
-            await this.emailSender.SendEmailAsync(
-                email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-            this.StatusMessage = "Verification email sent. Please check your email.";
-            return this.RedirectToPage();
-        }
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+            public List<Child> Children { get; set; }
 
-            [Phone]
-            [Display(Name = "Phone number")]
-            public string PhoneNumber { get; set; }
+            public List<Parent> Parents { get; set; }
         }
     }
 }

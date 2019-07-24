@@ -12,9 +12,8 @@
     using ISOOU.Services.Data.Contracts;
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Messaging;
-    using ISOOU.Web.Areas.Identity.Pages.Account.Manage;
     using ISOOU.Web.ViewModels;
-    using ISOOU.Web.ViewModels.Schools;
+    using ISOOU.Web.ViewModels.Districts;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -44,11 +43,7 @@
             services.AddDbContext<ISOOUDbContext>(
                 options => options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddTransient<ISchoolsService, SchoolsService>();
-            services.AddTransient<IDistrictsService, DistrictsService>();
-            services.AddTransient<ICandidatesService, CandidatesService>();
-            services.AddTransient<ISearchSpotsService, SearchSpotsService>();
-            services.AddTransient<ISystemUsersService, SystemUsersService>();
+            
 
             services
                 .AddIdentity<SystemUser, ApplicationRole>(options =>
@@ -105,21 +100,18 @@
 
             // Application services
             services.AddTransient<IEmailSender, NullMessageSender>();
-            services.AddTransient<ISmsSender, NullMessageSender>();
+            services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<ISettingsService, SettingsService>();
 
             // Entity services
-            services.AddTransient<AllDistrictsViewModel>();
-            services.AddTransient<AllSchoolsViewModel>();
-            services.AddTransient<BaseSchoolModel>();
-            services.AddTransient<DistrictViewModel>();
-            services.AddTransient<SchoolViewModel>();
-            services.AddTransient<StatusCandidateViewModel>();
-            services.AddTransient<StatusCandidatesViewModel>();
-            services.AddTransient<SchoolClassesViewModel>();
-            services.AddTransient<ClassViewModel>();
-            services.AddTransient<SearchResultViewModel>();
-            services.AddTransient<SearchSpotsViewModel>();
+            services.AddTransient<ISchoolsService, SchoolsService>();
+            services.AddTransient<IDistrictsService, DistrictsService>();
+            services.AddTransient<ICandidatesService, CandidatesService>();
+            services.AddTransient<ISearchSpotsService, SearchSpotsService>();
+            services.AddTransient<IUsersService, UsersService>();
+            services.AddTransient<IAdmissionProceduresService, AdmissionProceduresService>();
+            services.AddSingleton<AllDistrictsViewModel>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
