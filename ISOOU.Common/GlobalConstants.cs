@@ -1,13 +1,11 @@
-﻿using System;
-
-namespace ISOOU.Common
+﻿namespace ISOOU.Common
 {
     public static class GlobalConstants
     {
         // Roles
         public const string AdministratorRoleName = "Administrator";
         public const string DirectorRoleName = "Director";
-        public const string UserRoleName = "Family";
+        public const string UserRoleName = "User";
         //AdminRoleDetails
         public const string AdministratorUsername = "Admin";
         public const string AdministratorEmail = "admin@admin.com";
@@ -16,16 +14,19 @@ namespace ISOOU.Common
 
         // Schools
         public const int YoungestCandidate = 6;
-        public const int OldestCandidate = 10;
+        public const int OldestCandidate = 8;
 
         // Classes
         public const string EnglishLanguage = "Английски език";
         public const string SpanishLanguage = "Испански език";
         public const string ChineseLanguage = "Китайски език";
         public const string RussianLanguage = "Руски език";
-        public static readonly int InitialSpots = 18;
-        public static readonly int MinCoefOfAdmissionYear = 0;
-        public static readonly int MaxCoefOfAdmissionYear = 4;
+        public static readonly int FreeSpotsEnglishLanguage = 36;
+        public static readonly int FreeSpotsSpanishLanguage = 25;
+        public static readonly int FreeSpotsChineseLanguage = 9;
+        public static readonly int FreeSpotsRussianLanguage = 18;
+        public static readonly int MinCoefOfAdmissionYear = 1;
+        public static readonly int MaxCoefOfAdmissionYear = 2;
 
         //Criterias
         public static readonly int HasNoParentCriteria = 6;

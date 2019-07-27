@@ -17,27 +17,26 @@
     public class SchoolsService : ISchoolsService
     {
         private readonly IRepository<School> schoolRepository;
-        private readonly IRepository<ISOOUDbContext> allRepository;
-        private readonly IRepository<Class> classRepository;
-
         private readonly IDistrictsService districtsService;
 
-        public SchoolsService(IRepository<ISOOUDbContext> allRepository, IRepository<School> schoolRepository, IRepository<Class> classRepository, IDistrictsService districtsService)
+        public SchoolsService(
+                IRepository<School> schoolRepository,
+                IDistrictsService districtsService)
         {
-            this.allRepository = allRepository;
             this.schoolRepository = schoolRepository;
-            this.classRepository = classRepository;
             this.districtsService = districtsService;
         }
 
-        public async Task<IEnumerable<SchoolViewModel>> GetAllSchoolsByDistrictValue(int value)
+        public async Task<IEnumerable<SchoolViewModel>> GetAllSchoolsByDistrictId(int id)
         {
             DistrictViewModel currDistrict = await this.districtsService
-                                        .GetDistrictByValue<DistrictViewModel>(value);
+                                        .GetDistrictById<DistrictViewModel>(id);
+
+            var districtName = this.districtsService.GetDistrictName(currDistrict.Name);
 
             var schools = await this.schoolRepository
                 .All()
-                .Where(d => d.District.Name == currDistrict.Name)
+                .Where(d => d.District.Name == districtName)
                 .To<SchoolViewModel>()
                 .ToListAsync();
 
@@ -49,27 +48,46 @@
             return schools;
         }
 
-        public async Task<IEnumerable<SchoolClassesViewModel>> GetAllSchoolsByDistrictName(string districtName)
+        public async Task<IEnumerable<SchoolClassViewModel>> GetAllSchoolsByDistrictName(string districtName)
         {
-            var schools = await this.schoolRepository
+            var dn = this.districtsService.GetDistrictName(districtName);
+
+            var schoolsWithClassesAndFreeSpots = await this.schoolRepository
                 .All()
-                .Where(d => d.District.Name == districtName)
-                .To<SchoolClassesViewModel>()
+                .Where(d => d.District.Name == dn)
+                .To<SchoolClassViewModel>()
                 .ToListAsync();
 
-            if (schools == null)
+            if (schoolsWithClassesAndFreeSpots == null)
             {
                 throw new NullReferenceException();
             }
 
-            return schools;
+            return schoolsWithClassesAndFreeSpots;
+        }
+
+        public async Task<IEnumerable<SchoolClassViewModel>> GetAllSchoolsByDistrictNameWithClassesAndFreeSpots(string name)
+        {
+            var districtName = this.districtsService.GetDistrictName(name);
+
+            var schoolsWithClassesAndFreeSpots = await this.schoolRepository
+                .All()
+                .Where(d => d.District.Name == districtName)
+                .To<SchoolClassViewModel>()
+                .ToListAsync();
+
+            if (schoolsWithClassesAndFreeSpots == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            return schoolsWithClassesAndFreeSpots;
         }
 
         public async Task<IEnumerable<AllSchoolsViewModel>> GetAllSchoolsAsync()
         {
             var schools = await this.schoolRepository.All()
                 .To<AllSchoolsViewModel>()
-                .OrderBy(d => d.Name)
                 .ToListAsync();
 
             if (schools == null)
@@ -84,7 +102,6 @@
         {
             var schools = await this.schoolRepository.All()
                 .To<AdmissionProcedureSchoolViewModel>()
-                .OrderBy(d => d.SchoolName)
                 .ToListAsync();
 
             if (schools == null)
@@ -125,54 +142,19 @@
             return school;
         }
 
-        public IEnumerable<ClassViewModel> GetAllClasses()
+        public async Task<SchoolDetails> GetSchoolDetails(int id)
         {
-            var classes = this.classRepository.All();
+            SchoolDetails schoolDetails = await this.schoolRepository
+                .All()
+                .To<SchoolDetails>()
+                .FirstOrDefaultAsync(x => x.Id == id);
 
-            if (classes == null)
+            if (schoolDetails == null)
             {
                 throw new NullReferenceException();
             }
 
-            var classesViewModel = classes.To<ClassViewModel>().ToList();
-
-            return classesViewModel;
-        }
-
-        public async Task<SchoolDetailsWithSpotsAndCandidatesViewModel> GetSchoolsDetailsForSpotsAndCandidates(BaseSchoolModel school)
-        {
-            var schoolModel = await this.schoolRepository
-               .All()
-               .To<SchoolDetailsWithSpotsAndCandidatesViewModel>()
-               .FirstOrDefaultAsync(sch => sch.Id == school.Id);
-
-            if (schoolModel == null)
-            {
-                throw new NullReferenceException();
-            }
-
-            schoolModel.PossibleYears = FreeSpots.GetAllPossibleYears().ToList();
-            schoolModel.AdmissionProcedureStatus = AdmissionProcedureStatus.Finished.ToString();
-            schoolModel.AdmittedCandidatesUniqueNumber = new List<string> { "YM", "KM" };
-            schoolModel.NotAdmittedCandidatesUniqueNumber = new List<string> { "IM", "IM" };
-            schoolModel.AdmissionProcedureStatus = AdmissionProcedureStatus.Finished.ToString();
-            
-            
-            //SchoolDetailsWithSpotsAndCandidatesViewModel model =
-            //    new SchoolDetailsWithSpotsAndCandidatesViewModel
-            //        {
-            //        Name = schoolFromDb.Name,
-            //        AddressPermanent = schoolFromDb.Address.Permanent,
-            //        DistrictName = schoolFromDb.District.Name,
-            //        DirectorName = schoolFromDb.DirectorName,
-            //        PhoneNumber = schoolFromDb.PhoneNumber,
-            //        Email = schoolFromDb.Email,
-            //        URLOfMap = schoolFromDb.URLOfMap,
-            //        URLOfSchool = schoolFromDb.URLOfSchool,
-            //        AdmissionProcedureStatus = schoolFromDb.AdmissionProcedure.Status.ToString(),
-            //        PossibleYears = FreeSpots.GetAllPossibleYears().ToList(),
-            //        };
-            return schoolModel;
+            return schoolDetails;
         }
     }
 }

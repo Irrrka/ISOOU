@@ -1,13 +1,13 @@
 ﻿namespace ISOOU.Web.Controllers
 {
-    using ISOOU.Services.Data.Contracts;
-    using ISOOU.Services.Data;
     using ISOOU.Web.ViewModels.Home;
     using Microsoft.AspNetCore.Mvc;
+
     using System.Threading.Tasks;
 
     public class HomeController : BaseController
     {
+
         public IActionResult Index()
         {
             return this.View();

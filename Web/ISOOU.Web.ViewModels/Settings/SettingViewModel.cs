@@ -1,9 +1,9 @@
 ﻿namespace ISOOU.Web.ViewModels.Settings
 {
+    using AutoMapper;
+
     using ISOOU.Data.Models;
     using ISOOU.Services.Mapping;
-
-    using AutoMapper;
 
     public class SettingViewModel : IMapFrom<Setting>, IHaveCustomMappings
     {

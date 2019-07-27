@@ -7,6 +7,7 @@
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using ISOOU.Data.Models;
 
     public class DashboardController : AdministrationController
     {
@@ -29,18 +30,20 @@
             return this.View(viewModel);
         }
 
-        public async Task<IActionResult> StartAdmissionProcedureViewModel()
+        public async Task<IActionResult> StartAdmissionProcedure()
         {
             IEnumerable<AllSchoolsViewModel> schools = await this.schoolsService.GetAllSchoolsAsync();
+            var possibleYears = FreeSpotsCenter.GetAllPossibleYears();
+
             foreach (var school in schools)
             {
-                this.admissionProceduresService.StartProcedure();
+                await this.admissionProceduresService.StartProcedure();
             }
             return this.View();
         }
 
         [HttpPost]
-        public IActionResult StartAdmissionProcedureViewModel(StartAdmissionProcedureInputModel model)
+        public IActionResult StartAdmissionProcedure(StartAdmissionProcedureInputModel model)
         {
 
             return this.Redirect("Index");

@@ -1,19 +1,16 @@
 ﻿@using ISOOU.Web.ViewModels.Districts;
 
-@inject AllDistrictsViewModel allDistricts
-
 <div class="dropdown show">
-    <a class="nav-link text-dark dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" asp-area="" asp-controller="Schools" asp-action="AllSchoolsByDistrict">
-        Училища
+    <a class="nav-link text-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" asp-area="" asp-controller="Schools" asp-action="AllSchoolsByDistrict">
+        Училища по район
     </a>
     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
         @{
             <a class="dropdown-item" href="~/Schools/All">Всички райони</a>
-            foreach (var district in allDistricts.Districts)
-            {
-                var value = @district.Key;
-                <a href="~/Schools/AllSchoolsByDistrict/@value">Район "@district.Value"</a>
-            }
+            <!--foreach (var district in (List<DistrictViewModel>)this.ViewData["AllDistricts"])
+        {
+            <a href="~/Schools/AllSchoolsByDistrict/district.Id">"Район district.Name)"</a>
+        }-->
         }
     </div>
 </div>

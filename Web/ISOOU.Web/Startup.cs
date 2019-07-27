@@ -107,10 +107,11 @@
             services.AddTransient<ISchoolsService, SchoolsService>();
             services.AddTransient<IDistrictsService, DistrictsService>();
             services.AddTransient<ICandidatesService, CandidatesService>();
-            services.AddTransient<ISearchSpotsService, SearchSpotsService>();
+            services.AddTransient<ISearchService, SearchService>();
             services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<IAdmissionProceduresService, AdmissionProceduresService>();
             services.AddSingleton<AllDistrictsViewModel>();
+            services.AddSingleton<DistrictViewModel>();
 
         }
 

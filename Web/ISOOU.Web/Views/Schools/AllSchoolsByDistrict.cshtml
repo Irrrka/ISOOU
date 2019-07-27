@@ -1,43 +1,45 @@
-﻿@model IEnumerable<SchoolViewModel>
+﻿@using ISOOU.Data.Models.Enums;
+
+@model IEnumerable<SchoolViewModel>
 
 @{
-    string district = Model.FirstOrDefault().AddressDistrictName;
+    var district = Model.FirstOrDefault().District;
     ViewData["Title"] = $"Район {district}";
     Layout = "~/Views/Shared/_Layout.cshtml";
-}
+    }
 
-<section class="ftco-section ftco-counter img" id="section-counter" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
-    <div class="container bg">
-        <h2>Район @district</h2>
-        <table class="table px-4 py-3">
-            <thead class="py-2 bg">
-                <tr>
-                    <th scope="col">НАИМЕНОВАНИЕ</th>
-                    <th scope="col">АДРЕС</th>
-                    <th scope="col">ДИРЕКТОР</th>
-                    <th scope="col">ТЕЛЕФОН</th>
-                    <th scope="col">Е-MAIL</th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    foreach (var school in Model)
-                    {
-                        <tr height="21" style="height:21px;">
-                            <td height="21" style="height:21px;border-top:none;">
-                                <a href=@school.UrlOfSchool target="_blank">@school.Name</a>
-                            </td>
-                            <td style="border-top:none;border-left:none;">
-                                <a href="@school.UrlOfMap" target="_blank">@school.AddressPermanent</a>
-                            </td>
-                            <td style="border-top:none;border-left:none;">@school.DirectorName</td>
-                            <td style="border-top:none;border-left:none;">@school.PhoneNumber</td>
-                            <td style="border-top:none;border-left:none;">@school.Email</td>
-                        </tr>
+    <section class="ftco-section ftco-counter img" id="section-counter" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
+        <div class="container bg">
+            <h2>Район @district</h2>
+            <table class="table px-4 py-3">
+                <thead class="py-2 bg">
+                    <tr>
+                        <th scope="col">НАИМЕНОВАНИЕ</th>
+                        <th scope="col">АДРЕС</th>
+                        <th scope="col">ДИРЕКТОР</th>
+                        <th scope="col">ТЕЛЕФОН</th>
+                        <th scope="col">Е-MAIL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        foreach (var school in Model)
+                        {
+                            <tr height="21" style="height:21px;">
+                                <td height="21" style="height:21px;border-top:none;">
+                                    <a href=@school.UrlOfSchool target="_blank">@school.Name</a>
+                                </td>
+                                <td style="border-top:none;border-left:none;">
+                                    <a href="@school.UrlOfMap" target="_blank">@school.Address</a>
+                                </td>
+                                <td style="border-top:none;border-left:none;">@school.DirectorName</td>
+                                <td style="border-top:none;border-left:none;">@school.PhoneNumber</td>
+                                <td style="border-top:none;border-left:none;">@school.Email</td>
+                            </tr>
+                        }
                     }
-                }
-            </tbody>
-        </table>
-    </div>
-</section>
+                </tbody>
+            </table>
+        </div>
+    </section>
 

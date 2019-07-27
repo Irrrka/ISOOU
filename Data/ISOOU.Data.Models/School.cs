@@ -10,7 +10,7 @@
     {
         public School()
         {
-            this.Classes = new HashSet<SchoolClass>();
+            this.SchoolClasses = new HashSet<SchoolClass>();
         }
 
         [Required]
@@ -24,7 +24,6 @@
         [Required]
         public virtual District District { get; set; }
 
-        [Required]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
@@ -41,7 +40,6 @@
         [DataType(DataType.Url)]
         public string URLOfMap { get; set; }
 
-        public virtual ICollection<SchoolClass> Classes { get; set; }
-
+        public virtual ICollection<SchoolClass> SchoolClasses { get; set; }
     }
 }
