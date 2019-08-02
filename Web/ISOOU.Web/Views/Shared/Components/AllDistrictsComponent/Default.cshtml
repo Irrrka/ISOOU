@@ -1,0 +1,18 @@
+﻿@using ISOOU.Web.ViewModels.Districts
+
+@model  IEnumerable<DistrictViewModel>
+
+<div class="dropdown show">
+    <a class="nav-link text-dark dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" asp-area="" asp-controller="Schools" asp-action="AllSchoolsByDistrict">
+        Училища
+    </a>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        @{
+            <a class="dropdown-item" href="~/Schools/All">Всички райони</a>
+            foreach (var district in Model)
+            {
+                <a class="dropdown-item" href="~/Schools/AllSchoolsByDistrict/@district.Id">Район "@district.Name"</a>
+            }
+        }
+    </div>
+</div>

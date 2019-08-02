@@ -10,7 +10,13 @@
 
         public static string ChildInput => "ChildInput";
 
+        public static string ChildEdit => "ChildEdit";
+
         public static string ParentInput => "ParentInput";
+
+        public static string ParentEdit => "ParentEdit";
+
+        public static string ParentsListModel => "ParentsListModel";
 
         public static string ChangePassword => "ChangePassword";
 
@@ -30,7 +36,15 @@
 
         public static string ChildInputNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChildInput);
 
+        public static string ChildEditNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChildEdit);
+
         public static string ParentInputNavClass(ViewContext viewContext) => PageNavClass(viewContext, ParentInput);
+
+        public static string ParentEditNavClass(ViewContext viewContext) => PageNavClass(viewContext, ParentEdit);
+
+        public static string ParentEditFatherNavClass(ViewContext viewContext) => PageNavClass(viewContext, ParentEdit);
+
+        public static string ParentListNavClass(ViewContext viewContext) => PageNavClass(viewContext, ParentsListModel);
 
         public static string ChangePasswordNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangePassword);
 

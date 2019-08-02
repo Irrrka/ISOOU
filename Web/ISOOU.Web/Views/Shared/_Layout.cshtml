@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -73,7 +74,8 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Search" asp-action="FreeSpots">Свободни места</a>
                         </li>
                         <li class="nav-item">
-                            <partial name="_DistrictPartial" />
+                            <vc:all-districts></vc:all-districts>
+                            <partial name="AllSchoolsByDistrictPartial" />
                         </li>
                         <li class="nav-item">
                             <div class="dropdown show">
@@ -119,7 +121,7 @@
     <environment names="Development">
         <!-- loader -->
         <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" /><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00" /></svg></div>
-        
+
         <script src="~/js/jquery.min.js" asp-append-version="true"></script>
         <script src="~/js/jquery-migrate-3.0.1.min.js" asp-append-version="true"></script>
         <script src="~/js/popper.min.js" asp-append-version="true"></script>

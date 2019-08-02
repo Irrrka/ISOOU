@@ -30,7 +30,7 @@
         public async Task<IActionResult> AllSchoolsByDistrict(int id)
         {
             IEnumerable<SchoolViewModel> schools = await this.schoolsService.GetAllSchoolsByDistrictId(id);
-            return this.RedirectToPage("/Schools/AllSchoolsByDistrict/{id}", schools);
+            return this.View(schools);
         }
 
         public async Task<IActionResult> Index()
@@ -49,7 +49,7 @@
         [HttpGet("/Schools/Details/{id}")]
         public async Task<IActionResult> Details(int id)
         {
-            SchoolDetails model = await this.schoolsService.GetSchoolDetails(id);
+            SchoolDetails model = await this.schoolsService.GetSchoolDetailsById(id);
 
             return this.View(model);
         }

@@ -6,14 +6,18 @@
     {
         public SystemUser()
         {
-            this.Children = new HashSet<Child>();
+            this.Candidates = new HashSet<Candidate>();
             this.Parents = new HashSet<Parent>();
             this.Questions = new HashSet<Question>();
         }
 
         public string FullName { get; set; }
 
-        public virtual ICollection<Child> Children { get; set; }
+        public string UCN { get; set; }
+
+        public SystemRole UserRole { get; set; }
+
+        public virtual ICollection<Candidate> Candidates { get; set; }
 
         public virtual ICollection<Parent> Parents { get; set; }
 

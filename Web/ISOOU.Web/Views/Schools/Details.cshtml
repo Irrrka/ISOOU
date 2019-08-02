@@ -1,0 +1,58 @@
+﻿@using ISOOU.Web.ViewModels.Schools;
+
+@model SchoolDetails
+
+@{
+    ViewData["Title"] = $"Детайли за училище {Model.Name}";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="ftco-heading-2" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
+    <div class="container bg">
+        <h4>@ViewData["Title"]</h4>
+        <table class="table px-4 py-3">
+            <tr>
+                <th scope="col">Училище</th>
+                <th scope="col">Район</th>
+                <th scope="col">Адрес</th>
+                <th scope="col">Директор</th>
+                <th scope="col">Телефон</th>
+                <th scope="col">Е-поща</th>
+            </tr>
+            <tr>
+                <td scope="col">
+                    <a href="@Model.URLOfSchool" target="_blank">@Model.Name</a>
+                </td>
+                <td scope="col">@Model.DistrictName</td>
+                <td scope="col">
+                    <a href="@Model.URLOfMap" target="_blank">@Model.Address</a>
+                </td>
+                <td scope="col">@Model.DirectorName</td>
+                <td scope="col">@Model.PhoneNumber</td>
+                <td scope="col">@Model.Email</td>
+            </tr>
+        </table>
+        <hr />
+        <h4>Групи с прием</h4>
+        <table class="table px-4 py-3">
+            <thead class="py-2 bg">
+                <tr>
+                    <th scope="col">Езикова Пралелка</th>
+                    <th scope="col">Свободни места</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var kvp in Model.FreeSpotsBySchoolClass)
+                    {
+                                <tr>
+                                    <td scope="col">@kvp.Key език</td>
+                                    <td scope="col">@kvp.Value</td>
+                                </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+

@@ -46,7 +46,7 @@
             
 
             services
-                .AddIdentity<SystemUser, ApplicationRole>(options =>
+                .AddIdentity<SystemUser, SystemRole>(options =>
                 {
                     options.Password.RequireDigit = false;
                     options.Password.RequireLowercase = false;
@@ -91,7 +91,7 @@
 
             // Identity stores
             services.AddTransient<IUserStore<SystemUser>, ISOOUUserStore>();
-            services.AddTransient<IRoleStore<ApplicationRole>, ISOOURoleStore>();
+            services.AddTransient<IRoleStore<SystemRole>, ISOOURoleStore>();
 
             // Data repositories
             services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
@@ -108,8 +108,7 @@
             services.AddTransient<IDistrictsService, DistrictsService>();
             services.AddTransient<ICandidatesService, CandidatesService>();
             services.AddTransient<ISearchService, SearchService>();
-            services.AddTransient<IUsersService, UsersService>();
-            services.AddTransient<IAdmissionProceduresService, AdmissionProceduresService>();
+            services.AddTransient<IAdminService, AdminService>();
             services.AddSingleton<AllDistrictsViewModel>();
             services.AddSingleton<DistrictViewModel>();
 
@@ -118,7 +117,7 @@
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            AutoMapperConfig.RegisterMappings(typeof(SchoolViewModel).GetTypeInfo().Assembly);
+            AutoMapperConfig.RegisterMappings(typeof(DistrictViewModel).GetTypeInfo().Assembly);
 
             // Seed data on application startup
             using (var serviceScope = app.ApplicationServices.CreateScope())
@@ -151,8 +150,13 @@
 
             app.UseMvc(routes =>
             {
-                routes.MapRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                routes.MapRoute(
+                       name: "areas",
+                       template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(
+                        name: "default",
+                        template: "{controller=Home}/{action=Index}/{id?}");
             });
 
         }

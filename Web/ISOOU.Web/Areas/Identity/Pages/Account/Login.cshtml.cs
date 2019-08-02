@@ -20,12 +20,10 @@
 #pragma warning restore SA1649 // File name should match first type name
     {
         private readonly SignInManager<SystemUser> signInManager;
-        private readonly ILogger<LoginModel> logger;
 
-        public LoginModel(SignInManager<SystemUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<SystemUser> signInManager)
         {
             this.signInManager = signInManager;
-            this.logger = logger;
         }
 
         [BindProperty]
@@ -45,19 +43,12 @@
                 this.ModelState.AddModelError(string.Empty, this.ErrorMessage);
             }
 
-            returnUrl = returnUrl ?? this.Url.Content("~/");
-
-            // Clear the existing external cookie to ensure a clean login process
-            await this.HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-
-            this.ExternalLogins = (await this.signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
-            this.ReturnUrl = returnUrl;
+            this.ReturnUrl = returnUrl ?? this.Url.Content("~/");
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? this.Url.Content("~/");
+            returnUrl = "/Home/Index";
 
             if (this.ModelState.IsValid)
             {
@@ -66,19 +57,7 @@
                 var result = await this.signInManager.PasswordSignInAsync(this.Input.Email, this.Input.Password, this.Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
-                    this.logger.LogInformation("User logged in.");
-                    return this.LocalRedirect(returnUrl);
-                }
-
-                if (result.RequiresTwoFactor)
-                {
-                    return this.RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = this.Input.RememberMe });
-                }
-
-                if (result.IsLockedOut)
-                {
-                    this.logger.LogWarning("User account locked out.");
-                    return this.RedirectToPage("./Lockout");
+                    return this.Redirect(returnUrl);
                 }
                 else
                 {

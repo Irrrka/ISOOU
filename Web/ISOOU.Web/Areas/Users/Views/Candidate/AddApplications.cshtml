@@ -1,0 +1,35 @@
+﻿@page
+@model AddApplicationsModel
+
+@{
+    ViewData["Title"] = "Добави кандидатури";
+    ViewData["ActivePage"] = ManageNavPages.AddApplications;
+}
+
+<h4>@ViewData["Title"]</h4>
+
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Училища по район
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        @{
+            foreach (var district in Model.Districts)
+            {
+            <a class="dropdown-item" href="">@district.Name</a>
+            }
+        }
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-6">
+        <div class="input-group">
+            <span class="input-group-addon">
+                <input type="checkbox">
+            </span>
+            <input type="text" class="form-inline">
+        </div>
+    </div>
+</div>

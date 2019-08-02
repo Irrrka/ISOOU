@@ -8,7 +8,7 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
     public class ISOOURoleStore : RoleStore<
-        ApplicationRole,
+        SystemRole,
         ISOOUDbContext,
         string,
         IdentityUserRole<string>,
@@ -19,7 +19,7 @@
         {
         }
 
-        protected override IdentityRoleClaim<string> CreateRoleClaim(ApplicationRole role, Claim claim) =>
+        protected override IdentityRoleClaim<string> CreateRoleClaim(SystemRole role, Claim claim) =>
             new IdentityRoleClaim<string>
             {
                 RoleId = role.Id,

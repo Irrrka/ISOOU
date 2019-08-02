@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using ISOOU.Data;
+
     using ISOOU.Data.Common.Repositories;
     using ISOOU.Data.Models;
     using ISOOU.Services.Data.Contracts;
@@ -29,14 +29,12 @@
 
         public async Task<IEnumerable<SchoolViewModel>> GetAllSchoolsByDistrictId(int id)
         {
-            DistrictViewModel currDistrict = await this.districtsService
-                                        .GetDistrictById<DistrictViewModel>(id);
-
-            var districtName = this.districtsService.GetDistrictName(currDistrict.Name);
+            var currDistrict = await this.districtsService
+                                        .GetDistrictById(id);
 
             var schools = await this.schoolRepository
                 .All()
-                .Where(d => d.District.Name == districtName)
+                .Where(d => d.District.Name == currDistrict.Name)
                 .To<SchoolViewModel>()
                 .ToListAsync();
 
@@ -48,31 +46,28 @@
             return schools;
         }
 
-        public async Task<IEnumerable<SchoolClassViewModel>> GetAllSchoolsByDistrictName(string districtName)
-        {
-            var dn = this.districtsService.GetDistrictName(districtName);
+        //public async Task<IEnumerable<SchoolClassViewModel>> GetAllSchoolsByDistrictName(string districtName)
+        //{
 
-            var schoolsWithClassesAndFreeSpots = await this.schoolRepository
-                .All()
-                .Where(d => d.District.Name == dn)
-                .To<SchoolClassViewModel>()
-                .ToListAsync();
+        //    var schoolsWithClassesAndFreeSpots = await this.schoolRepository
+        //        .All()
+        //        .Where(d => d.District.Name == districtName)
+        //        .To<SchoolClassViewModel>()
+        //        .ToListAsync();
 
-            if (schoolsWithClassesAndFreeSpots == null)
-            {
-                throw new NullReferenceException();
-            }
+        //    if (schoolsWithClassesAndFreeSpots == null)
+        //    {
+        //        throw new NullReferenceException();
+        //    }
 
-            return schoolsWithClassesAndFreeSpots;
-        }
+        //    return schoolsWithClassesAndFreeSpots;
+        //}
 
         public async Task<IEnumerable<SchoolClassViewModel>> GetAllSchoolsByDistrictNameWithClassesAndFreeSpots(string name)
         {
-            var districtName = this.districtsService.GetDistrictName(name);
-
             var schoolsWithClassesAndFreeSpots = await this.schoolRepository
                 .All()
-                .Where(d => d.District.Name == districtName)
+                .Where(d => d.District.Name == name)
                 .To<SchoolClassViewModel>()
                 .ToListAsync();
 
@@ -112,37 +107,37 @@
             return schools;
         }
 
-        public async Task<BaseSchoolModel> GetSchoolByName(string name)
-        {
-            var school = await this.schoolRepository
-                .All()
-                .To<BaseSchoolModel>()
-                .FirstOrDefaultAsync(sch => sch.Name == name);
+        //public async Task<BaseSchoolModel> GetSchoolByName(string name)
+        //{
+        //    var school = await this.schoolRepository
+        //        .All()
+        //        .To<BaseSchoolModel>()
+        //        .FirstOrDefaultAsync(sch => sch.Name == name);
 
-            if (school == null)
-            {
-                throw new NullReferenceException();
-            }
+        //    if (school == null)
+        //    {
+        //        throw new NullReferenceException();
+        //    }
 
-            return school;
-        }
+        //    return school;
+        //}
 
-        public async Task<BaseSchoolModel> GetSchoolById(int id)
-        {
-            var school = await this.schoolRepository
-                .All()
-                .To<BaseSchoolModel>()
-                .FirstOrDefaultAsync(sch => sch.Id == id);
+        //public async Task<BaseSchoolModel> GetSchoolById(int id)
+        //{
+        //    var school = await this.schoolRepository
+        //        .All()
+        //        .To<BaseSchoolModel>()
+        //        .FirstOrDefaultAsync(sch => sch.Id == id);
 
-            if (school == null)
-            {
-                throw new NullReferenceException();
-            }
+        //    if (school == null)
+        //    {
+        //        throw new NullReferenceException();
+        //    }
 
-            return school;
-        }
+        //    return school;
+        //}
 
-        public async Task<SchoolDetails> GetSchoolDetails(int id)
+        public async Task<SchoolDetails> GetSchoolDetailsById(int id)
         {
             SchoolDetails schoolDetails = await this.schoolRepository
                 .All()

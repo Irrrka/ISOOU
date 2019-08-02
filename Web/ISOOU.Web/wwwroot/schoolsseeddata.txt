@@ -1,0 +1,62 @@
+[
+{
+"AddressDetails.District" : "Лозенец",
+"AddressDetails.Permanent" : "ул. "Презвитер Kозма" № 2",
+"DirectorName" : "Ивета Германова",
+"Email": "ou_122@abv.bg",
+"Name": "122 ОУ "Николай Лилиев"",
+"PhoneNumber": "865-03-74",
+"URLOfMap": "https://www.google.com/maps/d/viewer?ll=42.67476535055926%2C23.32297818193456&z=19&mid=1xYlSUjydIF6BL8ONgmjDwTpoymw",
+"URLOfSchool": "https://122ou.com/"
+},
+{
+"AddressDetails.District" : "Лозенец",
+"AddressDetails.Permanent" : "ул. \"Папа Йоан Павел II\" № 7\"",
+"DirectorName" : "Цветанка Тонева",
+"Email": "ou120@abv.bg",
+"Name": "120 ОУ \"Георги С. Раковски\"",
+"PhoneNumber": "866-56-80",
+"URLOfMap": "https://www.google.com/maps/d/viewer?ll=42.683467139210094%2C23.324429079739616&z=19&mid=1xYlSUjydIF6BL8ONgmjDwTpoymw",
+"URLOfSchool": "http://www.daskalo.com/ou120/"
+},
+{
+"AddressDetails.District" : "Лозенец",
+"AddressDetails.Permanent" : "ул. \"Димитър Хаджикоцев\" № 44",
+"DirectorName" : "Румяна Дончева",
+"Email": "zaharikru6a@abv.bg",
+"Name": "139 ОУ \"Захарий Kруша\"",
+"PhoneNumber": "866-77-41",
+"URLOfMap": "https://www.google.com/maps/d/viewer?ll=42.67561873535963%2C23.316023605169903&z=19&mid=1xYlSUjydIF6BL8ONgmjDwTpoymw",
+"URLOfSchool": "http://139ou.com/"
+},
+{
+"AddressDetails.District" : "Лозенец",
+"AddressDetails.Permanent" : "ул. \"Димитър Хаджикоцев\" № 44",
+"DirectorName" : "Румяна Дончева",
+"Email": "zaharikru6a@abv.bg",
+"Name": "139 ОУ \"Захарий Kруша\"",
+"PhoneNumber": "866-77-41",
+"URLOfMap": "https://www.google.com/maps/d/viewer?ll=42.67561873535963%2C23.316023605169903&z=19&mid=1xYlSUjydIF6BL8ONgmjDwTpoymw",
+"URLOfSchool": "http://139ou.com/"
+},
+{
+"AddressDetails.District" : "Лозенец",
+"AddressDetails.Permanent" : "ул. \"Люботрън\" № 12",
+"DirectorName" : "Мая Ангелова",
+"Email": "ou21@abv.bg",
+"Name": "21 СУ \"Христо Ботев\"",
+"PhoneNumber": "868-92-44",
+"URLOfMap": "https://www.google.com/maps/d/viewer?ll=42.6692634015377%2C23.31525917560066&z=19&mid=1xYlSUjydIF6BL8ONgmjDwTpoymw",
+"URLOfSchool": "http://www.21su.bg/index.php/bg/"
+},
+{
+"AddressDetails.District" : "Лозенец",
+"AddressDetails.Permanent" : "ул. \"Добри Войников\" № 16",
+"DirectorName" : "Анна Калчева",
+"Email": "sou_35@abv.bg",
+"Name": "35 СЕУ \"Добри Войников\"",
+"PhoneNumber": "866-10-60",
+"URLOfMap": "https://www.google.com/maps/d/viewer?ll=42.68223864402863%2C23.329048322839526&z=19&mid=1xYlSUjydIF6BL8ONgmjDwTpoymw",
+"URLOfSchool": "http://35sou.bg/"
+}
+]				 			 

@@ -1,15 +1,28 @@
 ﻿namespace ISOOU.Web.Controllers
 {
+    using ISOOU.Data.Models;
     using ISOOU.Web.ViewModels.Home;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
     using System.Threading.Tasks;
 
     public class HomeController : BaseController
     {
+        private readonly SignInManager<SystemUser> signInManager;
+
+        public HomeController(SignInManager<SystemUser> signInManager)
+        {
+            this.signInManager = signInManager;
+        }
 
         public IActionResult Index()
         {
+            if (this.signInManager.IsSignedIn(this.User))
+            {
+                return this.View("/Users/Index");
+            }
+
             return this.View();
         }
 

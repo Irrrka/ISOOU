@@ -32,17 +32,22 @@
         public static readonly int HasNoParentCriteria = 6;
         public static readonly int HasOneParentCriteria = 3;
         public static readonly int HasVisitKGCriteria = 1;
-        public static readonly int HasManyBrothersorSistersCriteria = 2;
-        public static readonly int ChilrenNumber = 3;
+        public static readonly int ChildrenInFamily = 3;
         public static readonly int HasManyBrothersOrSistersCriteria = 3;
         public static readonly int HasSENCriteria = 7;
-        public static readonly int HasHronicDeseasCriteria = 3;
+        public static readonly int HasDeseasCriteria = 3;
         public static readonly int ParentHasWorkCriteria = 2;
         public static readonly int ParentHasWorkInDistrictCriteria = 1;
-        public static readonly int ParentPermanentCitySofia = 2;
-        public static readonly int ParentCurrentCitySofia = 1;
+        public static readonly int ParentPermanentCitySofiaCriteria = 2;
+        public static readonly int ParentCurrentCitySofiaCriteria = 1;
+        public static readonly int ParentPermanentDistrictCriteria = 2;
+        public static readonly int ParentCurrentDistrictCriteria = 1;
 
         // ExceptionMessages
-        public static readonly string NullReferenceDistrictName = "Моля изберете район";
+        public static readonly string DistrictNotFound = "Моля изберете район";
+        public static readonly string ParentNotFound = "Parent Not Found";
+        public static readonly string CandidateNotFound = "Candidate Not Found";
+        public static readonly string UserNotFound = "User Not Found";
+        public static readonly string AddressNotFound = "Address Not Found";
     }
 }

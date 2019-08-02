@@ -1,7 +1,5 @@
 ﻿namespace ISOOU.Data.Models
 {
-    using System.ComponentModel.DataAnnotations.Schema;
-
     using ISOOU.Data.Common.Models;
     using ISOOU.Data.Models.Enums;
 
@@ -11,9 +9,9 @@
 
         public CityName CurrentCity { get; set; }
 
-        public string PermanentAddress { get; set; }
+        public string Permanent { get; set; }
 
-        public string CurrentAddress { get; set; }
+        public string Current { get; set; }
 
         public int CurrentDistrictId { get; set; }
 

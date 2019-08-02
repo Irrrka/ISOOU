@@ -70,7 +70,7 @@
                     .UseLoggerFactory(new LoggerFactory()));
 
             services
-                .AddIdentity<ApplicationUser, ApplicationRole>(options =>
+                .AddIdentity<SystemUser, SystemRole>(options =>
                 {
                     options.Password.RequireDigit = false;
                     options.Password.RequireLowercase = false;

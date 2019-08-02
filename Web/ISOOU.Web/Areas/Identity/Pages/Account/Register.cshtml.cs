@@ -1,9 +1,10 @@
 ﻿namespace ISOOU.Web.Areas.Identity.Pages.Account
 {
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
-
+    using ISOOU.Common;
     using ISOOU.Data.Models;
 
     using Microsoft.AspNetCore.Authorization;
@@ -19,19 +20,19 @@
 #pragma warning restore SA1649 // File name should match first type name
     {
         private readonly SignInManager<SystemUser> signInManager;
+        private readonly RoleManager<SystemRole> roleManager;
         private readonly UserManager<SystemUser> userManager;
-        private readonly ILogger<RegisterModel> logger;
         private readonly IEmailSender emailSender;
 
         public RegisterModel(
             UserManager<SystemUser> userManager,
             SignInManager<SystemUser> signInManager,
-            ILogger<RegisterModel> logger,
+            RoleManager<SystemRole> roleManager,
             IEmailSender emailSender)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
-            this.logger = logger;
+            this.roleManager = roleManager;
             this.emailSender = emailSender;
         }
 
@@ -50,11 +51,21 @@
             returnUrl = returnUrl ?? this.Url.Content("~/");
             if (this.ModelState.IsValid)
             {
+                var isRoot = !this.userManager.Users.Any();
                 var user = new SystemUser { UserName = this.Input.Email, Email = this.Input.Email };
+
                 var result = await this.userManager.CreateAsync(user, this.Input.Password);
+
                 if (result.Succeeded)
                 {
-                    this.logger.LogInformation("User created a new account with password.");
+                    if (isRoot)
+                    {
+                        await this.userManager.AddToRoleAsync(user, GlobalConstants.AdministratorRoleName);
+                    }
+                    else
+                    {
+                        await this.userManager.AddToRoleAsync(user, GlobalConstants.UserRoleName);
+                    }
 
                     var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = this.Url.Page(

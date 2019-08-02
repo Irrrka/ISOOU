@@ -1,0 +1,47 @@
+﻿@using ISOOU.Web.ViewModels.Schools;
+
+@model SearchFreeSpotsResultViewModel
+
+@{
+    ViewData["Title"] = $"Свободни места по район";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="ftco-section img" id="section-search" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
+    <div class="container bg">
+        <table class="table px-4 py-3">
+            <thead class="py-2 bg">
+                <tr>
+                    <th scope="col">УЧИЛИЩА В РАЙОН @Model.DistrictName</th>
+                    @{
+                        foreach (var className in Model.Result.Values.FirstOrDefault())
+                        {
+                            <th scope="col">@(className.Key) език</th>
+                        }
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var school in Model.Result)
+                    {
+                        <tr height="21" style="height:21px;">
+                            <td height="21" style="height:21px;border-top:none;">
+                                <a href="~/Schools/Details/@school.Key.Id" target="_blank">@school.Key.Name</a>
+                            </td>
+                            @{
+                                foreach (var classOfSchool in school.Value)
+                                {
+                                    <td height="21" style="height:21px;border-top:none;">
+                                        @classOfSchool.Value
+                                    </td>
+                                }
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+

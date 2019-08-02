@@ -1,7 +1,32 @@
 ﻿@model ISOOU.Web.Areas.Administration.ViewModels.Dashboard.IndexViewModel
 @{
-    this.ViewData["Title"] = "Admin dashboard";
+    this.ViewData["Title"] = "Administration dashboard";
 }
 
-<h1>@this.ViewData["Title"]</h1>
-Settings: @this.Model.SettingsCount
+
+    <div class="container">
+        <hr />
+        <div class="row">
+            <div class="col-md-12 d-flex">
+                <div class="container-fluid d-flex justify-content-around">
+                    <a class="btn btn-secondary py-3 px-4" href="/Administration/Dashboard/CreateDirector">Добави директор</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <hr />
+        <div class="row">
+            <div class="col-md-12 d-flex">
+                <div class="container-fluid d-flex justify-content-around">
+                    <button class"="btn btn-danger py-3 px-4" 
+                            asp-action="StartProcedure" 
+                            asp-controller="Dashboard" 
+                            asp-area="Administration" 
+                            asp-route="/">
+                        ИЗВЪРШИ КЛАСИРАНЕ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>

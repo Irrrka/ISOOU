@@ -1,0 +1,20 @@
+﻿@model IEnumerable<DistrictViewModel>
+
+@{
+    ViewData["Title"] = "Райони";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="ftco-section img" id="section" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
+    <div class="container-fluid bg">
+        <h1>Всички райони на територията на Столична община</h1>
+        <table class="table px-4 py-3">
+            <tbody>
+                @{
+                    <a href="" target="_blank">@String.Join(" ", Model.Select(n => n.Name))</a>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+

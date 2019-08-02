@@ -8,45 +8,70 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using ISOOU.Data.Models;
+    using ISOOU.Web.ViewModels.Schools;
+    using ISOOU.Web.ViewModels.Users;
+    using System.Linq;
+    using Microsoft.AspNetCore.Identity;
+    using ISOOU.Web.Areas.Users.Models;
+    using ISOOU.Common;
 
     public class DashboardController : AdministrationController
     {
         private readonly ISettingsService settingsService;
-        private readonly IAdmissionProceduresService admissionProceduresService;
+        private readonly IAdminService adminService;
         private readonly ISchoolsService schoolsService;
+        private readonly UserManager<SystemUser> userManager;
 
-        public DashboardController(ISettingsService settingsService, 
-            IAdmissionProceduresService admissionProceduresService,
-            ISchoolsService schoolsService)
+        public DashboardController(
+            ISettingsService settingsService,
+            IAdminService adminService,
+            ISchoolsService schoolsService,
+            UserManager<SystemUser> userManager)
         {
             this.settingsService = settingsService;
-            this.admissionProceduresService = admissionProceduresService;
+            this.adminService = adminService;
             this.schoolsService = schoolsService;
+            this.userManager = userManager;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<ActionResult> Index()
         {
-            var viewModel = new IndexViewModel { SettingsCount = this.settingsService.GetCount(), };
-            return this.View(viewModel);
-        }
-
-        public async Task<IActionResult> StartAdmissionProcedure()
-        {
-            IEnumerable<AllSchoolsViewModel> schools = await this.schoolsService.GetAllSchoolsAsync();
-            var possibleYears = FreeSpotsCenter.GetAllPossibleYears();
-
-            foreach (var school in schools)
-            {
-                await this.admissionProceduresService.StartProcedure();
-            }
             return this.View();
         }
 
         [HttpPost]
-        public IActionResult StartAdmissionProcedure(StartAdmissionProcedureInputModel model)
+        public async Task<ActionResult> CreateDirector(CreateDirectorInputModel createDirectorInputModel)
         {
+            var user = new SystemUser
+            {
+                UserName = createDirectorInputModel.Email,
+                Email = createDirectorInputModel.Email,
+                FullName = createDirectorInputModel.FirstName + " " + createDirectorInputModel.LastName,
+                UCN = createDirectorInputModel.UCN,
+            };
 
-            return this.Redirect("Index");
+            var result = await this.userManager.CreateAsync(user, createDirectorInputModel.Password);
+
+            if (result.Succeeded)
+            {
+                await this.userManager.AddToRoleAsync(user, GlobalConstants.DirectorRoleName);
+            }
+
+            return this.View();
         }
+
+        [HttpPost]
+        public async Task<ActionResult> StartProcedure()
+        {
+            Dictionary<School, Dictionary<ClassLanguageType, List<Candidate>>> dataFromDbForProcedure = await this.adminService.StartAdmissionProcedure();
+            //var possibleYears = FreeSpotsCenter.GetAllPossibleYears();
+            var model =
+                new Dictionary<BaseSchoolModel, Dictionary<ClassLanguageType, List<CandidateDashboardStartProcedureViewModel>>>();
+            //status message KLASIRANETO E IZVYRSHENO???
+            return this.View(dataFromDbForProcedure);
+        }
+
+
     }
 }

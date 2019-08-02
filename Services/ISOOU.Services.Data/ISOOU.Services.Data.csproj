@@ -24,6 +24,7 @@
     <ProjectReference Include="..\..\Data\ISOOU.Data\ISOOU.Data.csproj" />
     <ProjectReference Include="..\..\Web\ISOOU.Web.ViewModels\ISOOU.Web.ViewModels.csproj" />
     <ProjectReference Include="..\ISOOU.Services.Mapping\ISOOU.Services.Mapping.csproj" />
+    <ProjectReference Include="..\ISOOU.Services.Models\ISOOU.Services.Models.csproj" />
   </ItemGroup>
 
 </Project>

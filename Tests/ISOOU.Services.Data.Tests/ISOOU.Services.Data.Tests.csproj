@@ -29,6 +29,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\ISOOU.Data\ISOOU.Data.csproj" />
     <ProjectReference Include="..\..\Services\ISOOU.Services.Data\ISOOU.Services.Data.csproj" />
+    <ProjectReference Include="..\..\Services\ISOOU.Services.Messaging\ISOOU.Services.Messaging.csproj" />
   </ItemGroup>
 
 </Project>

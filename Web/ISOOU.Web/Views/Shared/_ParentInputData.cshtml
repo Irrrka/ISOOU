@@ -1,0 +1,101 @@
+﻿@using ISOOU.Web.ViewModels.Users;
+
+@model ParentInputModel
+@{
+    ViewData["Title"] = "Управление на семейния профил";
+}
+<div class="container-fluid">
+    
+    <hr />
+    <div class="row">
+        <h4>Родители</h4>
+    </div>
+    <div class="row">
+        <div class="col-10 justify">
+            <div class="container">
+                <form id="new-registration-inputdata-mother-form" asp-page="Index" method="post">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <h5>Майка</h5>
+                    <div class="row">
+                        <span class="justify-content-md-start">
+                            <label asp-for="UCN">ЕГН</label>
+                            <input asp-for="UCN" class="form-check-inline" />
+                            <label asp-for="MiddleName">Презиме</label>
+                            <input asp-for="MiddleName" class="form-check-inline" />
+                        </span>
+                    </div>
+                    <div class="row">
+                        <span class="justify-content-md-start">
+                            <label asp-for="FirstName">Име</label>
+                            <input asp-for="FirstName" class="form-check-inline" />
+                            <label asp-for="LastName">Фамилия</label>
+                            <input asp-for="LastName" class="form-check-inline" />
+                        </span>
+                    </div>
+                </form>
+            </div>
+            <div class="container">
+                <form id="new-registration-inputdata-father-form" asp-page="Index" method="post">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <h5>Баща</h5>
+                    <div class="row">
+                        <span class="justify-content-md-start">
+                            <label asp-for="UCN">ЕГН</label>
+                            <input asp-for="UCN" class="form-check-inline" />
+                            <label asp-for="MiddleName">Презиме</label>
+                            <input asp-for="MiddleName" class="form-check-inline" />
+                        </span>
+                    </div>
+                    <div class="row">
+                        <span class="justify-content-md-start">
+                            <label asp-for="FirstName">Име</label>
+                            <input asp-for="FirstName" class="form-check-inline" />
+                            <label asp-for="LastName">Фамилия</label>
+                            <input asp-for="LastName" class="form-check-inline" />
+                        </span>
+                    </div>
+                </form>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <input type="submit" class="btn btn-secondary py-3 px-4" value="Запиши" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="newUserInputData.js"></script>
+
+
+<!--<div class="form-group">
+    <label asp-for="Address.Permanent">Постоянен адрес</label>
+    <input asp-for="Address.Permanent" class="form-control" />
+</div>
+<div class="form-group">
+    <label asp-for="Address.Current">Настоящ адрес</label>
+    <input asp-for="Address.Current" class="form-control" />
+</div>
+<div class="form-group">
+    <label asp-for="Address.District">Район</label>
+    <input asp-for="Address.District" class="form-control" />
+</div>
+<div class="form-group">
+    <label asp-for="Address.Quarter">Квартал</label>
+    <input asp-for="Address.Quarter" class="form-control" />
+</div>
+<div class="form-group">
+    <label asp-for="MothersFullName">Майка</label>
+    <input asp-for="MothersFullName" class="form-control" value="Ирррка" disabled />
+</div>
+<div class="form-group">
+    <label asp-for="FathersFullName">Баща</label>
+    <input asp-for="FathersFullName" class="form-control" value="Джово" disabled />
+</div>
+<div class="form-group">
+    <input type="submit" class="btn btn-secondary py-3 px-4" value="Добави дете" />
+</div>
+            </form>
+</div>
+</div>
+    -->

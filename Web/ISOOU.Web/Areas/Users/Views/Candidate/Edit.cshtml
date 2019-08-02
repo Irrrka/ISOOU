@@ -1,0 +1,74 @@
+﻿@model ISOOU.Web.ViewModels.Users.EditCandidateInputModel
+@{
+    ViewData["Title"] = "Деца";
+}
+
+
+<section class="ftco-section img" id="section" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
+    <div class="container-fluid bg">
+        <div class="row">
+            <h4 class="ftco-heading-2"></h4>
+            <div class="col-6 d-flex justify-content-around">
+                <div id="add-parent" class="container" style="">
+                    <form id="new-registration-inputdata-form" method="post">
+                        <div class="row d-flex justify-content-end">
+                            <div class="form-inline">
+                                <label asp-for="UCN"></label>
+                                <input asp-for="UCN" value="@Model.UCN" disabled/>
+                                <span asp-validation-for="UCN" class="text-danger"></span>
+                            </div>
+                            <div class="form-inline">
+                                <label asp-for="FirstName"></label>
+                                <input asp-for="FirstName" value="@Model.FirstName"/>
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="form-inline">
+                                <label asp-for="MiddleName"></label>
+                                <input asp-for="MiddleName" value="@Model.MiddleName"/>
+                                <span asp-validation-for="MiddleName" class="text-danger"></span>
+                            </div>
+                            <div class="form-inline">
+                                <label asp-for="LastName"></label>
+                                <input asp-for="LastName" value="@Model.LastName"/>
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                            <div class="form-inline">
+                                <label asp-for="YearOfBirth"></label>
+                                <input asp-for="YearOfBirth" value="@Model.YearOfBirth" disabled/>
+                                <span asp-validation-for="YearOfBirth" class="text-danger"></span>
+                            </div>
+                            <div class="form-inline">
+                                <label asp-for="KinderGarten"></label>
+                                <input asp-for="KinderGarten" value="@Model.KinderGarten"/>
+                                <span asp-validation-for="KinderGarten" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="SEN"> СОП </label>
+                                <label asp-for="SEN"><input asp-for="SEN" type="radio" value="НЕ" checked>НЕ</label>
+                                <label asp-for="SEN"><input asp-for="SEN" type="radio" value="ДА">ДА</label>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Desease"> Хронични заболявания </label>
+                                <label asp-for="Desease"><input asp-for="Desease" type="radio" value="НЕ" checked>НЕ</label>
+                                <label asp-for="Desease"><input asp-for="Desease" type="radio" value="ДА">ДА</label>
+                            </div>
+                        </div>
+                        <div class="container d-flex justify-content-around">
+                            <input type="submit" class="btn btn-secondary py-3 px-4" value="Запиши" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+
+
+

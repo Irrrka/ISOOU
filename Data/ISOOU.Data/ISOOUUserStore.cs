@@ -9,7 +9,7 @@
 
     public class ISOOUUserStore : UserStore<
         SystemUser,
-        ApplicationRole,
+        SystemRole,
         ISOOUDbContext,
         string,
         IdentityUserClaim<string>,
@@ -23,7 +23,7 @@
         {
         }
 
-        protected override IdentityUserRole<string> CreateUserRole(SystemUser user, ApplicationRole role)
+        protected override IdentityUserRole<string> CreateUserRole(SystemUser user, SystemRole role)
         {
             return new IdentityUserRole<string> { RoleId = role.Id, UserId = user.Id };
         }
