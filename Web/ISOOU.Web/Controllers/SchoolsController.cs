@@ -46,10 +46,12 @@
         }
 
         [HttpGet("/Schools/Details/{id}")]
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var model = this.schoolsService.GetSchoolDetailsById(id)
-                                    .To<SchoolDetails>();
+            var sm = await this.schoolsService.GetSchoolDetailsById(id);
+
+            //TODO CoefOfYear?
+            var model = sm.To<SchoolDetailsViewModel>();
 
             return this.View(model);
         }

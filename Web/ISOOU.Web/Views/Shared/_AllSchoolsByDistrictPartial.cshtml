@@ -1,0 +1,14 @@
+﻿<div class="dropdown show">
+    <a class="nav-link text-dark dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" asp-area="" asp-controller="Schools" asp-action="AllSchoolsByDistrict">
+        Училища по райони
+    </a>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        @{
+            <a class="dropdown-item" href="~/Schools/All">Всички райони</a>
+            @foreach (var district in (IEnumerable<ISOOU.Web.ViewModels.Districts.DistrictViewModel>)this.ViewData["AllDistricts"])
+            {
+            <a class="dropdown-item" asp-controller="Schools" asp-action="AllSchoolsByDistrict" asp-route-id="@district.Id">Район "@district.Name"</a>
+            }
+        }
+    </div>
+</div>
