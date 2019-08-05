@@ -2,20 +2,19 @@
 {
     using System;
     using System.Reflection;
+
     using ISOOU.Data;
     using ISOOU.Data.Common.Repositories;
     using ISOOU.Data.Models;
     using ISOOU.Data.Repositories;
     using ISOOU.Services.Data.Contracts;
     using ISOOU.Services.Mapping;
-    using ISOOU.Services.Messaging;
-    using ISOOU.Web.ViewModels;
+    using ISOOU.Services.Models;
+    using ISOOU.Web.ViewModels.Districts;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
-    
 
     public abstract class BaseServiceTests : IDisposable
     {
@@ -58,15 +57,17 @@
 
            
             services.AddScoped<IDistrictsService, DistrictsService>();
+            services.AddScoped<ISchoolsService, SchoolsService>();
             
             // Identity stores
             //services.AddTransient<IUserStore<SystemUser>, ApplicationUserStore>();
             //services.AddTransient<IRoleStore<ApplicationRole>, ApplicationRoleStore>();
 
             // AutoMapper
-            AutoMapperConfig.RegisterMappings(typeof(DistrictViewModel).GetTypeInfo().Assembly);
-
-           
+            AutoMapperConfig.RegisterMappings(
+                typeof(DistrictViewModel).GetTypeInfo().Assembly,
+                typeof(DistrictServiceModel).GetTypeInfo().Assembly,
+                typeof(District).GetTypeInfo().Assembly);
 
             var context = new DefaultHttpContext();
             services.AddSingleton<IHttpContextAccessor>(new HttpContextAccessor { HttpContext = context });

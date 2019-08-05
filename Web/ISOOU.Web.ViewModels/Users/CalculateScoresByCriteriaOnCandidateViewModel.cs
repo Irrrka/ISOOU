@@ -1,11 +1,16 @@
 ﻿using ISOOU.Data.Models;
 using ISOOU.Services.Mapping;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ISOOU.Web.ViewModels.Users
 {
     public class CalculateScoresByCriteriaOnCandidateViewModel
     {
+        public CalculateScoresByCriteriaOnCandidateViewModel()
+        {
+            this.ScoresByCrieria = new Dictionary<string, int>();
+        }
 
         public string ParentPermanentCity { get; set; }
 
@@ -20,6 +25,8 @@ namespace ISOOU.Web.ViewModels.Users
         public string MotherFullName { get; set; }
 
         public string FatherFullName { get; set; }
+
+        public Dictionary<string, int> ScoresByCrieria { get; set; }
 
     }
 }

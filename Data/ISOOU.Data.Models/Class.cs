@@ -9,9 +9,9 @@
     public class Class : BaseModel<int>
     {
         [Required]
-        public ClassLanguageType Profile { get; set; }
+        public ClassProfile Profile { get; set; }
 
-        public int FreeSpots { get; set; }
+        public int InitialFreeSpots { get; set; }
 
         public virtual ICollection<SchoolClass> SchoolClasses { get; set; }
 

@@ -14,11 +14,11 @@
         public async Task SeedAsync(ISOOUDbContext dbContext, IServiceProvider serviceProvider)
         {
             var userManager = serviceProvider.GetRequiredService<UserManager<SystemUser>>();
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<SystemUser>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<SystemRole>>();
 
-            var admin = userManager.FindByNameAsync(GlobalConstants.AdministratorRoleName);
-            Task<SystemUser> role = roleManager.FindByNameAsync(GlobalConstants.AdministratorRoleName);
-            if (admin == null)
+            var userToSeed = await userManager.FindByNameAsync(GlobalConstants.AdministratorUsername);
+            var roleToSeed = (await roleManager.FindByNameAsync(GlobalConstants.AdministratorRoleName)).ToString();
+            if (userToSeed == null)
             {
                 var userAdmin = new SystemUser()
                 {
@@ -27,17 +27,19 @@
                     FullName = GlobalConstants.AdministratorFullName,
                 };
 
-                var result = await userManager.CreateAsync(userAdmin, GlobalConstants.AdministratorPassword);
+                var result = await userManager.CreateAsync(userAdmin, roleToSeed);
                 if (!result.Succeeded)
                 {
                     throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
                 }
 
                 await userManager.AddToRoleAsync(userAdmin, GlobalConstants.AdministratorRoleName);
-                await dbContext.Users.AddAsync(userAdmin);
+          
             }
 
-            if (userManager.FindByEmailAsync("irrrka@imail.com") == null)
+            userToSeed = await userManager.FindByEmailAsync("irrrka@imail.com");
+            roleToSeed = (await roleManager.FindByNameAsync(GlobalConstants.UserRoleName)).ToString();
+            if (userToSeed == null)
             {
                 var userIrrrka = new SystemUser()
                 {
@@ -47,16 +49,17 @@
                 };
 
                 var result = await userManager.CreateAsync(userIrrrka, "123123");
-                //if (!result.Succeeded)
-                //{
-                //    throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
-                //}
+                if (!result.Succeeded)
+                {
+                    throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
+                }
 
-                await userManager.AddToRoleAsync(userIrrrka, GlobalConstants.UserRoleName);
-                await dbContext.Users.AddAsync(userIrrrka);
+                await userManager.AddToRoleAsync(userIrrrka, roleToSeed);
             }
 
-            if (userManager.FindByEmailAsync("irrrkaDir@imail.com") == null)
+            userToSeed = await userManager.FindByEmailAsync("irrrkaDir@imail.com");
+            roleToSeed = (await roleManager.FindByNameAsync(GlobalConstants.DirectorRoleName)).ToString();
+            if (userToSeed == null)
             {
                 var userIrrrkaDir = new SystemUser
                 {
@@ -66,16 +69,17 @@
                 };
 
                 var result = await userManager.CreateAsync(userIrrrkaDir, "123123");
-                //if (!result.Succeeded)
-                //{
-                //    throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
-                //}
+                if (!result.Succeeded)
+                {
+                    throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
+                }
 
-                await userManager.AddToRoleAsync(userIrrrkaDir, GlobalConstants.DirectorRoleName);
-                await dbContext.Users.AddAsync(userIrrrkaDir);
+                await userManager.AddToRoleAsync(userIrrrkaDir, roleToSeed);
             }
 
-            if (userManager.FindByEmailAsync("jovo@imail.com") == null)
+            userToSeed = await userManager.FindByEmailAsync("jovo@imail.com");
+            roleToSeed = (await roleManager.FindByNameAsync(GlobalConstants.UserRoleName)).ToString();
+            if (userToSeed == null)
             {
                 var userJovo = new SystemUser
                 {
@@ -85,13 +89,12 @@
                 };
 
                 var result = await userManager.CreateAsync(userJovo, "123123");
-                //if (!result.Succeeded)
-                //{
-                //    throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
-                //}
+                if (!result.Succeeded)
+                {
+                    throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
+                }
 
-                await userManager.AddToRoleAsync(userJovo, GlobalConstants.UserRoleName);
-                await dbContext.Users.AddAsync(userJovo);
+                await userManager.AddToRoleAsync(userJovo, roleToSeed);
             }
         }
     }

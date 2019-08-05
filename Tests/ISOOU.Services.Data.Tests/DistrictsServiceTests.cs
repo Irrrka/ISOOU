@@ -9,7 +9,7 @@
     using ISOOU.Services.Mapping;
     using ISOOU.Data.Models;
     using ISOOU.Services.Data.Tests.Common;
-    using ISOOU.Web.ViewModels;
+    using ISOOU.Web.ViewModels.Districts;
     using Moq;
     using Xunit;
     using System.Reflection;
@@ -17,68 +17,66 @@
     using Microsoft.Extensions.DependencyInjection;
     using System;
     using ISOOU.Services.Models;
+    using Microsoft.EntityFrameworkCore;
 
     public class DistrictsServiceTests : BaseServiceTests
     {
-        private IDistrictsService districtsServiceMock =>
+        private IDistrictsService DistrictsServiceMock =>
             this.ServiceProvider.GetRequiredService<IDistrictsService>();
 
         [Fact]
-        public void TestGetAllDistricts_WithCorrectInputData_ShouldReturnAllDistricts()
+        public async Task GetAllDistricts_WithCorrectInputData_ShouldReturnAllDistrictsAsync()
         {
-
-            var expected = this.GetTestData();
-            var actual = this.districtsServiceMock.GetAllDistrictsAsync();
+            List<DistrictServiceModel> expected = this.GetTestData().To<DistrictServiceModel>().ToList();
+            List<DistrictServiceModel> actual = await this.DistrictsServiceMock.GetAllDistricts().ToListAsync();
 
             foreach (var data in actual)
             {
-                Assert.True(expected.Any(n => n.Name == data.Name), 
-                    "DistrictsService GetAllDistricts() not works properly!");
-            }
-        }
-
-        [Fact]
-        public void TestGetAllDistricts_WithEmptyData_ShouldReturnEmptyList()
-        {
-
-            var expected = new List<DistrictViewModel>();
-            var actual = this.districtsServiceMock.GetAllDistrictsAsync();
-
-            foreach (var data in actual)
-            {
-                Assert.True(actual.Count() == 0,
+                Assert.True(
+                        expected.Any(n => n.Name == data.Name),
                         "DistrictsService GetAllDistricts() not works properly!");
             }
         }
 
         [Fact]
-        public async Task TestGetDistrictsById_WithExistingId_ShouldReturnDistrictById()
+        public void GetAllDistricts_WithEmptyData_ShouldReturnEmptyList()
         {
-            int id = 1;
+            List<DistrictServiceModel> expected = new List<DistrictServiceModel>();
+            List<DistrictServiceModel> actual = this.DistrictsServiceMock.GetAllDistricts().ToList();
 
-            var expected = this.GetTestData().FirstOrDefault(i => i.Id == id);
-            var actual = await this.districtsServiceMock.GetDistrictById(id);
-
-            AssertExtensions.EqualWithMessage(
-                                                expected.Name,
-                                                actual.Name,
-                                                "DistrictsService GetDistrictById() not works properly!");
+            foreach (var data in actual)
+            {
+                Assert.True(
+                        actual.Count() == 0,
+                        "DistrictsService GetAllDistricts() not works properly!");
+            }
         }
 
         [Fact]
-        public async Task TestGetDistrictsById_WithNonExistingId_ShouldThrowNullReferenceException()
+        public async Task GetDistrictsById_WithExistingId_ShouldReturnDistrictById()
         {
-            int id = 5;
+            this.SeedTestData(this.DbContext);
 
-            var expected = this.GetTestData().FirstOrDefault(i => i.Id == id);
-            //var actual = await this.districtsServiceMock.GetDistrictById<DistrictViewModel>(id);
+            DistrictServiceModel expected = this.DbContext.Districts.To<DistrictServiceModel>().First();
+            DistrictServiceModel actual = await this.DistrictsServiceMock.GetDistrictById(expected.Id);
 
-            await Assert.ThrowsAsync<NullReferenceException>(() => this.districtsServiceMock.GetDistrictById(id));
+            Assert.True(
+                        expected.Name == actual.Name,
+                        "DistrictsService GetDistrictById() not works properly!");
+        }
+
+        [Fact]
+        public async Task GetDistrictsById_WithNonExistingId_ShouldThrowNullReferenceException()
+        {
+            this.SeedTestData(this.DbContext);
+
+            int id = 100;
+            await Assert.ThrowsAsync<NullReferenceException>(
+                () => this.DistrictsServiceMock.GetDistrictById(id));
     }
 
         private void SeedTestData(ISOOUDbContext context)
         {
-
             context.Districts.AddRange(this.GetTestData());
             context.SaveChanges();
         }
@@ -89,10 +87,12 @@
             {
                 new District
                 {
+                    Id = 1,
                     Name = "Факултета",
                 },
                 new District
                 {
+                    Id = 2,
                     Name = "Център",
                 },
             };

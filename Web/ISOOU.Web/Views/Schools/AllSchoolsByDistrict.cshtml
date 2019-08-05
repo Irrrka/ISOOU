@@ -1,9 +1,7 @@
-﻿@using ISOOU.Data.Models.Enums;
-
-@model IEnumerable<SchoolViewModel>
+﻿@model IEnumerable<SchoolByDistrictViewModel>
 
 @{
-    var district = Model.FirstOrDefault().District;
+    var district = Model.FirstOrDefault().DistrictName;
     ViewData["Title"] = $"Район {district}";
     Layout = "~/Views/Shared/_Layout.cshtml";
     }
@@ -27,10 +25,10 @@
                         {
                             <tr height="21" style="height:21px;">
                                 <td height="21" style="height:21px;border-top:none;">
-                                    <a href=@school.UrlOfSchool target="_blank">@school.Name</a>
+                                    <a href=@school.UrlOfSchool >@school.Name</a>
                                 </td>
                                 <td style="border-top:none;border-left:none;">
-                                    <a href="@school.UrlOfMap" target="_blank">@school.Address</a>
+                                    <a href="@school.UrlOfMap" >@school.Address</a>
                                 </td>
                                 <td style="border-top:none;border-left:none;">@school.DirectorName</td>
                                 <td style="border-top:none;border-left:none;">@school.PhoneNumber</td>

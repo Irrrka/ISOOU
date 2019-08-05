@@ -40,7 +40,6 @@
 
             string currentRole = string.Empty;
 
-            //PASS CurrROle
             if (parentsCount == 0)
             {
                 currentRole = ParentRole.Майка.ToString();
@@ -51,7 +50,7 @@
                 currentRole = ParentRole.Баща.ToString();
             }
 
-            var allDistricts = this.districtsService.GetAllDistrictsAsync();
+            var allDistricts = this.districtsService.GetAllDistricts();
 
             this.ViewData["Districts"] = allDistricts.Select(d => new CreateParentDistrictViewModel
                                                  {
@@ -78,7 +77,7 @@
                 return this.View(createParentInputModel);
             }
 
-            var allDistricts = this.districtsService.GetAllDistrictsAsync();
+            var allDistricts = this.districtsService.GetAllDistricts();
 
             this.ViewData["Districts"] = allDistricts.Select(d => new CreateParentDistrictViewModel
             {
@@ -115,7 +114,7 @@
                 return this.Redirect("/");
             }
 
-            var allDistricts = this.districtsService.GetAllDistrictsAsync();
+            var allDistricts = this.districtsService.GetAllDistricts();
 
             this.ViewData["Districts"] = allDistricts.Select(d => new CreateParentDistrictViewModel
             {
@@ -153,7 +152,7 @@
                 return this.Redirect("/");
             }
 
-            var allDistricts = this.districtsService.GetAllDistrictsAsync();
+            var allDistricts = this.districtsService.GetAllDistricts();
 
             this.ViewData["Districts"] = allDistricts.Select(d => new CreateParentDistrictViewModel
             {
@@ -183,7 +182,7 @@
             var parentServiceModel = AutoMapper.Mapper.Map<ParentServiceModel>(parentInputModel);
             await this.parentsService.Edit(parentServiceModel);
 
-            var allDistricts = this.districtsService.GetAllDistrictsAsync();
+            var allDistricts = this.districtsService.GetAllDistricts();
 
             this.ViewData["Districts"] = allDistricts.Select(d => new CreateParentDistrictViewModel
             {

@@ -6,11 +6,16 @@ using System.Text;
 
 namespace ISOOU.Data.Models
 {
-    //Refactor >> all functionality about freespots here?
+    //TODO Refactor >> all functionality about freespots here?
     [NotMapped]
     public static class FreeSpotsCenter
     {
-        public static int CalculateFreeSpotsCoeficientByYear(int yearOfBirth)
+        public static void GetFreeSpotsByYearsAndDistrictBySchoolClassesBySchool()
+        {
+
+        }
+
+        public static int CalculateCoeficient(int yearOfBirth)
         {
             var years = FreeSpotsCenter.GetAllPossibleYears();
 
@@ -20,8 +25,11 @@ namespace ISOOU.Data.Models
 
             foreach (var year in years)
             {
+                var coef = year == DateTime.Now.Year - GlobalConstants.InTimeCandidate
+                                ? GlobalConstants.MaxCoefOfAdmissionYear
+                                : GlobalConstants.MinCoefOfAdmissionYear;
                 coefByYear
-                    .Add(year, random.Next(GlobalConstants.MinCoefOfAdmissionYear, GlobalConstants.MaxCoefOfAdmissionYear));
+                    .Add(year, coef);
             }
 
             return coefByYear[yearOfBirth];

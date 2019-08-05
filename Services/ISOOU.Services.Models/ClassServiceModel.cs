@@ -8,7 +8,7 @@ namespace ISOOU.Services.Models
     {
         public ClassProfileServiceModel Profile { get; set; }
 
-        public int FreeSpots { get; set; }
+        public int InitialFreeSpots { get; set; }
 
         public virtual ICollection<SchoolClassServiceModel> SchoolClasses { get; set; }
     }

@@ -1,5 +1,6 @@
 ﻿using ISOOU.Data.Models;
 using ISOOU.Services.Mapping;
+using System.Collections.Generic;
 
 namespace ISOOU.Services.Models
 {
@@ -15,5 +16,7 @@ namespace ISOOU.Services.Models
         public int ClassId { get; set; }
 
         public ClassServiceModel Class { get; set; }
+
+        public virtual ICollection<CandidateSchoolClassServiceModel> CandidateClasses { get; set; }
     }
 }

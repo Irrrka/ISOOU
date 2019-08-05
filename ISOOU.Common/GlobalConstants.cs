@@ -6,6 +6,7 @@
         public const string AdministratorRoleName = "Administrator";
         public const string DirectorRoleName = "Director";
         public const string UserRoleName = "User";
+
         //AdminRoleDetails
         public const string AdministratorUsername = "Admin";
         public const string AdministratorEmail = "admin@admin.com";
@@ -14,17 +15,26 @@
 
         // Schools
         public const int YoungestCandidate = 6;
+        public const int InTimeCandidate = 7;
         public const int OldestCandidate = 8;
+        public const int MaxNumberOfApplications = 3;
+        public const string AdmittedStatusMessage = "{Name} е приет!";
+        public const string NotAdmittedStatusMessage = "{Name} не е приет!";
+
+
+
 
         // Classes
-        public const string EnglishLanguage = "Английски език";
-        public const string SpanishLanguage = "Испански език";
-        public const string ChineseLanguage = "Китайски език";
-        public const string RussianLanguage = "Руски език";
-        public static readonly int FreeSpotsEnglishLanguage = 36;
-        public static readonly int FreeSpotsSpanishLanguage = 25;
-        public static readonly int FreeSpotsChineseLanguage = 9;
-        public static readonly int FreeSpotsRussianLanguage = 18;
+        public const string EnglishLangProfile = "Английски език";
+        public const string RussianLangProfile = "Руски език";
+        public const string MathProfile = "Математика";
+        public const string PaintProfile = "Рисуване";
+        public const string MusicProfile = "Музика";
+        public static readonly int FreeSpotsEnglishLangProfile = 36;
+        public static readonly int FreeSpotsRussianLangProfile = 25;
+        public static readonly int FreeSpotsMathProfile = 36;
+        public static readonly int FreeSpotsPaintProfile = 18;
+        public static readonly int FreeSpotsMusicProfile = 18;
         public static readonly int MinCoefOfAdmissionYear = 1;
         public static readonly int MaxCoefOfAdmissionYear = 2;
 
@@ -45,9 +55,10 @@
 
         // ExceptionMessages
         public static readonly string DistrictNotFound = "Моля изберете район";
-        public static readonly string ParentNotFound = "Parent Not Found";
-        public static readonly string CandidateNotFound = "Candidate Not Found";
-        public static readonly string UserNotFound = "User Not Found";
-        public static readonly string AddressNotFound = "Address Not Found";
+        public static readonly string ParentNotFound = "Няма намерен родител";
+        public static readonly string CandidateNotFound = "Няма намерен кандидате";
+        public static readonly string UserNotFound = "Няма намерен потребител";
+        public static readonly string AddressNotFound = "Няма намерен адрес";
+        public static readonly string SchoolNotFound = "Няма намерени училища";
     }
 }

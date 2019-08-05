@@ -1,31 +1,18 @@
 ﻿namespace ISOOU.Services.Data.Contracts
-{ 
-    using System.Collections.Generic;
+{
+    using System.Linq;
     using System.Threading.Tasks;
 
-    using ISOOU.Web.ViewModels;
-    using ISOOU.Web.ViewModels.Schools;
+    using ISOOU.Services.Models;
 
     public interface ISchoolsService
     {
-        Task<IEnumerable<SchoolViewModel>> GetAllSchoolsByDistrictId(int id);
+        Task<IQueryable<SchoolServiceModel>> GetAllSchoolsByDistrictId(int id);
 
-        //Task<IEnumerable<SchoolClassViewModel>> GetAllSchoolsByDistrictName(string name);
+        IQueryable<SchoolServiceModel> GetAllSchools();
 
-        Task<IEnumerable<AllSchoolsViewModel>> GetAllSchoolsAsync();
+        IQueryable<ClassProfileServiceModel> GetAllClassProfiles();
 
-        Task<IEnumerable<AdmissionProcedureSchoolViewModel>> GetSchoolsForAdmissionProcedureAsync();
-
-        //Task<BaseSchoolModel> GetSchoolByName(string name);
-
-        //Task<BaseSchoolModel> GetSchoolById(int id);
-
-        Task<IEnumerable<SchoolClassViewModel>> GetAllSchoolsByDistrictNameWithClassesAndFreeSpots(string name);
-
-        Task<SchoolDetails> GetSchoolDetailsById(int id);
-
-        //Task<List<SystemUser>> GetAllAdmittedCandidates();
-
-        //Task<List<SystemUser>> GetAllNotAdmittedCandidates();
+        Task<SchoolServiceModel> GetSchoolDetailsById(int id);
     }
 }

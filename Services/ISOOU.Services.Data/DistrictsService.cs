@@ -1,17 +1,14 @@
 ﻿namespace ISOOU.Services.Data
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
     using ISOOU.Data.Common.Repositories;
     using ISOOU.Data.Models;
-    using ISOOU.Data.Models.Enums;
     using ISOOU.Services.Data.Contracts;
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
-    using ISOOU.Web.ViewModels;
     using Microsoft.EntityFrameworkCore;
 
     public class DistrictsService : IDistrictsService
@@ -25,11 +22,13 @@
 
         public async Task<DistrictServiceModel> GetDistrictById(int id)
         {
-            var district = await this.districtRepository
+            var districtFromDb = await this.districtRepository
                 .All()
-                .Where(d => d.Id == id)
-                .To<DistrictServiceModel>()
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(d => d.Id == id);
+            //TODO Map?
+            DistrictServiceModel district = new DistrictServiceModel();
+            district.Id = districtFromDb.Id;
+            district.Name = districtFromDb.Name;
 
             if (district == null)
             {
@@ -39,7 +38,7 @@
             return district;
         }
 
-        public IQueryable<DistrictServiceModel> GetAllDistrictsAsync()
+        public IQueryable<DistrictServiceModel> GetAllDistricts()
         {
             var districts = this.districtRepository
                                 .All()

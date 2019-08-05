@@ -1,9 +1,10 @@
 ﻿namespace ISOOU.Web.Components
 {
     using ISOOU.Services.Data.Contracts;
+    using ISOOU.Services.Mapping;
+    using ISOOU.Web.ViewModels.Districts;
     using Microsoft.AspNetCore.Mvc;
 
-    using System.Threading.Tasks;
 
     public class AllDistrictsComponent : ViewComponent
     {
@@ -14,9 +15,9 @@
             this.districtService = districtService;
         }
 
-        public IViewComponentResult InvokeAsync()
+        public IViewComponentResult Invoke()
         {
-            var allDistricts = this.districtService.GetAllDistrictsAsync();
+            var allDistricts = this.districtService.GetAllDistricts().To<DistrictViewComponentViewModel>();
             return this.View(allDistricts);
         }
     }

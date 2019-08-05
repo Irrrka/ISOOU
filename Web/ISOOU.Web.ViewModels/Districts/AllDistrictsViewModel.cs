@@ -8,6 +8,7 @@
 
     public class AllDistrictsViewModel
     {
+
         public AllDistrictsViewModel()
         {
             this.Districts = this.FillData();
@@ -18,13 +19,6 @@
         private Dictionary<int, string> FillData()
         {
             Dictionary<int, string> dict = null;
-
-            foreach (DistrictName district in Enum.GetValues(typeof(DistrictName)))
-            {
-                dict = Enum.GetValues(typeof(DistrictName))
-                               .Cast<DistrictName>()
-                               .ToDictionary(t => (int)t, t => t.ToString());
-            }
 
             return dict;
         }

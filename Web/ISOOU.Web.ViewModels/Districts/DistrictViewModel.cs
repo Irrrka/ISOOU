@@ -1,4 +1,4 @@
-﻿namespace ISOOU.Web.ViewModels
+﻿namespace ISOOU.Web.ViewModels.Districts
 {
     using ISOOU.Data.Models;
     using ISOOU.Services.Mapping;

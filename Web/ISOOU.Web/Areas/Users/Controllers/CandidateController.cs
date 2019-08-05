@@ -11,6 +11,7 @@
     using ISOOU.Web.Areas.Users.Controllers;
     using ISOOU.Web.Areas.Users.Models;
     using ISOOU.Web.ViewModels.Users;
+    using ISOOU.Web.ViewModels.Districts;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
@@ -19,13 +20,16 @@
     {
         private readonly IParentsService parentsService;
         private readonly ICandidatesService candidatesService;
+        private readonly IDistrictsService districtsService;
 
         public CandidateController(
             IParentsService parentsService,
-            ICandidatesService candidatesService)
+            ICandidatesService candidatesService,
+            IDistrictsService districtsService)
         {
             this.parentsService = parentsService;
             this.candidatesService = candidatesService;
+            this.districtsService = districtsService;
         }
 
         [HttpGet("/Users/Candidate/Create")]
@@ -85,14 +89,14 @@
         }
 
         [HttpGet(Name = "Criteria")]
-        public IActionResult Criteria()
+        public IActionResult Criteria(int id)
         {
             //TODO Criteria
             return this.View();
         }
 
         [HttpGet(Name = "Applications")]
-        public IActionResult Applications()
+        public IActionResult Applications(int id)
         {
             //TODO Applications
             return this.View();
@@ -101,13 +105,21 @@
         [HttpGet(Name = "AddApplications")]
         public async Task<IActionResult> AddApplicationsAsync(int id, CalculateScoresByCriteriaOnCandidateViewModel model)
         {
+            var allDistricts = this.districtsService.GetAllDistricts();
+
+            this.ViewData["Districts"] = allDistricts.Select(d => new AddApplicationsDistrictViewModel
+                                                {
+                                                    Name = d.Name,
+                                                })
+                                                .ToList();
+
             var scoresByCriteria = await this.candidatesService.CalculateScoresByCriteria(id);
-            //var mother = this.candidatesService.GetCandidateById(id).To;
+
             return this.View(scoresByCriteria);
         }
 
         [HttpPost(Name = "AddApplications")]
-        public IActionResult AddApplications(ApplicationsListViewModel applicationsListViewModel)
+        public IActionResult AddApplications(ScoresByApplicationsViewModel applicationsListViewModel)
         {
             //TODO Applications
             return this.View();

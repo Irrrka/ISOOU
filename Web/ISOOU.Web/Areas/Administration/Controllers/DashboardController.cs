@@ -64,10 +64,10 @@
         [HttpPost]
         public async Task<ActionResult> StartProcedure()
         {
-            Dictionary<School, Dictionary<ClassLanguageType, List<Candidate>>> dataFromDbForProcedure = await this.adminService.StartAdmissionProcedure();
+            Dictionary<School, Dictionary<ClassProfile, List<Candidate>>> dataFromDbForProcedure = await this.adminService.StartAdmissionProcedure();
             //var possibleYears = FreeSpotsCenter.GetAllPossibleYears();
             var model =
-                new Dictionary<BaseSchoolModel, Dictionary<ClassLanguageType, List<CandidateDashboardStartProcedureViewModel>>>();
+                new Dictionary<BaseSchoolModel, Dictionary<ClassProfile, List<CandidateDashboardStartProcedureViewModel>>>();
             //status message KLASIRANETO E IZVYRSHENO???
             return this.View(dataFromDbForProcedure);
         }

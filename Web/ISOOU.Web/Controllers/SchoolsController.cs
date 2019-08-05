@@ -1,55 +1,55 @@
 ﻿namespace ISOOU.Web.Controllers
 {
-    using System.Linq;
+
     using System.Threading.Tasks;
-    using ISOOU.Data.Models;
+
     using ISOOU.Services.Data.Contracts;
-    using ISOOU.Services.Data;
-    using ISOOU.Web.ViewModels;
+    using ISOOU.Services.Models;
+    using ISOOU.Services.Mapping;
+    
     using ISOOU.Web.ViewModels.Schools;
     using Microsoft.AspNetCore.Mvc;
-
+    using ISOOU.Web.ViewModels;
+    using System.Linq;
     using System.Collections.Generic;
 
     public class SchoolsController : Controller
     {
         private readonly ISchoolsService schoolsService;
-        private readonly IDistrictsService districtsService;
-        private readonly ISearchService searchService;
-        private readonly ICandidatesService candidatesService;
 
-        public SchoolsController(ISchoolsService schoolsService, ICandidatesService candidatesService, IDistrictsService districtsService, ISearchService searchService)
+        public SchoolsController(ISchoolsService schoolsService)
         {
             this.schoolsService = schoolsService;
-            this.candidatesService = candidatesService;
-            this.districtsService = districtsService;
-            this.searchService = searchService;
         }
 
         [HttpGet("/Schools/AllSchoolsByDistrict/{id}")]
         public async Task<IActionResult> AllSchoolsByDistrict(int id)
         {
-            IEnumerable<SchoolViewModel> schools = await this.schoolsService.GetAllSchoolsByDistrictId(id);
+            var schools = (await this.schoolsService.GetAllSchoolsByDistrictId(id))
+                        .To<SchoolByDistrictViewModel>()
+                        .ToList();
+
             return this.View(schools);
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            await this.All();
+            this.All();
             return this.View("All");
         }
 
-        public async Task<IActionResult> All()
+        public IActionResult All()
         {
-            var schools = await this.schoolsService.GetAllSchoolsAsync();
+            var schools = this.schoolsService.GetAllSchools();
 
             return this.View(schools);
         }
 
         [HttpGet("/Schools/Details/{id}")]
-        public async Task<IActionResult> Details(int id)
+        public IActionResult Details(int id)
         {
-            SchoolDetails model = await this.schoolsService.GetSchoolDetailsById(id);
+            var model = this.schoolsService.GetSchoolDetailsById(id)
+                                    .To<SchoolDetails>();
 
             return this.View(model);
         }

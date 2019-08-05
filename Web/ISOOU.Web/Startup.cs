@@ -12,6 +12,7 @@
     using ISOOU.Services.Data.Contracts;
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Messaging;
+    using ISOOU.Services.Models;
     using ISOOU.Web.ViewModels;
     using ISOOU.Web.ViewModels.Districts;
     using Microsoft.AspNetCore.Builder;
@@ -100,13 +101,14 @@
 
             // Application services
             services.AddTransient<IEmailSender, NullMessageSender>();
-            services.AddTransient<ISettingsService, SettingsService>();
-            services.AddTransient<ISettingsService, SettingsService>();
+            //services.AddTransient<ISettingsService, SettingsService>();
+           // services.AddTransient<ISettingsService, SettingsService>();
 
             // Entity services
             services.AddTransient<ISchoolsService, SchoolsService>();
             services.AddTransient<IDistrictsService, DistrictsService>();
             services.AddTransient<ICandidatesService, CandidatesService>();
+            services.AddTransient<IParentsService, ParentsService>();
             services.AddTransient<ISearchService, SearchService>();
             services.AddTransient<IAdminService, AdminService>();
             services.AddSingleton<AllDistrictsViewModel>();
@@ -117,7 +119,8 @@
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            AutoMapperConfig.RegisterMappings(typeof(DistrictViewModel).GetTypeInfo().Assembly);
+            AutoMapperConfig.RegisterMappings(typeof(DistrictViewModel).GetTypeInfo().Assembly,
+                                        typeof(DistrictServiceModel).GetTypeInfo().Assembly);
 
             // Seed data on application startup
             using (var serviceScope = app.ApplicationServices.CreateScope())
@@ -150,6 +153,7 @@
 
             app.UseMvc(routes =>
             {
+
                 routes.MapRoute(
                        name: "areas",
                        template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
@@ -157,6 +161,10 @@
                 routes.MapRoute(
                         name: "default",
                         template: "{controller=Home}/{action=Index}/{id?}");
+
+                //routes.MapRoute(
+                //       name: "default",
+                //       template: "{controller=Home}/{action=Index}/{year}&{districtId}");
             });
 
         }

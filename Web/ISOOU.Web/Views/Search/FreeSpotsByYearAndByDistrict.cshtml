@@ -1,47 +1,49 @@
-﻿@using ISOOU.Web.ViewModels.Schools;
+﻿@using ISOOU.Web.ViewModels.Search;
 
 @model SearchFreeSpotsResultViewModel
 
 @{
-    ViewData["Title"] = $"Свободни места по район";
+    ViewData["Title"] = $"Свободни места по район и по година";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <section class="ftco-section img" id="section-search" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
     <div class="container bg">
+        <h4 class="ftco-heading-2">СВОБОДНИ МЕСТА ЗА НАБОР <i>@Model.YearOfBirth</i> В РАЙОН <i>@Model.DistrictName</i></h4>
         <table class="table px-4 py-3">
             <thead class="py-2 bg">
                 <tr>
-                    <th scope="col">УЧИЛИЩА В РАЙОН @Model.DistrictName</th>
+                    <th scope="col"></th>
                     @{
-                        foreach (var className in Model.Result.Values.FirstOrDefault())
+                        foreach (var classProfile in (IEnumerable<string>)this.ViewData["Classes"])
                         {
-                            <th scope="col">@(className.Key) език</th>
+                            <th scope="col">
+                                <a href="~/Schools/Details/@classProfile" target="_blank">@classProfile</a>
+                            </th>
                         }
                     }
                 </tr>
             </thead>
+
             <tbody>
                 @{
-                    foreach (var school in Model.Result)
+                    @foreach (var school in Model.Result)
                     {
-                        <tr height="21" style="height:21px;">
+                    <tr height="21" style="height:21px;">
+                        <td height="21" style="height:21px;border-top:none;">
+                            <a href="/Schools/Details/@school.Key.Id">@school.Key.Name</a>
+                        </td>
+                        @foreach (var classProfileFreeSpots in school.Value)
+                        {
                             <td height="21" style="height:21px;border-top:none;">
-                                <a href="~/Schools/Details/@school.Key.Id" target="_blank">@school.Key.Name</a>
+                                @classProfileFreeSpots
                             </td>
-                            @{
-                                foreach (var classOfSchool in school.Value)
-                                {
-                                    <td height="21" style="height:21px;border-top:none;">
-                                        @classOfSchool.Value
-                                    </td>
-                                }
-                            }
-                        </tr>
+                        }
+                    </tr>
                     }
                 }
             </tbody>
-        </table>
+       </table>
     </div>
 </section>
 

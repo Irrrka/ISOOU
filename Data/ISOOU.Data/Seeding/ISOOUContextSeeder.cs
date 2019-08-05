@@ -27,7 +27,6 @@
                           {
                               new RolesSeeder(),
                               new UsersSeeder(),
-                              new SettingsSeeder(),
                               new DistrictsSeeder(),
                               new SchoolsSeeder(),
                           };

@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\ISOOU.Data.Models\ISOOU.Data.Models.csproj" />
     <ProjectReference Include="..\..\Services\ISOOU.Services.Mapping\ISOOU.Services.Mapping.csproj" />
+    <ProjectReference Include="..\..\Services\ISOOU.Services.Models\ISOOU.Services.Models.csproj" />
   </ItemGroup>
 
 </Project>

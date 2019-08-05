@@ -19,7 +19,7 @@ namespace ISOOU.Web.Controllers
 
         public IActionResult All()
         {
-           var districts = this.districtsServices.GetAllDistrictsAsync();
+           var districts = this.districtsServices.GetAllDistricts();
 
            return this.View(districts);
         }

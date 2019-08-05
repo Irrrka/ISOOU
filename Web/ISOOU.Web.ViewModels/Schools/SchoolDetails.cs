@@ -3,11 +3,16 @@
     using AutoMapper;
     using ISOOU.Data.Models;
     using ISOOU.Services.Mapping;
+
     using System.Collections.Generic;
     using System.Linq;
 
-    public class SchoolDetails : BaseSchoolModel, IHaveCustomMappings
+    public class SchoolDetails : IHaveCustomMappings
     {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
         public string Address { get; set; }
 
         public string Email { get; set; }
@@ -32,7 +37,7 @@
                 x => x.FreeSpotsBySchoolClass,
                 opt => opt.MapFrom(d => this.FillDictionary(
                     d.SchoolClasses.Select(lan => lan.Class.Profile.ToString()).ToList(),
-                    d.SchoolClasses.Select(fs => fs.Class.FreeSpots).ToList())));
+                    d.SchoolClasses.Select(fs => fs.Class.InitialFreeSpots).ToList())));
         }
 
         private Dictionary<string, int> FillDictionary(List<string> languageTypes, List<int> freeSpots)

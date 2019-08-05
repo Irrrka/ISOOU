@@ -1,16 +1,53 @@
-﻿@using ISOOU.Web.ViewModels.Schools;
+﻿@using ISOOU.Web.ViewModels.Search
 
 @model SearchFreeSpotsInputModel
 
 @{
-    ViewData["Title"] = $"Свободни места по район";
+    ViewData["Title"] = $"Свободни места по район и по година";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
     <section class="ftco-section img" id="section-search" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
         <div class="container">
             <div id="searchForm" class="row justify-content-center">
                 <div class="col-md-6 py-5 px-md-5 bg">
-                    <partial name="_SearchFormPartial">
+                    <div class="heading-section heading-section-black ftco-animate mb-5">
+                        <span class="subheading">Въведете година на раждане и район по постоянен адрес</span>
+                        <form asp-area="" asp-controller="Search" asp-action="FreeSpots" method="post">
+                            <hr />
+                            <div class="row d-flex">
+                                <div class="form-group col-md-6">
+
+                                    <div class="form-inline">
+                                        <label asp-for="SelectedDistrictId">РАЙОН</label>
+                                        <select class="form-control text-primary" asp-for="SelectedDistrictId">
+                                            <option selected disabled>---Изберете район---</option>
+                                            @foreach (var district in (IEnumerable<ISOOU.Web.ViewModels.Search.SearchDistrictViewModel>)this.ViewData["Districts"])
+                                            {
+                                                <option value="@district.Id">@district.Name</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="SelectedDistrictId" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-inline">
+                                        <label asp-for="SelectedYearOfBirth">НАБОР</label>
+                                        <select class="form-control text-primary" asp-for="SelectedYearOfBirth">
+                                            <option selected disabled>---Изберете набор---</option>
+                                            @foreach (var year in (IEnumerable<int>)this.ViewData["Years"])
+                                            {
+                                                <option value="@year">@year</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="SelectedYearOfBirth" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row d-flex justify-content-center">
+                                <input type="submit" class="btn btn-secondary py-3 px-4" value="Намери" />
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

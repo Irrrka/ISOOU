@@ -19,16 +19,12 @@
                 <tr>
                     @{
                         var i = 0;
-                        foreach (var kvp in Model.ScoresByCriteriaByCandidates)
+                        foreach (var kvp in Model.ScoresByCrieria)
                         {
-                        <span>@kvp.Key</span>
-                            foreach (var item in kvp.Value)
-                            {
-                                i++;
-                        <td>@i</td>
-                        <td>@item.Key</td>
-                        <td>@item.Value</td>
-                            }
+                            i++;
+                            <td>@i</td>
+                            <td>@kvp.Key</td>
+                            <td>@kvp.Value</td>
                         }
                     }
             </tbody>

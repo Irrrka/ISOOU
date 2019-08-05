@@ -1,8 +1,7 @@
-﻿@page
-@model ApplicationsModel
+﻿@using ISOOU.Common
+@model  ISOOU.Web.ViewModels.Users.ScoresByApplicationsViewModel
 @{
     ViewData["Title"] = "Кандидатури";
-    ViewData["ActivePage"] = ManageNavPages.Applications;
 }
 
 <h4>@ViewData["Title"]</h4>
@@ -11,7 +10,7 @@
     <div class="row">
         <div class="col-md-12 d-flex">
             <div class="container-fluid d-flex justify-content-around">
-                <a class="btn btn-secondary py-3 px-4" asp-page="./AddApplications">Добави училище</a>
+                <a href="/Users/Canidate/AddApplications" class="btn btn-secondary py-3 px-4" >Добави училище</a>
             </div>
         </div>
     </div>
@@ -20,7 +19,7 @@
 <hr />
 <div class="row">
     <div class="col-md-6">
-        <h4>@Model.StatusMessage</h4>
+        <h4>@Model.IsAdmittedStatusMessage</h4>
         <p><strong>Кандидатури за следващото класиране</strong></p>
         <div class="table-responsive">
             <table class="table table-bordered">
@@ -34,11 +33,17 @@
                 <tbody>
                     <tr>
                         @{
-                            for (int i = 1; i <= 3; i++)
+                            int i = 1;
+                            @while (i <= 3)
                             {
-                                <td>i</td>
+                                foreach (var data in Model.ScoresBySchoolNames)
+                                {
+                                    <td>@(i++)</td>
+                                    <td>@data.Key</td>
 
-                                <td>12</td>
+                                    <td>@data.Value</td>
+                                }
+
                             }
                         }
                     </tr>
@@ -46,6 +51,17 @@
             </table>
         </div>
     </div>
+</div>
+<div class="container">
+    <hr />
+    <div class="row">
+        <div class="col-md-12 d-flex">
+            <div class="container-fluid d-flex justify-content-around">
+                <a href="/Users/Canidate/Applications" class="btn btn-secondary py-3 px-4">Премахни кандидатури</a>
+            </div>
+        </div>
+    </div>
+    <hr />
 </div>
 
 

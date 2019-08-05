@@ -48,7 +48,7 @@
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? this.Url.Content("~/");
+            returnUrl = returnUrl ?? this.Url.Content("/");
             if (this.ModelState.IsValid)
             {
                 var isRoot = !this.userManager.Users.Any();

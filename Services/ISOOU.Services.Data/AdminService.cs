@@ -23,7 +23,7 @@
             this.candidatesRepository = candidatesRepository;
         }
 
-        public async Task<Dictionary<School, Dictionary<ClassLanguageType, List<Candidate>>>> StartAdmissionProcedure()
+        public async Task<Dictionary<School, Dictionary<ClassProfile, List<Candidate>>>> StartAdmissionProcedure()
         {
             var schoolsFromDb = await this.schoolRepository.All()
                                                      .ToListAsync();
@@ -40,13 +40,13 @@
             }
 
             var dataForProcedure =
-                new Dictionary<School, Dictionary<ClassLanguageType, List<Candidate>>>();
+                new Dictionary<School, Dictionary<ClassProfile, List<Candidate>>>();
 
             foreach (var schoolFromDb in schoolsFromDb)
             {
                 if (!dataForProcedure.ContainsKey(schoolFromDb))
                 {
-                    dataForProcedure.Add(schoolFromDb, new Dictionary<ClassLanguageType, List<Candidate>>());
+                    dataForProcedure.Add(schoolFromDb, new Dictionary<ClassProfile, List<Candidate>>());
                 }
 
                 foreach (var schoolClass in schoolFromDb.SchoolClasses)

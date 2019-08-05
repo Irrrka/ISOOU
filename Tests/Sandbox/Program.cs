@@ -90,7 +90,7 @@
             // Application services
             services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ISmsSender, NullMessageSender>();
-            services.AddTransient<ISettingsService, SettingsService>();
+            //services.AddTransient<ISettingsService, SettingsService>();
         }
     }
 }

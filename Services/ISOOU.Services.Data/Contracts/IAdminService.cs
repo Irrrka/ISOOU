@@ -7,6 +7,6 @@
 
     public interface IAdminService
     {
-        Task<Dictionary<School, Dictionary<ClassLanguageType, List<Candidate>>>> StartAdmissionProcedure();
+        Task<Dictionary<School, Dictionary<ClassProfile, List<Candidate>>>> StartAdmissionProcedure();
     }
 }
