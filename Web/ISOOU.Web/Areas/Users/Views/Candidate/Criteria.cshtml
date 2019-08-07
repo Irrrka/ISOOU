@@ -3,62 +3,44 @@
     ViewData["Title"] = "Критерии и точки";
 }
 
-<h4>@ViewData["Title"]</h4>
-<div class="container">
-    <div class="table-responsive">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Критерий</th>
-                    <th>Точки</th>
-                    <th>Данни</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    @{
-                        var i = 0;
-                        foreach (var kvp in Model.ScoresByCrieria)
-                        {
-                            i++;
-                            <td>@i</td>
-                            <td>@kvp.Key</td>
-                            <td>@kvp.Value</td>
-                        }
-                    }
-            </tbody>
-        </table>
-    </div>
-</div>
+    <section class="ftco-heading-2 img" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6 mt-2">
+                    <div class="container">
+                        <div class="table-responsive">
 
-
-
-
-
-
-
-
-
-<section class="ftco-section img" id="section" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
-    <div class="container-fluid bg">
-        <div class="row">
-            <h4 class="ftco-heading-2"></h4>
-            <div class="col-6 d-flex justify-content-around">
-                <div id="add-parent" class="container" style="">
-                   
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Критерий</th>
+                                        <th>Точки</th>
+                                        <th>Данни</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        @{
+                                            var i = 0;
+                                            foreach (var kvp in Model.ScoresByCrieria)
+                                            {
+                                                i++;
+                                                <td>@i</td>
+                                                <td>@kvp.Key</td>
+                                                <td>@kvp.Value</td>
+                                            }
+                                        }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
 }
-
-
-
-
-

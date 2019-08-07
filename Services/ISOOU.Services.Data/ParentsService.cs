@@ -60,7 +60,6 @@
         {
             var parents = this.parentsRepository
                 .All()
-                .Include(x => x.User)
                 .To<ParentServiceModel>();
 
             return parents;
@@ -70,7 +69,7 @@
         {
             var parentToEdit = await this.parentsRepository
                                .All()
-                               .SingleOrDefaultAsync(p => p.Id == parentServiceModel.Id);
+                               .FirstOrDefaultAsync(p => p.Id == parentServiceModel.Id);
 
             if (parentToEdit == null)
             {
@@ -137,8 +136,11 @@
             var parent = await this.parentsRepository
                                 .All()
                                 .To<ParentServiceModel>()
-                                .SingleOrDefaultAsync(p => p.Id == id);
-            CoreValidator.EnsureNotNull(GlobalConstants.ParentNotFound);
+                                .FirstOrDefaultAsync(p => p.Id == id);
+            if (parent==null)
+            {
+                throw new ArgumentNullException();
+            }
             return parent;
         }
 

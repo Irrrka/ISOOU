@@ -10,7 +10,7 @@ namespace ISOOU.Services.Models
             : base()
         {
             this.CandidateSchoolClasses = new HashSet<CandidateSchoolClassServiceModel>();
-            //this.Scores = new List<CriteriaServiceModel>();
+            this.Scores = new List<CriteriaServiceModel>();
         }
 
         public int Id { get; set; }
@@ -45,6 +45,6 @@ namespace ISOOU.Services.Models
 
         public CandidateStatus Status { get; set; } = CandidateStatus.NotAdmitted;
 
-        //public ICollection<CriteriaServiceModel> Scores { get; set; }
+        public ICollection<CriteriaServiceModel> Scores { get; set; }
     }
 }

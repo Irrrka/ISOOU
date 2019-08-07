@@ -9,13 +9,13 @@
 
     public interface ICandidatesService
     {
-        Task<bool> Create(CandidateServiceModel model);
+        Task<bool> Create(string userIdentity, CandidateServiceModel model);
 
         IQueryable<CandidateServiceModel> GetCandidates();
 
         Task<CandidateServiceModel> GetCandidateById(int id);
 
-        Task<bool> Edit(CandidateServiceModel candidateServiceModel);
+        Task<bool> Edit(string userIdentity, CandidateServiceModel candidateServiceModel);
 
         Task<bool> Delete(int id);
 

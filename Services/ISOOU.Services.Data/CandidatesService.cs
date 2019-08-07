@@ -18,36 +18,41 @@
 
     public class CandidatesService : ICandidatesService
     {
-        private readonly UserManager<SystemUser> userManager;
+        private readonly IRepository<SystemUser> usersRepository;
         private readonly IRepository<Candidate> candidatesRepository;
         private readonly IRepository<Parent> parentsRepository;
         private readonly IRepository<Criteria> criteriasRepository;
 
         public CandidatesService(
-            UserManager<SystemUser> userManager,
+            IRepository<SystemUser> usersRepository,
             IRepository<Candidate> candidatesRepository,
             IRepository<Parent> parentsRepository,
             IRepository<Criteria> criteriasRepository)
         {
-            this.userManager = userManager;
+            this.usersRepository = usersRepository;
             this.candidatesRepository = candidatesRepository;
             this.parentsRepository = parentsRepository;
             this.criteriasRepository = criteriasRepository;
         }
 
-        public async Task<bool> Create(CandidateServiceModel model)
+        public async Task<bool> Create(string userIdentity, CandidateServiceModel model)
         {
             if (model==null)
             {
                 throw new ArgumentNullException();
             }
 
-            var candidate = AutoMapper.Mapper.Map<Candidate>(model);
+            SystemUser user = await this.usersRepository
+                            .All()
+                            .FirstOrDefaultAsync(x => x.UserName == userIdentity);
+
+            var candidate = model.To<Candidate>();
+            candidate.User = user;
 
             await this.candidatesRepository.AddAsync(candidate);
-            await this.candidatesRepository.SaveChangesAsync();
+            var result = await this.candidatesRepository.SaveChangesAsync();
 
-            return true;
+            return result > 0;
         }
 
         public async Task<CandidateServiceModel> GetCandidateById(int id)
@@ -70,26 +75,42 @@
             return candidates;
         }
 
-        public async Task<bool> Edit(CandidateServiceModel candidateServiceModel)
+        public async Task<bool> Edit(string userIdentity, CandidateServiceModel candidateServiceModel)
         {
             var candidateToEdit = await this.candidatesRepository
                                 .All()
-                                .SingleOrDefaultAsync(p => p.Id == candidateServiceModel.Id);
+                                .FirstOrDefaultAsync(p => p.Id == candidateServiceModel.Id);
+            if (candidateToEdit == null)
+            {
+                throw new ArgumentNullException();
+            }
 
+            SystemUser user = await this.usersRepository
+                            .All()
+                            .FirstOrDefaultAsync(x => x.UserName == userIdentity);
+
+           
             candidateToEdit.FirstName = candidateServiceModel.FirstName;
             candidateToEdit.MiddleName = candidateServiceModel.MiddleName;
             candidateToEdit.LastName = candidateServiceModel.LastName;
-            candidateToEdit.Mother = await this.parentsRepository
-                                .All()
-                                .SingleOrDefaultAsync(p => p.Id == candidateServiceModel.Mother.Id);
-            candidateToEdit.Father = await this.parentsRepository
-                                .All()
-                                .SingleOrDefaultAsync(p => p.Id == candidateServiceModel.Father.Id);
+            candidateToEdit.SEN = candidateServiceModel.SEN;
+            candidateToEdit.Desease = candidateServiceModel.Desease;
+            candidateToEdit.User = user;
+            candidateToEdit.KinderGarten = candidateToEdit.KinderGarten;
+            candidateToEdit.YearOfBirth = candidateToEdit.YearOfBirth;
+            candidateToEdit.UCN = candidateToEdit.UCN;
+
+            //candidateToEdit.Mother = await this.parentsRepository
+            //                    .All()
+            //                    .SingleOrDefaultAsync(p => p.Id == candidateServiceModel.Mother.Id);
+            //candidateToEdit.Father = await this.parentsRepository
+            //                    .All()
+            //                    .SingleOrDefaultAsync(p => p.Id == candidateServiceModel.Father.Id);
 
             this.candidatesRepository.Update(candidateToEdit);
-            await this.candidatesRepository.SaveChangesAsync();
+            var result = await this.candidatesRepository.SaveChangesAsync();
 
-            return true;
+            return result > 0;
         }
 
         public async Task<bool> Delete(int id)

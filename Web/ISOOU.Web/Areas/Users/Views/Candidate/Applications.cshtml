@@ -4,65 +4,73 @@
     ViewData["Title"] = "Кандидатури";
 }
 
-<h4>@ViewData["Title"]</h4>
-<div class="container">
-    <hr />
-    <div class="row">
-        <div class="col-md-12 d-flex">
-            <div class="container-fluid d-flex justify-content-around">
-                <a href="/Users/Canidate/AddApplications" class="btn btn-secondary py-3 px-4" >Добави училище</a>
+    <section class="ftco-section img" id="section" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <hr />
+                    <div class="container-fluid d-flex justify-content-around">
+                        <a href="/Users/Canidate/AddApplications" class="btn btn-secondary py-3 px-4">Добави училище</a>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <hr />
-</div>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <h4>@Model.IsAdmittedStatusMessage</h4>
-        <p><strong>Кандидатури за следващото класиране</strong></p>
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Желание</th>
-                        <th>Училище</th>
-                        <th>Точки</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        @{
-                            int i = 1;
-                            @while (i <= 3)
+
+            <hr />
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        @{ 
+                            if (Model.IsAdmittedStatusMessage!=null)
                             {
-                                foreach (var data in Model.ScoresBySchoolNames)
-                                {
-                                    <td>@(i++)</td>
-                                    <td>@data.Key</td>
-
-                                    <td>@data.Value</td>
-                                }
-
+                             <h4>@Model.IsAdmittedStatusMessage</h4>
                             }
                         }
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-<div class="container">
-    <hr />
-    <div class="row">
-        <div class="col-md-12 d-flex">
-            <div class="container-fluid d-flex justify-content-around">
-                <a href="/Users/Canidate/Applications" class="btn btn-secondary py-3 px-4">Премахни кандидатури</a>
+                        <p class="ftco-heading-2"><strong>Кандидатури за следващото класиране</strong></p>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Желание</th>
+                                        <th>Училище</th>
+                                        <th>Точки</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        @{
+                                            int i = 1;
+                                            @while (i <= 3)
+                                            {
+                                                foreach (var data in Model.ScoresBySchoolNames)
+                                                {
+                                                    <td>@(i++)</td>
+                                                    <td>@data.Key</td>
+
+                                                    <td>@data.Value</td>
+                                                }
+
+                                            }
+                                        }
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <hr />
-</div>
+            <div class="container">
+                <hr />
+                <div class="row">
+                    <div class="col-md-12 d-flex">
+                        <div class="container-fluid d-flex justify-content-around">
+                            <a href="/Users/Canidate/Applications" class="btn btn-secondary py-3 px-4">Премахни кандидатури</a>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+            </div>
+</section>
 
 
 

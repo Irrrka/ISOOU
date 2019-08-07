@@ -15,6 +15,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using System;
 
     public class CandidateController : UserController
     {
@@ -35,40 +36,51 @@
         [HttpGet("/Users/Candidate/Create")]
         public IActionResult Create()
         {
+            var allusersParents = this.parentsService
+                .GetParents()
+                .Where(x => x.User.UserName == this.User.Identity.Name);
+            this.ViewData["Parents"] = allusersParents
+                .Select(p => new CreateCandidateParentViewModel { Id = p.Id, FullName = p.FullName })
+                .ToList();
             return this.View();
         }
 
         [HttpPost("/Users/Candidate/Create")]
-        public async Task<IActionResult> Create(CreateCandidateInputModel input)
+        public async Task<IActionResult> Create(CreateCandidateInputModel candidateInputModel)
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View(input);
+                var allusersParents = this.parentsService
+              .GetParents()
+              .Where(x => x.User.UserName == this.User.Identity.Name);
+                this.ViewData["Parents"] = allusersParents
+                    .Select(p => new CreateCandidateParentViewModel { Id = p.Id, FullName = p.FullName })
+                    .ToList();
+                return this.View(candidateInputModel);
             }
 
-            string userName = this.User.Identity.Name;
+            var userIdentity = candidateInputModel.UserName;
 
-            var candidateToAdd = new CandidateServiceModel();
-            var userSM = this.User.To<SystemUserServiceModel>();
-            candidateToAdd.SEN = input.SEN == "ДА" ? true : false;
-            candidateToAdd.Desease = input.Desease == "ДА" ? true : false;
-            candidateToAdd.FirstName = input.FirstName;
-            candidateToAdd.MiddleName = input.MiddleName;
-            candidateToAdd.LastName = input.LastName;
-            candidateToAdd.KinderGarten = input.KinderGarten;
-            candidateToAdd.UCN = input.UCN;
-            candidateToAdd.YearOfBirth = input.YearOfBirth;
-            candidateToAdd.User.UserName = userSM.UserName;
-            //MotherAndFather
-         //   this.User.FindFirst(ClaimTypes.NameIdentifier).Value) !!!!!!!!!!!!
-            //candidateToAdd = input.To<CandidateServiceModel>();
+            CandidateServiceModel candidateToAdd = new CandidateServiceModel();
+            //TODO automapper doesnt work why?
+            //var father = await this.parentsService.GetParentById(candidateInputModel.FatherId);
+            //var mother = await this.parentsService.GetParentById(candidateInputModel.MotherId);
+            candidateToAdd.UCN = candidateInputModel.UCN;
+            candidateToAdd.FirstName = candidateInputModel.FirstName;
+            candidateToAdd.MiddleName = candidateInputModel.MiddleName;
+            candidateToAdd.LastName = candidateInputModel.LastName;
+            //candidateToAdd.Father = father;
+           // candidateToAdd.Mother = mother;
+            candidateToAdd.KinderGarten = candidateInputModel.KinderGarten;
+            candidateToAdd.SEN = candidateInputModel.SEN;
+            candidateToAdd.Desease = candidateInputModel.Desease;
+            candidateToAdd.YearOfBirth = candidateInputModel.YearOfBirth;
 
-            await this.candidatesService.Create(candidateToAdd);
+            await this.candidatesService.Create(userIdentity, candidateToAdd);
 
             return this.Redirect("/");
         }
 
-       
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
@@ -82,25 +94,59 @@
 
             return this.Redirect("/");
         }
-        
+
         [HttpGet("/Users/Candidate/Edit")]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var candidate = this.candidatesService.GetCandidateById(id);
-            var candidateProfileViewModel = candidate.To<CandidateProfileViewModel>();
-            return this.View(candidateProfileViewModel);
+            var candidateEditViewModel = (await this.candidatesService.GetCandidateById(id))
+                                    .To<EditCandidateInputModel>();
+
+            if (candidateEditViewModel == null)
+            {
+                return this.Redirect("/");
+            }
+
+            var allusersParents = this.parentsService
+               .GetParents()
+               .Where(x => x.User.UserName == this.User.Identity.Name);
+            this.ViewData["Parents"] = allusersParents
+                .Select(p => new CreateCandidateParentViewModel { Id = p.Id, FullName = p.FullName })
+                .ToList();
+
+            return this.View(candidateEditViewModel);
         }
 
-        [HttpPut("/Users/Candidate/Edit")]
+        [HttpPost("/Users/Candidate/Edit")]
         public async Task<IActionResult> Edit(EditCandidateInputModel candidateInputModel)
         {
             if (!this.ModelState.IsValid)
             {
+                var allusersParents = this.parentsService
+              .GetParents()
+              .Where(x => x.User.UserName == this.User.Identity.Name);
+                this.ViewData["Parents"] = allusersParents
+                    .Select(p => new CreateCandidateParentViewModel { Id = p.Id, FullName = p.FullName })
+                    .ToList();
                 return this.View(candidateInputModel);
             }
 
-            var candidateServiceModel = AutoMapper.Mapper.Map<CandidateServiceModel>(candidateInputModel);
-            await this.candidatesService.Edit(candidateServiceModel);
+            var candidateToEdit = candidateInputModel.To<CandidateServiceModel>();
+            //TODO automapper doesnt work why?
+            //var father = await this.parentsService.GetParentById(candidateInputModel.FatherId);
+            //var mother = await this.parentsService.GetParentById(candidateInputModel.MotherId);
+            candidateToEdit.UCN = candidateInputModel.UCN;
+            candidateToEdit.FirstName = candidateInputModel.FirstName;
+            candidateToEdit.MiddleName = candidateInputModel.MiddleName;
+            candidateToEdit.LastName = candidateInputModel.LastName;
+            //candidateToAdd.Father = father;
+            // candidateToAdd.Mother = mother;
+            candidateToEdit.KinderGarten = candidateInputModel.KinderGarten;
+            candidateToEdit.SEN = candidateInputModel.SEN;
+            candidateToEdit.Desease = candidateInputModel.Desease;
+            candidateToEdit.YearOfBirth = candidateInputModel.YearOfBirth;
+
+            var userIdentity = candidateInputModel.UserName;
+            await this.candidatesService.Edit(userIdentity, candidateToEdit);
 
             return this.Redirect("/");
         }
@@ -108,7 +154,21 @@
         [HttpGet(Name = "Criteria")]
         public IActionResult Criteria(int id)
         {
-            //TODO Criteria
+            //var candidateEditViewModel = (await this.candidatesService.GetCandidateById(id))
+            //                        .To<EditCandidateInputModel>();
+
+            //if (candidateEditViewModel == null)
+            //{
+            //    return this.Redirect("/");
+            //}
+
+            //var allusersParents = this.parentsService
+            //   .GetParents()
+            //   .Where(x => x.User.UserName == this.User.Identity.Name);
+            //this.ViewData["Parents"] = allusersParents
+            //    .Select(p => new CreateCandidateParentViewModel { Id = p.Id, FullName = p.FullName })
+            //    .ToList();
+
             return this.View();
         }
 

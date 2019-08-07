@@ -22,8 +22,18 @@ namespace ISOOU.Services.Models
 
         public string LastName { get; set; }
 
-        public string FullName => this.FirstName + " " + this.LastName;
-
+        public string FullName
+        {
+            get
+            {
+                return this.FirstName + " " + this.LastName;
+            }
+            set
+            {
+                this.FullName = value;
+            }
+        }
+        
         public string UCN { get; set; }
 
         public string PhoneNumber { get; set; }
