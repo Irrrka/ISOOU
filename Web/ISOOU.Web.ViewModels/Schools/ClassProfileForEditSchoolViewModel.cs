@@ -1,10 +1,9 @@
 ﻿namespace ISOOU.Web.ViewModels.Schools
 {
-    using ISOOU.Data.Models;
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
 
-    public class BaseSchoolModel : IMapFrom<SchoolServiceModel>
+    public class ClassProfileForEditSchoolViewModel : IMapFrom<ClassProfileServiceModel>
     {
         public int Id { get; set; }
 

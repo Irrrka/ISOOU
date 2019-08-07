@@ -1,0 +1,115 @@
+﻿@model ISOOU.Web.ViewModels.Schools.EditSchoolViewModel
+@{
+    this.ViewData["Title"] = "СЕКЦИЯ ДИРЕКТОРИ";
+}
+@if (Model == null)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <form asp-area="Directors" asp-controller="Home" asp-action="EditSchool" method="get">
+                    <div class="form-inline mt-1 justify-content-end">
+                        <select class="form-control text-primary" id="name" asp-for="Name">
+                            <option selected disabled>--- Изберете училище за редактиране---</option>
+                            @foreach (var school in (IEnumerable<ISOOU.Web.ViewModels.Schools.BaseSchoolModel>)this.ViewData["Schools"])
+                            {
+                                <option value="@school.Name">@school.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <input type="submit" class="btn btn-secondary py-3 px-4" value="Намери" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container">
+        <hr />
+        <div class="row">
+            <div class="col-md-8">
+                @if (Model.Name == null)
+                {
+                    <span>Няма намерено училище!</span>
+                }
+                else
+                {
+            <form asp-area="Directors" asp-controller="Home" asp-action="EditSchool" method="post">
+                <div class="form-inline mt-1 justify-content-end">
+                    <input hidden asp-for="Id" value="@Model.Id" class="form-control" />
+                </div>
+                <div class="form-inline mt-1 justify-content-end">
+                    <label asp-for="Name">Име на училище</label>
+                    <input asp-for="Name" value="@Model.Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-inline mt-1 justify-content-end">
+                    <label asp-for="DirectorName">Име на директор</label>
+                    <input asp-for="DirectorName" value="@Model.DirectorName" class="form-control" />
+                    <span asp-validation-for="DirectorName" class="text-danger"></span>
+                </div>
+                <div class="form-inline mt-1 justify-content-end">
+                    <label asp-for="Address">Адрес на училището</label>
+                    <input asp-for="Address" value="@Model.Address" class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <div class="form-inline mt-1 justify-content-end">
+                    <label asp-for="DistrictName">Район</label>
+                    <input asp-for="DistrictName" value="@Model.DistrictName" class="form-control" />
+                    <span asp-validation-for="DistrictName" class="text-danger"></span>
+                </div>
+                <div class="form-inline mt-1 justify-content-end">
+                    <label asp-for="Email">Е-поща</label>
+                    <input asp-for="Email" value="@Model.Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-inline mt-1 justify-content-end">
+                    <label asp-for="PhoneNumber">Телефон</label>
+                    <input asp-for="PhoneNumber" value="@Model.PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-inline mt-1 justify-content-end">
+                    <label asp-for="URLOfSchool">Сайт на училището</label>
+                    <input asp-for="URLOfSchool" value="@Model.URLOfSchool" class="form-control" />
+                    <span asp-validation-for="URLOfSchool" class="text-danger"></span>
+                </div>
+                <div class="form-inline mt-1 justify-content-end">
+                    <label asp-for="URLOfMap">Е-карта на училището</label>
+                    <input asp-for="URLOfMap" value="@Model.URLOfMap" class="form-control" />
+                    <span asp-validation-for="URLOfMap" class="text-danger"></span>
+                </div>
+                <div class="form-inline mt-1 justify-content-end">
+                    <label asp-for="SchoolClassClassProfile">Паралелка</label>
+                    <select class="form-control text-primary" id="name" asp-for="SchoolClassClassProfile">
+                        <option selected disabled>--- Изберете паралелка---</option>
+                        @foreach (var classProfile in (IEnumerable<ISOOU.Web.ViewModels.Schools.ClassProfileForEditSchoolViewModel>)this.ViewData["ClassProfiles"])
+                        {
+                            <option value="@classProfile.Id">@classProfile.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-inline mt-1 justify-content-end">
+                    <label asp-for="SchoolClassClassInitialFreeSpots">Свободни места за настоящ набор</label>
+                    <input asp-for="SchoolClassClassInitialFreeSpots" class="form-control" />
+                </div>
+                <div class="form-inline mt-1 justify-content-end">
+                    <input type="submit" class="btn btn-secondary py-3 px-4" value="Редактирай" />
+                </div>
+            </form>
+                }
+            </div>
+        </div>
+    </div>
+
+}
+
+
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

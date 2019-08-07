@@ -1,83 +1,86 @@
 ﻿namespace ISOOU.Web.Controllers
 {
+    using System.Threading.Tasks;
+
+    using ISOOU.Common;
     using ISOOU.Data.Models;
     using ISOOU.Services.Data.Contracts;
-    using ISOOU.Web.ViewModels;
-    using ISOOU.Web.ViewModels.Districts;
+    using ISOOU.Services.Mapping;
+    using ISOOU.Services.Models;
     using ISOOU.Web.ViewModels.Home;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class HomeController : BaseController
     {
         private readonly SignInManager<SystemUser> signInManager;
         private readonly IDistrictsService districtsService;
+        private readonly IUsersService usersService;
 
-        public HomeController(SignInManager<SystemUser> signInManager, IDistrictsService districtsService)
+        public HomeController(
+            SignInManager<SystemUser> signInManager,
+            IDistrictsService districtsService,
+            IUsersService usersService)
         {
             this.signInManager = signInManager;
             this.districtsService = districtsService;
+            this.usersService = usersService;
         }
 
         public IActionResult Index()
         {
-            //var allDistricts = this.districtsService.GetAllDistricts();
+            if (this.User.Identity.IsAuthenticated)
+            {
+                if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+                {
+                    return this.Redirect("/Administration/Dashboard/Index");
+                }
+                else if (this.User.IsInRole(GlobalConstants.DirectorRoleName))
+                {
+                    return this.Redirect("/Directors/Home/Index");
+                }
+                else if (this.User.IsInRole(GlobalConstants.UserRoleName))
+                {
+                    return this.Redirect("/Users/Home/Index");
+                }
+            }
 
-            //this.ViewData["AllDistricts"] = allDistricts.Select(d => new DistrictViewModel
-            //{
-            //    Id = d.Id,
-            //    Name = d.Name,
-            //})
-            //.ToList();
             return this.View();
         }
 
-        public IActionResult Privacy()
-        {
-            return this.View();
-        }
-
+        public IActionResult Privacy() => this.View();
+     
         //TODO
-        public IActionResult News()
-        {
-            return this.View();
-        }
-
+        public IActionResult News() => this.View();
+       
         //TODO
-        public IActionResult Calendar()
-        {
-            return this.View();
-        }
-
-        public IActionResult Helper()
-        {
-            return this.View();
-        }
-
-        public IActionResult Laws()
-        {
-            return this.View();
-        }
-
-        //TODO calendar
+        public IActionResult Calendar() => this.View();
+       
+        public IActionResult Helper() => this.View();
+       
+        public IActionResult Laws() => this.View();
+      
+        //TODO add map
         public IActionResult ContactForm()
         {
             return this.View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> ContactForm(ContactFormInputModel model)
+        public async Task<IActionResult> ContactForm(ContactFormInputModel input)
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View();
+                return this.View(input);
             }
 
-            //    await this.usersService.CreateMessage(model);
-            //    model.StatusMessage = "Благодарим за обратната връзка!";
-            return this.Redirect("ContactForm");
+            QuestionServiceModel model = new QuestionServiceModel();
+            //var currUser = this.User.Identity.Name;
+            var userIdentity = input.UserEmail;
+            model = input.To<QuestionServiceModel>();
+            await this.usersService.CreateMessage(userIdentity, model);
+
+            return this.Redirect("/");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

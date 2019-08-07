@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using ISOOU.Services.Models;
+    using ISOOU.Web.ViewModels.Schools;
 
     public interface ISchoolsService
     {
@@ -13,6 +14,14 @@
 
         IQueryable<ClassProfileServiceModel> GetAllClassProfiles();
 
+        IQueryable<ClassServiceModel> GetAllClasses();
+
         Task<SchoolServiceModel> GetSchoolDetailsById(int id);
+
+        Task<SchoolServiceModel> GetSchoolDetailsByName(string name);
+
+        Task<bool> CreateClassProfile(string name);
+
+        Task<bool> EditSchool(ClassServiceModel classModel, SchoolServiceModel model);
     }
 }

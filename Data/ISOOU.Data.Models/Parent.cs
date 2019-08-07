@@ -19,5 +19,6 @@
         public virtual District WorkDistrict { get; set; }
 
         public virtual ICollection<CandidateParents> Candidates { get; set; }
+
     }
 }

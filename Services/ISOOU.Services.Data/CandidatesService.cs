@@ -1,5 +1,6 @@
 ﻿namespace ISOOU.Services.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
@@ -34,11 +35,12 @@
             this.criteriasRepository = criteriasRepository;
         }
 
-        public ClaimsPrincipal User { get; private set; }
-
         public async Task<bool> Create(CandidateServiceModel model)
         {
-            CoreValidator.EnsureNotNull(model, GlobalConstants.CandidateNotFound);
+            if (model==null)
+            {
+                throw new ArgumentNullException();
+            }
 
             var candidate = AutoMapper.Mapper.Map<Candidate>(model);
 
@@ -57,14 +59,12 @@
             return candidate;
         }
 
-        public async Task<IQueryable<CandidateServiceModel>> GetCandidates()
+        public IQueryable<CandidateServiceModel> GetCandidates()
         {
-            var user = await this.userManager.GetUserAsync(this.User);
-            CoreValidator.EnsureNotNull(user, GlobalConstants.UserNotFound);
-
+   
             var candidates = this.candidatesRepository
                 .All()
-                .Where(u => u.User == user)
+                .Include(x => x.User)
                 .To<CandidateServiceModel>();
 
             return candidates;

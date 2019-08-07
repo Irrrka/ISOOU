@@ -38,6 +38,24 @@
             return district;
         }
 
+        public async Task<DistrictServiceModel> GetDistrictByName(string name)
+        {
+            var districtFromDb = await this.districtRepository
+                .All()
+                .FirstOrDefaultAsync(d => d.Name == name);
+            //TODO Map?
+            DistrictServiceModel district = new DistrictServiceModel();
+            district.Id = districtFromDb.Id;
+            district.Name = districtFromDb.Name;
+
+            if (district == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            return district;
+        }
+
         public IQueryable<DistrictServiceModel> GetAllDistricts()
         {
             var districts = this.districtRepository

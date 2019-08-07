@@ -8,13 +8,13 @@
 
     public interface IParentsService
     {
-        Task<bool> Create(ParentServiceModel parentServiceModel);
+        Task<bool> Create(string userIdentity, ParentServiceModel parentServiceModel);
 
-        Task<IQueryable<ParentServiceModel>> GetParents();
+        IQueryable<ParentServiceModel> GetParents();
 
         Task<ParentServiceModel> GetParentById(int id);
 
-        Task<bool> Edit(ParentServiceModel parentServiceModel);
+        Task<bool> Edit(string userIdentity, ParentServiceModel parentServiceModel);
 
         Task<bool> Delete(int id);
     }

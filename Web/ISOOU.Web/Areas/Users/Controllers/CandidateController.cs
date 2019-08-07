@@ -39,19 +39,36 @@
         }
 
         [HttpPost("/Users/Candidate/Create")]
-        public async Task<IActionResult> Create(CreateCandidateInputModel candidateInputModel)
+        public async Task<IActionResult> Create(CreateCandidateInputModel input)
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View(candidateInputModel);
+                return this.View(input);
             }
 
-            var candidateServiceModel = AutoMapper.Mapper.Map<CandidateServiceModel>(candidateInputModel);
-            await this.candidatesService.Create(candidateServiceModel);
+            string userName = this.User.Identity.Name;
+
+            var candidateToAdd = new CandidateServiceModel();
+            var userSM = this.User.To<SystemUserServiceModel>();
+            candidateToAdd.SEN = input.SEN == "ДА" ? true : false;
+            candidateToAdd.Desease = input.Desease == "ДА" ? true : false;
+            candidateToAdd.FirstName = input.FirstName;
+            candidateToAdd.MiddleName = input.MiddleName;
+            candidateToAdd.LastName = input.LastName;
+            candidateToAdd.KinderGarten = input.KinderGarten;
+            candidateToAdd.UCN = input.UCN;
+            candidateToAdd.YearOfBirth = input.YearOfBirth;
+            candidateToAdd.User.UserName = userSM.UserName;
+            //MotherAndFather
+         //   this.User.FindFirst(ClaimTypes.NameIdentifier).Value) !!!!!!!!!!!!
+            //candidateToAdd = input.To<CandidateServiceModel>();
+
+            await this.candidatesService.Create(candidateToAdd);
 
             return this.Redirect("/");
         }
 
+       
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
@@ -74,7 +91,7 @@
             return this.View(candidateProfileViewModel);
         }
 
-        [HttpPost("/Users/Candidate/Edit")]
+        [HttpPut("/Users/Candidate/Edit")]
         public async Task<IActionResult> Edit(EditCandidateInputModel candidateInputModel)
         {
             if (!this.ModelState.IsValid)

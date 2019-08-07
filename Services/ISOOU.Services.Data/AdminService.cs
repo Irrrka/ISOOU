@@ -9,18 +9,34 @@
     using ISOOU.Data.Models;
     using ISOOU.Services.Data.Contracts;
     using Microsoft.EntityFrameworkCore;
+    using ISOOU.Services.Models;
+    using ISOOU.Services.Mapping;
 
     public class AdminService : IAdminService
     {
         private readonly IRepository<School> schoolRepository;
         private readonly IRepository<Candidate> candidatesRepository;
+        private readonly IRepository<Question> questionsRepository;
 
         public AdminService(
             IRepository<School> schoolRepository,
-            IRepository<Candidate> candidatesRepository)
+            IRepository<Candidate> candidatesRepository,
+            IRepository<Question> questionsRepository)
         {
             this.schoolRepository = schoolRepository;
             this.candidatesRepository = candidatesRepository;
+            this.questionsRepository = questionsRepository;
+        }
+
+        public async Task<QuestionServiceModel> ReadLastMessage()
+        {
+            var message = await this.questionsRepository
+                .All()
+                .OrderByDescending(x => x.CreatedOn)
+                .To<QuestionServiceModel>()
+                .FirstOrDefaultAsync();
+
+            return message;
         }
 
         public async Task<Dictionary<School, Dictionary<ClassProfile, List<Candidate>>>> StartAdmissionProcedure()

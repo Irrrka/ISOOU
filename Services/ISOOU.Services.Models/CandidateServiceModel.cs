@@ -37,6 +37,10 @@ namespace ISOOU.Services.Models
 
         public virtual ParentServiceModel Father { get; set; }
 
+        public string UserId { get; set; }
+
+        public SystemUserServiceModel User { get; set; }
+
         public virtual ICollection<CandidateSchoolClassServiceModel> CandidateSchoolClasses { get; set; }
 
         public CandidateStatus Status { get; set; } = CandidateStatus.NotAdmitted;

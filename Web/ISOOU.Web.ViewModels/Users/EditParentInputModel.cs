@@ -1,11 +1,14 @@
 ﻿using ISOOU.Data.Models;
 using ISOOU.Services.Mapping;
+using ISOOU.Services.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace ISOOU.Web.ViewModels.Users
 {
-    public class EditParentInputModel : IMapFrom<Parent>
+    public class EditParentInputModel : IMapFrom<ParentServiceModel>, IMapTo<ParentServiceModel>
     {
+        public int Id { get; set; }
+
         [Required]
         [StringLength(20, MinimumLength = 2)]
         [Display(Name = "Име")]
@@ -23,6 +26,8 @@ namespace ISOOU.Web.ViewModels.Users
 
         public string FullName => this.FirstName + " " + this.LastName;
 
+       
+        [Display(Name = "ЕГН")]
         public string UCN { get; set; }
 
         [DataType(DataType.PhoneNumber)]
@@ -31,33 +36,39 @@ namespace ISOOU.Web.ViewModels.Users
 
         [Required]
         [Display(Name = "Град по постоянен адрес")]
-        public string PermanentCity { get; set; }
+        public string AddressPermanentCity { get; set; }
 
         [Required]
         [Display(Name = "Постоянен адрес")]
-        public string PermanentAddress { get; set; }
+        public string AddressPermanent { get; set; }
 
         [Required]
         [Display(Name = "Район по постоянен адрес")]
-        public string PermanentDistrict { get; set; }
+        public string AddressPermanentDistrictName { get; set; }
+
 
         [Required]
         [Display(Name = "Град по настоящ адрес")]
-        public string CurrentCity { get; set; }
+        public string AddressCurrentCity { get; set; }
 
         [Required]
         [Display(Name = "Настоящ адрес")]
-        public string CurrentAddress { get; set; }
+        public string AddressCurrent { get; set; }
 
         [Required]
         [Display(Name = "Район по настоящ адрес")]
-        public string CurrentDistrict { get; set; }
+        public string AddressCurrentDistrictName { get; set; }
 
         [Display(Name = "Месторабота - име")]
         public string WorkName { get; set; }
 
         [Display(Name = "Месторабота - район")]
-        public string WorkDistrict { get; set; }
+        public string WorkDistrictName { get; set; }
 
+        public string ParentRole { get; set; }
+
+        public string UserName { get; set; }
+
+        public int AddressId { get; set; }
     }
 }

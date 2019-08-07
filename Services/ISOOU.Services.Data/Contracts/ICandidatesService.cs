@@ -11,7 +11,7 @@
     {
         Task<bool> Create(CandidateServiceModel model);
 
-        Task<IQueryable<CandidateServiceModel>> GetCandidates();
+        IQueryable<CandidateServiceModel> GetCandidates();
 
         Task<CandidateServiceModel> GetCandidateById(int id);
 

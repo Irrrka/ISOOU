@@ -1,45 +1,47 @@
 ﻿@model ISOOU.Web.ViewModels.Users.CreateDirectorInputModel
-{
+@{
     this.ViewData["Title"] = "Admin dashboard";
 }
 
     <div class="container">
         <hr />
         <div class="row">
-            <div class="col-md-12 d-flex">
-                <form asp-area="Administration" asp-controller="Dashboard" asp-route="/" asp-action="CreateDirector" method="post">
-                    <div class="form-group">
-                        <label asp-for="FirstName"></label>
+            <div class="col-md-8">
+                <form asp-area="Administration" asp-controller="Dashboard" asp-action="CreateDirector" method="post">
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="FirstName">Име</label>
                         <input asp-for="FirstName" class="form-control" />
                         <span asp-validation-for="FirstName" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="LastName"></label>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="LastName">Фамилия</label>
                         <input asp-for="LastName" class="form-control" />
                         <span asp-validation-for="LastName" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="UCN"></label>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="UCN">ЕГН</label>
                         <input asp-for="UCN" class="form-control" />
                         <span asp-validation-for="UCN" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Email"></label>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="Email">Е-поща</label>
                         <input asp-for="Email" class="form-control" />
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Password"></label>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="Password">Парола</label>
                         <input asp-for="Password" class="form-control" />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="ConfirmPassword"></label>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="ConfirmPassword">Повтори парола</label>
                         <input asp-for="ConfirmPassword" class="form-control" />
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
-                    <button type="submit" class="btn btn-secondary py-3 px-4">Регистрация</button>
-                </form>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <input type="submit" class="btn btn-secondary py-3 px-4" value="РЕГИСТРАЦИЯ НА ДИРЕКТОР" />
+                    </div>
+                        </form>
             </div>
         </div>
     </div>

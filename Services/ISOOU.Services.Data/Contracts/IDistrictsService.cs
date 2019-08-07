@@ -9,6 +9,8 @@
     {
         Task<DistrictServiceModel> GetDistrictById(int id);
 
+        Task<DistrictServiceModel> GetDistrictByName(string name);
+
         IQueryable<DistrictServiceModel> GetAllDistricts();
     }
 }

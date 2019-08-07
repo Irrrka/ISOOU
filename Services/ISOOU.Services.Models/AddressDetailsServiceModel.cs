@@ -17,11 +17,7 @@ namespace ISOOU.Services.Models
 
         public string Current { get; set; }
 
-        public int CurrentDistrictId { get; set; }
-
         public virtual DistrictServiceModel CurrentDistrict { get; set; }
-
-        public int PermanentDistrictId { get; set; }
 
         public virtual DistrictServiceModel PermanentDistrict { get; set; }
     }

@@ -1,96 +1,111 @@
-﻿@model ISOOU.Web.ViewModels.Users.EditParentInputModel
+﻿@model ISOOU.Web.ViewModels.Users.DeleteParentViewModel
 @{
     ViewData["Title"] = "Родители";
 }
+
 <section class="ftco-section img" id="section" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
-    <div class="container-fluid bg">
+    <div class="container">
         <div class="row">
-            <h4 class="ftco-heading-2"></h4>
-            <div class="col-6 d-flex justify-content-around">
-                <div id="add-parent" class="container" style="">
-                    <form id="new-registration-inputdata-form" method="post">
-                        <div class="row d-flex justify-content-end">
-                            <div class="form-inline">
-                                <input asp-for="UCN" value="@Model.UCN" disabled/>
-                            </div>
-                            <div class="form-inline">
-                                <input asp-for="FirstName" value="@Model.FirstName"/>
-                            </div>
-                            <div class="form-inline">
-                                <input asp-for="MiddleName" value="@Model.MiddleName"/>
-                            </div>
-                            <div class="form-inline">
-                                <input asp-for="LastName" value="@Model.LastName"/>
-                            </div>
-                            <div class="form-inline">
-                                <select class="form-control text-primary" id="type" asp-for="PermanentCity">
-                                    <option value="@Model.PermanentCity" selected disabled></option>
-                                    @foreach (var city in (IEnumerable<string>)this.ViewData["CityNames"])
-                                    {
-                                        <option value="@city">@city</option>
-                                    }
-                                </select>
-                            </div>
-                            <div class="form-inline">
-                                <select class="form-control text-primary" id="type" asp-for="PermanentDistrict">
-                                    <option value="@Model.PermanentDistrict" selected disabled></option>
-                                    @foreach (var district in (IEnumerable<ISOOU.Web.ViewModels.Districts.CreateParentDistrictViewModel>)this.ViewData["Districts"])
-                                    {
-                                        <option value="@district.Id">@district.Name</option>
-                                    }
-                                </select>
-                            </div>
-                            <div class="form-inline">
-                                <input asp-for="PermanentAddress" value="@Model.PermanentAddress"/>
-                            </div>
-                            <div class="form-inline">
-                                <select class="form-control text-primary" id="type" asp-for="CurrentCity">
-                                    <option value="@Model.CurrentCity" selected disabled></option>
-                                    @foreach (var city in (IEnumerable<string>)this.ViewData["CityNames"])
-                                    {
-                                        <option value="@city">@city</option>
-                                    }
-                                </select>
-                            </div>
-                            <div class="form-inline">
-                                <select class="form-control text-primary" id="type" asp-for="CurrentDistrict">
-                                    <option value="@Model.CurrentDistrict" selected disabled></option>
-                                    @foreach (var district in (IEnumerable<ISOOU.Web.ViewModels.Districts.CreateParentDistrictViewModel>)this.ViewData["districts"])
-                                    {
-                                        <option value="@district.Id">@district.Name</option>
-                                    }
-                                </select>
-                            </div>
-                            <div class="form-inline">
-                                <input asp-for="CurrentAddress" />
-                            </div>
-                            <div class="form-inline">
-                                <input asp-for="PhoneNumber" />
-                            </div>
-                            <div class="form-inline">
-                                <input asp-for="WorkName" />
-                            </div>
-                            <div class="form-inline">
-                                <select class="form-control text-primary" id="type" asp-for="WorkDistrict">
-                                    <option value="@Model.WorkDistrict" selected disabled></option>
-                                    @foreach (var district in (IEnumerable<ISOOU.Web.ViewModels.Districts.CreateParentDistrictViewModel>)this.ViewData["districts"])
-                                    {
-                                        <option value="@district.Id">@district.Name</option>
-                                    }
-                                </select>
-                            </div>
-                        </div>
-                        <div class="container d-flex justify-content-around">
-                            <input type="submit" class="btn btn-secondary py-3 px-4" value="Изтрий" />
-                        </div>
-                    </form>
-                </div>
+            <div class="col-md-8">
+                <form id="edit-parent" method="post">
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="UCN"></label>
+                        <input selected disabled asp-for="@Model.UCN" />
+                    </div>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="ParentRole">Родител</label>
+                        <select class="form-control text-primary" asp-for="ParentRole">
+                            @foreach (var role in (IEnumerable<string>)this.ViewData["ParentsRole"])
+                            {
+                                <option disabled value="@role">@role</option>
+                            }
+                        </select>
+                        <input hidden asp-for="UserName" value="@this.User.Identity.Name" />
+                    </div>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="FirstName"></label>
+                        <input asp-for="FirstName" disabled value="@Model.FirstName" />
+                    </div>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="MiddleName"></label>
+                        <input asp-for="MiddleName" disabled value="@Model.MiddleName" />
+                    </div>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="LastName"></label>
+                        <input asp-for="LastName" disabled value="@Model.LastName" />
+                    </div>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="AddressPermanentCity"></label>
+                        <select class="form-control text-primary" asp-for="AddressPermanentCity">
+                            <option selected disabled value="@Model.AddressPermanentCity"></option>
+                            @foreach (var city in (IEnumerable<string>)this.ViewData["CityNames"])
+                            {
+                                <option disabled value="@city">@city</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="AddressPermanentDistrictName"></label>
+                        <select class="form-control text-primary" asp-for="AddressPermanentDistrictName">
+                            <option disabled selected value="@Model.AddressPermanentDistrictName"></option>
+                            @foreach (var district in (IEnumerable<ISOOU.Web.ViewModels.Districts.CreateParentDistrictViewModel>)this.ViewData["Districts"])
+                            {
+                                <option disabled>@district.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="AddressPermanent"></label>
+                        <input disabled asp-for="AddressPermanent" />
+                    </div>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="AddressCurrentCity"></label>
+                        <select class="form-control text-primary" asp-for="AddressCurrentCity">
+                            <option selected disabled value="@Model.AddressCurrentCity"></option>
+                            @foreach (var city in (IEnumerable<string>)this.ViewData["CityNames"])
+                            {
+                                <option disabled value="@city">@city</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="AddressCurrentDistrictName"></label>
+                        <select class="form-control text-primary" asp-for="AddressCurrentDistrictName">
+                            <option selected disabled value="@Model.AddressCurrentDistrictName"></option>
+                            @foreach (var district in (IEnumerable<ISOOU.Web.ViewModels.Districts.CreateParentDistrictViewModel>)this.ViewData["Districts"])
+                            {
+                                <option disabled>@district.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="AddressCurrent"></label>
+                        <input asp-for="AddressCurrent" disabled value="@Model.AddressCurrent" />
+                    </div>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="PhoneNumber"></label>
+                        <input asp-for="PhoneNumber" disabled value="@Model.PhoneNumber" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="WorkName"></label>
+                        <input asp-for="WorkName" disabled value="@Model.WorkName" />
+                    </div>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="WorkDistrictName"></label>
+                        <select class="form-control text-primary" asp-for="WorkDistrictName">
+                            <option disabled selected value="@Model.WorkDistrictName"></option>
+                            @foreach (var district in (IEnumerable<ISOOU.Web.ViewModels.Districts.CreateParentDistrictViewModel>)this.ViewData["districts"])
+                            {
+                                <option disabled>@district.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="container d-flex justify-content-around">
+                        <input type="submit" class="btn btn-secondary py-3 px-4" value="Изтрий" />
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </section>
-
-
-@section Scripts{
-    <partial name="_ValidationScriptsPartial" />
-}

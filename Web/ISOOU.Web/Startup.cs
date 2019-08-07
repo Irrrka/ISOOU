@@ -44,8 +44,6 @@
             services.AddDbContext<ISOOUDbContext>(
                 options => options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
 
-            
-
             services
                 .AddIdentity<SystemUser, SystemRole>(options =>
                 {
@@ -101,8 +99,6 @@
 
             // Application services
             services.AddTransient<IEmailSender, NullMessageSender>();
-            //services.AddTransient<ISettingsService, SettingsService>();
-           // services.AddTransient<ISettingsService, SettingsService>();
 
             // Entity services
             services.AddTransient<ISchoolsService, SchoolsService>();
@@ -110,6 +106,7 @@
             services.AddTransient<ICandidatesService, CandidatesService>();
             services.AddTransient<IParentsService, ParentsService>();
             services.AddTransient<ISearchService, SearchService>();
+            services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<IAdminService, AdminService>();
             services.AddSingleton<AllDistrictsViewModel>();
             services.AddSingleton<DistrictViewModel>();

@@ -6,14 +6,17 @@
     {
         [Required]
         [StringLength(20, MinimumLength = 2)]
+        [Display(Name = "Име")]
         public string FirstName { get; set; }
 
         [Required]
         [StringLength(40, MinimumLength = 4)]
+        [Display(Name = "Фамилия")]
         public string LastName { get; set; }
 
         [Required]
         [StringLength(10, MinimumLength = 10)]
+        [Display(Name = "ЕГН")]
         public string UCN { get; set; }
 
         [Required]

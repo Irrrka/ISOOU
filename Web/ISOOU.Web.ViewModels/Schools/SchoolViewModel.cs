@@ -1,21 +1,22 @@
-﻿namespace ISOOU.Web.ViewModels
+﻿namespace ISOOU.Web.ViewModels.Schools
 {
+    using ISOOU.Services.Mapping;
+    using ISOOU.Services.Models;
     using ISOOU.Web.ViewModels.Schools;
 
     using System.Collections.Generic;
 
-    public class SchoolViewModel : BaseSchoolModel
+    public class SchoolViewModel : IMapFrom<SchoolServiceModel>, IMapTo<SchoolServiceModel>
     {
-        public SchoolViewModel()
-        {
-            this.FreeSpotsByLanguageTypeOfSchoolClasses = new Dictionary<string, int>();
-        }
+        public int Id { get; set; }
+
+        public string Name { get; set; }
 
         public string DirectorName { get; set; }
 
         public string Address { get; set; }
 
-        public string District { get; set; }
+        public string DistrictName { get; set; }
 
         public string PhoneNumber { get; set; }
 
@@ -24,9 +25,6 @@
         public string UrlOfSchool { get; set; }
 
         public string UrlOfMap { get; set; }
-
-        //TODO use?
-        public IDictionary<string, int> FreeSpotsByLanguageTypeOfSchoolClasses { get; set; }
 
     }
 }

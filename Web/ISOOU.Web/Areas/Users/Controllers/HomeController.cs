@@ -35,25 +35,26 @@
             this.userHasParents = false;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public IActionResult Index()
         {
-            var parentsFromService = await this.parentsService.GetParents();
-            var parents = await parentsFromService
+            var parents = this.parentsService.GetParents()
+                .Where(x => x.User.UserName == this.User.Identity.Name)
                 .Select(p => new ParentsHomeViewModel
                 {
                     Id = p.Id,
                     FullName = p.FirstName + " " + p.LastName,
                 })
-                .ToListAsync();
+                .ToList();
 
-            var candidatesFromService = await this.candidatesService.GetCandidates();
-            var candidates = await candidatesFromService
+            var candidates = this.candidatesService.GetCandidates()
+                 .Where(x => x.User.UserName == this.User.Identity.Name)
                 .Select(c => new CandidatesHomeViewModel
                 {
                     Id = c.Id,
                     FullName = c.FirstName + " " + c.LastName,
                 })
-                .ToListAsync();
+                .ToList();
 
             var familyHomeViewModel = new FamilyHomeViewModel()
             {
@@ -61,11 +62,12 @@
                 Candidates = candidates,
             };
 
-            //this.ViewData["Parents"] = parents;
-            //this.ViewData["Candidates"] = candidates;
+            if (familyHomeViewModel.Parents.Count > 0 || familyHomeViewModel.Candidates.Count > 0)
+            {
+                return this.View(familyHomeViewModel);
+            }
 
-            return this.View(familyHomeViewModel);
+            return this.View();
         }
-
     }
 }

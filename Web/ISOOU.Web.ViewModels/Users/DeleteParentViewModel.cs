@@ -1,50 +1,55 @@
 ﻿using ISOOU.Data.Models;
 using ISOOU.Services.Mapping;
+using ISOOU.Services.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace ISOOU.Web.ViewModels.Users
 {
-    public class DeleteParentViewModel : IMapFrom<Parent>
+    public class DeleteParentViewModel : IMapFrom<ParentServiceModel>, IMapTo<ParentServiceModel>
     {
-        
+        [Display(Name = "Име")]
         public string FirstName { get; set; }
 
-       
+        [Display(Name = "Презиме")]
         public string MiddleName { get; set; }
 
-       
+        [Display(Name = "Фамилия")]
         public string LastName { get; set; }
 
         public string FullName => this.FirstName + " " + this.LastName;
 
+        [Display(Name = "ЕГН")]
         public string UCN { get; set; }
 
-       
+        [Display(Name = "Телефонен номер")]
         public string PhoneNumber { get; set; }
 
-        
-        public string PermanentCity { get; set; }
+        [Display(Name = "Град по постоянен адрес")]
+        public string AddressPermanentCity { get; set; }
 
-        
-        public string PermanentAddress { get; set; }
+        [Display(Name = "Постоянен адрес")]
+        public string AddressPermanent { get; set; }
 
-       
-        public string PermanentDistrict { get; set; }
+        [Display(Name = "Район по постоянен адрес")]
+        public string AddressPermanentDistrictName { get; set; }
 
-       
-        public string CurrentCity { get; set; }
+        [Display(Name = "Град по настоящ адрес")]
+        public string AddressCurrentCity { get; set; }
 
-      
-        public string CurrentAddress { get; set; }
+        [Display(Name = "Настоящ адрес")]
+        public string AddressCurrent { get; set; }
 
-       
-        public string CurrentDistrict { get; set; }
+        [Display(Name = "Район по настоящ адрес")]
+        public string AddressCurrentDistrictName { get; set; }
 
-        
+        [Display(Name = "Месторабота - име")]
         public string WorkName { get; set; }
 
-       
-        public string WorkDistrict { get; set; }
+        [Display(Name = "Месторабота - район")]
+        public string WorkDistrictName { get; set; }
 
+        public string ParentRole { get; set; }
+
+        public string UserName { get; set; }
     }
 }

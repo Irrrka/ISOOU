@@ -3,7 +3,7 @@ using ISOOU.Services.Models;
 
 namespace ISOOU.Web.ViewModels.Home
 {
-    public class ContactFormInputModel : IMapTo<QuestionServiceModel>
+    public class ContactFormViewModel : IMapTo<QuestionServiceModel>, IMapFrom<QuestionServiceModel>
     {
         public string UserEmail { get; set; }
 

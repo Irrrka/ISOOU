@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace ISOOU.Services.Models
 {
-    public class ParentServiceModel : IMapFrom<Parent>, IMapTo<Parent>, IHaveCustomMappings
+    public class ParentServiceModel : IMapFrom<Parent>, IMapTo<Parent>
     {
         public ParentServiceModel()
            : base()
@@ -32,7 +32,9 @@ namespace ISOOU.Services.Models
 
         public string UserId { get; set; }
 
-        public string Role { get; set; }
+        public SystemUserServiceModel User { get; set; }
+
+        public ParentRole Role { get; set; }
 
         public string WorkName { get; set; }
 
@@ -40,9 +42,5 @@ namespace ISOOU.Services.Models
 
         public virtual ICollection<CandidateParentsServiceModel> Candidates { get; set; }
 
-        public void CreateMappings(IProfileExpression configuration)
-        {
-            //role, user
-        }
     }
 }

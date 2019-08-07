@@ -1,6 +1,7 @@
 ﻿namespace ISOOU.Web.Areas.Administration.Controllers
 {
     using ISOOU.Services.Data.Contracts;
+    using ISOOU.Services.Mapping;
     using ISOOU.Services.Data;
     using ISOOU.Web.Areas.Administration.ViewModels.Dashboard;
     using ISOOU.Web.ViewModels;
@@ -14,21 +15,19 @@
     using Microsoft.AspNetCore.Identity;
     using ISOOU.Web.Areas.Users.Models;
     using ISOOU.Common;
+    using ISOOU.Web.ViewModels.Home;
 
     public class DashboardController : AdministrationController
     {
-        private readonly ISettingsService settingsService;
         private readonly IAdminService adminService;
         private readonly ISchoolsService schoolsService;
         private readonly UserManager<SystemUser> userManager;
 
         public DashboardController(
-            ISettingsService settingsService,
             IAdminService adminService,
             ISchoolsService schoolsService,
             UserManager<SystemUser> userManager)
         {
-            this.settingsService = settingsService;
             this.adminService = adminService;
             this.schoolsService = schoolsService;
             this.userManager = userManager;
@@ -37,12 +36,24 @@
         [HttpGet]
         public async Task<ActionResult> Index()
         {
+            var message = (await this.adminService.ReadLastMessage()).To<ContactFormViewModel>();
+            return this.View(message);
+        }
+
+        [HttpGet]
+        public ActionResult CreateDirector()
+        {
             return this.View();
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateDirector(CreateDirectorInputModel createDirectorInputModel)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(createDirectorInputModel);
+            }
+
             var user = new SystemUser
             {
                 UserName = createDirectorInputModel.Email,
@@ -57,8 +68,8 @@
             {
                 await this.userManager.AddToRoleAsync(user, GlobalConstants.DirectorRoleName);
             }
-
-            return this.View();
+            //TODO SPECIFY THE SCHOOL OF DIR
+            return this.Redirect("/");
         }
 
         [HttpPost]

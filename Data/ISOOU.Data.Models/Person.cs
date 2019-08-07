@@ -25,6 +25,7 @@
 
         [Required]
         [StringLength(10)]
+
         public string UCN { get; set; }
 
         [DataType(DataType.PhoneNumber)]
