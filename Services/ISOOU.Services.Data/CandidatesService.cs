@@ -89,7 +89,6 @@
                             .All()
                             .FirstOrDefaultAsync(x => x.UserName == userIdentity);
 
-           
             candidateToEdit.FirstName = candidateServiceModel.FirstName;
             candidateToEdit.MiddleName = candidateServiceModel.MiddleName;
             candidateToEdit.LastName = candidateServiceModel.LastName;
@@ -193,6 +192,59 @@
             //Todo CalculationOfChangingSchool????
             return scoresByCriteria;
         }
+
+        public async Task<List<int>> CalculateAdditionalScoresByPositionOfApplication(int id)
+        {
+            var scoresForApplications = new List<int>();
+
+            var candidate = await this.candidatesRepository
+                              .All()
+                              .SingleOrDefaultAsync(p => p.Id == id);
+
+            int scores = candidate.Scores.Sum(x => x.Scores);
+
+            //TODO Scalability?!
+            int scoresFirstApplication = scores + GlobalConstants.FirstApplicationBonusCriteria;
+            scoresForApplications.Add(scoresFirstApplication);
+
+            int scoresSecondApplication = scores + GlobalConstants.SecondApplicationBonusCriteria;
+            scoresForApplications.Add(scoresSecondApplication);
+
+            int scoresThirdApplication = scores + GlobalConstants.ThirdApplicationBonusCriteria;
+            scoresForApplications.Add(scoresThirdApplication);
+
+            return scoresForApplications;
+        }
+
+        public async Task AddApplications(int candidateId, string userIdentity, List<SchoolClassServiceModel> applicationsToAdd)
+        {
+            SystemUser user = await this.usersRepository
+                          .All()
+                          .FirstOrDefaultAsync(x => x.UserName == userIdentity);
+
+            var candidateToEdit = await this.candidatesRepository
+                               .All()
+                               .FirstOrDefaultAsync(p => p.Id == candidateId);
+
+            if (candidateToEdit == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            foreach (var app in applicationsToAdd)
+            {
+                var schoolClass = app.To<SchoolClass>();
+                candidateToEdit.CandidateSchoolClasses.Add(
+                    new CandidateSchoolClass
+                    {
+                        SchoolClass = schoolClass,
+                    });
+            }
+
+            this.candidatesRepository.Update(candidateToEdit);
+            await this.candidatesRepository.SaveChangesAsync();
+        }
+
 
         private static void CalculateParentWorkDistrictCriteria(Dictionary<string, int> scoresByCriteria, Parent mother, Parent father, SchoolClass schoolclass)
         {

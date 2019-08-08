@@ -1,9 +1,9 @@
 ﻿namespace ISOOU.Web.ViewModels.Districts
 {
-    using ISOOU.Data.Models;
     using ISOOU.Services.Mapping;
+    using ISOOU.Services.Models;
 
-    public class AddApplicationsDistrictViewModel : IMapFrom<District>
+    public class AddApplicationsDistrictViewModel : IMapFrom<DistrictServiceModel>, IMapTo<DistrictServiceModel>
     {
         public int Id { get; set; }
 

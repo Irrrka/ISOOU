@@ -22,6 +22,8 @@
 
         Task<bool> CreateClassProfile(string name);
 
+        SchoolClassServiceModel GetSchoolClassBySchoolAndClass(string schoolName, string classProfile);
+
         Task<bool> EditSchool(ClassServiceModel classModel, SchoolServiceModel model);
     }
 }

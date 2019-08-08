@@ -7,7 +7,9 @@
             <a class="dropdown-item" href="~/Schools/All">Всички райони</a>
             @foreach (var district in (IEnumerable<ISOOU.Web.ViewModels.Districts.DistrictViewModel>)this.ViewData["AllDistricts"])
             {
-            <a class="dropdown-item" asp-controller="Schools" asp-action="AllSchoolsByDistrict" asp-route-id="@district.Id">Район "@district.Name"</a>
+            <a class="dropdown-item" asp-controller="Schools" asp-action="AllSchoolsByDistrict" asp-route-id="@district.Id">
+            Район "@district.Name"
+            </a>
             }
         }
     </div>

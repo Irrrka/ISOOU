@@ -1,31 +1,19 @@
-﻿namespace ISOOU.Web.Areas.Users.Models
-{
-    using System.ComponentModel.DataAnnotations;
+﻿namespace ISOOU.Web.ViewModels.Users
+{ 
+    using System.Collections.Generic;
 
-    using ISOOU.Data.Models;
     using ISOOU.Services.Mapping;
+    using ISOOU.Services.Models;
 
-    public class CandidateProfileViewModel : IMapFrom<Candidate>
+    public class CandidateProfileViewModel : IMapFrom<CandidateServiceModel>, IMapTo<CandidateServiceModel>
     {
-       
-        public string FirstName { get; set; }
+        public CandidateProfileViewModel()
+        {
+            this.ScoresByApplications = new Dictionary<string, Dictionary<string, int>>();
+        }
 
-       
-        public string MiddleName { get; set; }
+        public int Id { get; set; }
 
-        
-        public string LastName { get; set; }
-
-        
-        public int YearOfBirth { get; set; }
-
-       
-        public string KinderGarten { get; set; }
-
-        
-        public string SEN { get; set; }
-
-      
-        public string Desease { get; set; }
+        public Dictionary<string, Dictionary<string, int>> ScoresByApplications { get; set; }
     }
 }

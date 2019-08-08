@@ -104,6 +104,17 @@
             return classProfiles;
         }
 
+        public SchoolClassServiceModel GetSchoolClassBySchoolAndClass(string schoolName, string classProfile)
+        {
+            var schoolClass = this.schoolClassRepository
+                .All()
+                .To<SchoolClassServiceModel>()
+                .Where(c => c.Class.Profile.Name == classProfile)
+                .FirstOrDefault(s => s.School.Name == schoolName);
+
+            return schoolClass;
+        }
+
         public IQueryable<ClassServiceModel> GetAllClasses()
         {
             var classes = this.classRepository

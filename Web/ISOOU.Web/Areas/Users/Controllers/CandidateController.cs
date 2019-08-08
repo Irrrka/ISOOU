@@ -16,21 +16,28 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using System;
+    using System.Collections.Generic;
+    using ISOOU.Web.ViewModels.Schools;
+    using ISOOU.Web.ViewModels.Search;
+    using ISOOU.Common;
 
     public class CandidateController : UserController
     {
         private readonly IParentsService parentsService;
         private readonly ICandidatesService candidatesService;
         private readonly IDistrictsService districtsService;
+        private readonly ISchoolsService schoolsService;
 
         public CandidateController(
             IParentsService parentsService,
             ICandidatesService candidatesService,
-            IDistrictsService districtsService)
+            IDistrictsService districtsService,
+            ISchoolsService schoolsService)
         {
             this.parentsService = parentsService;
             this.candidatesService = candidatesService;
             this.districtsService = districtsService;
+            this.schoolsService = schoolsService;
         }
 
         [HttpGet("/Users/Candidate/Create")]
@@ -152,53 +159,101 @@
         }
 
         [HttpGet(Name = "Criteria")]
-        public IActionResult Criteria(int id)
-        {
-            //var candidateEditViewModel = (await this.candidatesService.GetCandidateById(id))
-            //                        .To<EditCandidateInputModel>();
+        public async Task<IActionResult> Criteria(int id)
+        {//NOT WORKING!!!!!!!!
+            CandidateServiceModel candidateModel = await this.candidatesService.GetCandidateById(id);
 
-            //if (candidateEditViewModel == null)
-            //{
-            //    return this.Redirect("/");
-            //}
+            Dictionary<string, int> result = await this.candidatesService.CalculateScoresByCriteria(id);
 
-            //var allusersParents = this.parentsService
-            //   .GetParents()
-            //   .Where(x => x.User.UserName == this.User.Identity.Name);
-            //this.ViewData["Parents"] = allusersParents
-            //    .Select(p => new CreateCandidateParentViewModel { Id = p.Id, FullName = p.FullName })
-            //    .ToList();
+            var viewModel = new CalculateScoresByCriteriaOnCandidateViewModel();
 
-            return this.View();
+            viewModel.ScoresByCrieria = result;
+
+            //?
+            viewModel.ParentPermanentCity = candidateModel.Mother.Address.PermanentCity.ToString();
+            //?
+            viewModel.ParentCurrentCity = candidateModel.Mother.Address.CurrentCity.ToString();
+            //?
+            viewModel.ParentPermanentDistrictName = candidateModel.Mother.Address.PermanentDistrict.Name;
+            //?
+            viewModel.ParentCurrentDistrictName = candidateModel.Mother.Address.CurrentDistrict.Name;
+            //?
+            viewModel.ParentWorkDistrictName = candidateModel.Mother.WorkDistrict.Name;
+
+            viewModel.MotherFullName = candidateModel.Mother.FullName;
+
+            viewModel.FatherFullName = candidateModel.Father.FullName;
+
+            return await Task.Run(() => this.View(viewModel));
         }
 
-        [HttpGet(Name = "Applications")]
-        public IActionResult Applications(int id)
-        {
-            //TODO Applications
-            return this.View();
-        }
 
         [HttpGet(Name = "AddApplications")]
-        public async Task<IActionResult> AddApplicationsAsync(int id, CalculateScoresByCriteriaOnCandidateViewModel model)
+        public async Task<IActionResult> AddApplications(int id)
         {
-            var allDistricts = this.districtsService.GetAllDistricts();
+            var allClasses = this.schoolsService
+             .GetAllClasses();
+            this.ViewData["AllClasses"] = allClasses
+                .Select(p => new AddClassApplicationsViewModel { ProfileName = p.Profile.Name, InitialFreeSpots = p.InitialFreeSpots })
+                .ToList();
 
-            this.ViewData["Districts"] = allDistricts.Select(d => new AddApplicationsDistrictViewModel
-                                                {
-                                                    Name = d.Name,
-                                                })
-                                                .ToList();
+            var allSchools = this.schoolsService
+              .GetAllSchools();
+            this.ViewData["AllSchools"] = allSchools
+                .Select(p => new AddSchoolApplicationsViewModel { Id = p.Id, Name = p.Name, DistrictName = p.District.Name })
+                .ToList();
 
-            var scoresByCriteria = await this.candidatesService.CalculateScoresByCriteria(id);
+            CandidateServiceModel candidateServiceModel = await this.candidatesService.GetCandidateById(id);
+            AddApplicationsInputModel model = new AddApplicationsInputModel();
+            model.CandidateId = candidateServiceModel.Id;
 
-            return this.View(scoresByCriteria);
+            return this.View(model);
         }
 
         [HttpPost(Name = "AddApplications")]
-        public IActionResult AddApplications(ScoresByApplicationsViewModel applicationsListViewModel)
+        public async Task<IActionResult> AddApplications(AddApplicationsInputModel input)
         {
-            //TODO Applications
+            if (!this.ModelState.IsValid)
+            {
+                var allClasses = this.schoolsService
+                .GetAllClasses();
+                this.ViewData["AllClasses"] = allClasses
+                    .Select(p => new AddClassApplicationsViewModel { ProfileName = p.Profile.Name, InitialFreeSpots = p.InitialFreeSpots })
+                    .ToList()
+                    .OrderBy(x => x.ProfileName);
+
+                var allSchools = this.schoolsService
+                  .GetAllSchools();
+                this.ViewData["AllSchools"] = allSchools
+                    .Select(p => new AddSchoolApplicationsViewModel { Id = p.Id, Name = p.Name, DistrictName = p.District.Name })
+                    .ToList()
+                    .OrderBy(x => x.DistrictName);
+
+                return this.View(input);
+            }
+
+            List<CandidateSchoolClassServiceModel> applications = 
+                new List<CandidateSchoolClassServiceModel>();
+            //TODO Fix this:
+            SchoolClassServiceModel schoolClassFirstWish = this.schoolsService.GetSchoolClassBySchoolAndClass(input.FirstWishSchool, input.FirstWishClassProfile);
+            SchoolClassServiceModel schoolClassSecondWish = this.schoolsService.GetSchoolClassBySchoolAndClass(input.SecondWishSchool, input.SecondWishClassProfile);
+            SchoolClassServiceModel schoolClassThirdWish = this.schoolsService.GetSchoolClassBySchoolAndClass(input.ThirdWishSchool, input.ThirdWishClassProfile);
+            List<SchoolClassServiceModel> applicationsToAdd = new List<SchoolClassServiceModel>();
+            applicationsToAdd.Add(schoolClassFirstWish);
+            applicationsToAdd.Add(schoolClassSecondWish);
+            applicationsToAdd.Add(schoolClassThirdWish);
+
+            var candidateId = input.CandidateId;
+            var userIdentity = input.UserName;
+            await this.candidatesService.AddApplications(candidateId, userIdentity, applicationsToAdd);
+
+            return this.Redirect("/");
+        }
+
+        [HttpGet(Name = "Profile")]
+        public IActionResult Profile(CandidateProfileViewModel model)
+        {
+
             return this.View();
         }
     }

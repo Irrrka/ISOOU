@@ -1,8 +1,8 @@
-﻿using ISOOU.Services.Mapping;
-using ISOOU.Services.Models;
-
-namespace ISOOU.Web.ViewModels
+﻿namespace ISOOU.Web.ViewModels.Schools
 {
+    using ISOOU.Services.Mapping;
+    using ISOOU.Services.Models;
+
     public class SchoolByDistrictViewModel : IMapFrom<SchoolServiceModel>, IMapTo<SchoolServiceModel>
     {
         public int Id { get; set; }

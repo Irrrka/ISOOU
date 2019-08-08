@@ -20,5 +20,9 @@
         Task<bool> Delete(int id);
 
         Task<Dictionary<string, int>> CalculateScoresByCriteria(int id);
+
+        Task<List<int>> CalculateAdditionalScoresByPositionOfApplication(int id);
+
+        Task AddApplications(int candidateId, string userIdentity, List<SchoolClassServiceModel> applicationsToAdd);
     }
 }
