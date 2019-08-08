@@ -31,7 +31,6 @@
         {
             this.SeedTestData(this.DbContext);
             var schools = this.DbContext.Schools.To<SchoolServiceModel>().ToList();
-            var classProfiles = this.DbContext.ClassProfiles.To<ClassProfileServiceModel>().ToList();
             //TODO
         }
 
@@ -56,23 +55,6 @@
                     DirectorName = "Мария Мария",
                     PhoneNumber = "02/000001",
                     District = district1,
-                    SchoolClasses = new List<SchoolClass>()
-                    {
-                       new SchoolClass()
-                       {
-                           Class = new Class()
-                           {
-                               Profile = new ClassProfile { Name = "Карате"}, InitialFreeSpots = 10,
-                           },
-                       },
-                       new SchoolClass()
-                       {
-                           Class = new Class()
-                           {
-                               Profile = new ClassProfile { Name = "Джудо"}, InitialFreeSpots = 10,
-                           },
-                       },
-                    },
                 },
                  new School
                 {
@@ -81,16 +63,6 @@
                     DirectorName = "Мария Мария Mariq",
                     PhoneNumber = "02/0011101",
                     District = district1,
-                    SchoolClasses = new List<SchoolClass>()
-                    {
-                       new SchoolClass()
-                       {
-                           Class = new Class()
-                           {
-                               Profile = new ClassProfile { Name = "Карате"}, InitialFreeSpots = 10,
-                           },
-                       },
-                    },
                 },
                    new School
                 {
@@ -99,16 +71,6 @@
                     DirectorName = "Мария Мария Mariq Мария",
                     PhoneNumber = "02/111111",
                     District = district2,
-                    SchoolClasses = new List<SchoolClass>()
-                    {
-                       new SchoolClass()
-                       {
-                           Class = new Class()
-                           {
-                               Profile = new ClassProfile { Name = "Джудо"}, InitialFreeSpots = 10,
-                           },
-                       },
-                    },
                 },
                       new School
                 {
@@ -117,16 +79,6 @@
                     DirectorName = "Мария Мария Mariq Мария Мария",
                     PhoneNumber = "02/111111",
                     District = district2,
-                    SchoolClasses = new List<SchoolClass>()
-                    {
-                       new SchoolClass()
-                       {
-                           Class = new Class()
-                           {
-                               Profile = new ClassProfile { Name = "Карате"}, InitialFreeSpots = 10,
-                           },
-                       },
-                    },
                 },
             };
         }

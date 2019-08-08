@@ -16,13 +16,13 @@
             else if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
             {
                 <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Admin">Администратор</a>
+                    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Администратор</a>
                 </li>
             }
             else if (this.User.IsInRole(GlobalConstants.DirectorRoleName))
             {
                 <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="Directors" asp-controller="Home" asp-action="Index" title="Dir">Директор @(this.User.Identity.Name)</a>
+                    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Директор @(this.User.Identity.Name)</a>
                 </li>
             }
             <li class="nav-item">

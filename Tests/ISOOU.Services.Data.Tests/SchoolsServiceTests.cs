@@ -132,7 +132,7 @@
         [Fact]
         public async Task GetSchoolByDistrictId_WithCorrectDistrictAndNoSchools_ShouldReturnEmptyList()
         {
-            this.DbContext.Districts.Add(new District { Id = 100, Name = "Монте Карло"});
+            this.DbContext.Districts.Add(new District { Id = 100, Name = "Монте Карло",});
             this.DbContext.SaveChanges();
 
             int districtId = this.DbContext.Districts.Select(i => i.Id).Last();
@@ -156,37 +156,6 @@
                 () => this.SchoolsServiceMock.GetAllSchoolsByDistrictId(districtId));
         }
 
-        [Fact]
-        public async Task GetAllClassProfiles_WithCorrectData_SchoudReturnAllSeededClassProfiles()
-        {
-            this.SeedTestData(this.DbContext);
-
-            IQueryable<ClassProfileServiceModel> expected = this.DbContext.ClassProfiles.To<ClassProfileServiceModel>();
-            List<ClassProfileServiceModel> actual = await this.SchoolsServiceMock.GetAllClassProfiles().ToListAsync();
-
-            foreach (var data in actual)
-            {
-                Assert.True(
-                        expected.Any(n => n.Name == data.Name),
-                        "SchoolsService GetAllClassProfiles() not works properly!");
-            }
-        }
-
-        [Fact]
-        public async Task GetAllClassProfiles_WithNoData_SchoudReturnEmptyist()
-        {
-
-            var expected = new List<ClassProfileServiceModel>();
-            List<ClassProfileServiceModel> actual = await this.SchoolsServiceMock.GetAllClassProfiles().ToListAsync();
-
-            foreach (var data in actual)
-            {
-                Assert.True(
-                        actual.Count == 0,
-                        "SchoolsService GetAllClassProfiles() not works properly!");
-            }
-        }
-
         private void SeedTestData(ISOOUDbContext context)
         {
             context.Schools.AddRange(this.GetTestData());
@@ -207,77 +176,30 @@
                     DirectorName = "Мария Мария",
                     PhoneNumber = "02/000001",
                     District = district1,
-                    SchoolClasses = new List<SchoolClass>()
-                    {
-                       new SchoolClass()
-                       {
-                           Class = new Class()
-                           {
-                               Profile = new ClassProfile { Name = "Карате"},
-                           },
-                       },
-                       new SchoolClass()
-                       {
-                           Class = new Class()
-                           {
-                               Profile = new ClassProfile { Name = "Джудо"},
-                           },
-                       },
-                    },
                 },
-                 new School
+                new School
                 {
                     Name = "108мо",
                     Address = "ул. Хан Кру2",
                     DirectorName = "Мария Мария Mariq",
                     PhoneNumber = "02/0011101",
                     District = district1,
-                    SchoolClasses = new List<SchoolClass>()
-                    {
-                       new SchoolClass()
-                       {
-                           Class = new Class()
-                           {
-                               Profile = new ClassProfile { Name = "Карате"},
-                           },
-                       },
-                    },
                 },
-                   new School
+                new School
                 {
                     Name = "109то",
                     Address = "ул. Хан Кру22",
                     DirectorName = "Мария Мария Mariq Мария",
                     PhoneNumber = "02/111111",
                     District = district2,
-                    SchoolClasses = new List<SchoolClass>()
-                    {
-                       new SchoolClass()
-                       {
-                           Class = new Class()
-                           {
-                               Profile = new ClassProfile { Name = "Джудо"},
-                           },
-                       },
-                    },
                 },
-                      new School
+                new School
                 {
                     Name = "110то",
                     Address = "ул. Хан Кру222",
                     DirectorName = "Мария Мария Mariq Мария Мария",
                     PhoneNumber = "02/111111",
                     District = district2,
-                    SchoolClasses = new List<SchoolClass>()
-                    {
-                       new SchoolClass()
-                       {
-                           Class = new Class()
-                           {
-                               Profile = new ClassProfile { Name = "Карате"},
-                           },
-                       },
-                    },
                 },
             };
         }

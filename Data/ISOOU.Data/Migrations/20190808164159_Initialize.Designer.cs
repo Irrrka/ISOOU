@@ -4,14 +4,16 @@ using ISOOU.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ISOOU.Data.Migrations
 {
     [DbContext(typeof(ISOOUDbContext))]
-    partial class ISOOUDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190808164159_Initialize")]
+    partial class Initialize
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -392,8 +394,6 @@ namespace ISOOU.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
-
-                    b.Property<int>("AdmissionSchoolId");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();

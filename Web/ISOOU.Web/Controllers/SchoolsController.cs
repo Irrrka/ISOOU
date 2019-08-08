@@ -1,17 +1,13 @@
-﻿namespace ISOOU.Web.Controllers
+﻿
+namespace ISOOU.Web.Controllers
 {
-
+    using System.Linq;
     using System.Threading.Tasks;
-
+    using ISOOU.Data.Models;
     using ISOOU.Services.Data.Contracts;
-    using ISOOU.Services.Models;
     using ISOOU.Services.Mapping;
-    
     using ISOOU.Web.ViewModels.Schools;
     using Microsoft.AspNetCore.Mvc;
-    using ISOOU.Web.ViewModels;
-    using System.Linq;
-    using System.Collections.Generic;
 
     public class SchoolsController : Controller
     {
@@ -52,6 +48,7 @@
 
             //TODO CoefOfYear?
             var model = sm.To<SchoolDetailsViewModel>();
+            //model.FreeSpots = model.FreeSpots * (FreeSpotsCenter.CalculateCoeficient());
 
             return this.View(model);
         }

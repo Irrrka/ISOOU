@@ -13,17 +13,11 @@
 
     public class HomeController : BaseController
     {
-        private readonly SignInManager<SystemUser> signInManager;
-        private readonly IDistrictsService districtsService;
         private readonly IUsersService usersService;
 
         public HomeController(
-            SignInManager<SystemUser> signInManager,
-            IDistrictsService districtsService,
             IUsersService usersService)
         {
-            this.signInManager = signInManager;
-            this.districtsService = districtsService;
             this.usersService = usersService;
         }
 
@@ -54,17 +48,14 @@
         public IActionResult News() => this.View();
        
         //TODO
-        public IActionResult Calendar() => this.View();
+        //public IActionResult Calendar() => this.View();
        
         public IActionResult Helper() => this.View();
        
         public IActionResult Laws() => this.View();
       
         //TODO add map
-        public IActionResult ContactForm()
-        {
-            return this.View();
-        }
+        public IActionResult ContactForm() => this.View();
 
         [HttpPost]
         public async Task<IActionResult> ContactForm(ContactFormInputModel input)
@@ -75,7 +66,6 @@
             }
 
             QuestionServiceModel model = new QuestionServiceModel();
-            //var currUser = this.User.Identity.Name;
             var userIdentity = input.UserEmail;
             model = input.To<QuestionServiceModel>();
             await this.usersService.CreateMessage(userIdentity, model);

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ISOOU.Data.Migrations
 {
     [DbContext(typeof(ISOOUDbContext))]
-    [Migration("20190804162333_Initialize")]
-    partial class Initialize
+    [Migration("20190808171004_AdmissionSchoolId")]
+    partial class AdmissionSchoolId
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -169,69 +169,6 @@ namespace ISOOU.Data.Migrations
                     b.ToTable("CandidateParents");
                 });
 
-            modelBuilder.Entity("ISOOU.Data.Models.CandidateSchoolClass", b =>
-                {
-                    b.Property<int>("CandidateId");
-
-                    b.Property<int>("SchoolClassId");
-
-                    b.Property<DateTime>("CreatedOn");
-
-                    b.Property<int>("Id");
-
-                    b.Property<DateTime?>("ModifiedOn");
-
-                    b.Property<int?>("SchoolClassClassId");
-
-                    b.Property<int?>("SchoolClassSchoolId");
-
-                    b.HasKey("CandidateId", "SchoolClassId");
-
-                    b.HasAlternateKey("Id");
-
-                    b.HasIndex("SchoolClassSchoolId", "SchoolClassClassId");
-
-                    b.ToTable("CandidatesSchoolClasses");
-                });
-
-            modelBuilder.Entity("ISOOU.Data.Models.Class", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedOn");
-
-                    b.Property<int>("InitialFreeSpots");
-
-                    b.Property<DateTime?>("ModifiedOn");
-
-                    b.Property<int>("ProfileId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProfileId");
-
-                    b.ToTable("Classes");
-                });
-
-            modelBuilder.Entity("ISOOU.Data.Models.ClassProfile", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedOn");
-
-                    b.Property<DateTime?>("ModifiedOn");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ClassProfiles");
-                });
-
             modelBuilder.Entity("ISOOU.Data.Models.Criteria", b =>
                 {
                     b.Property<int>("Id")
@@ -375,6 +312,8 @@ namespace ISOOU.Data.Migrations
 
                     b.Property<string>("Email");
 
+                    b.Property<int>("FreeSpots");
+
                     b.Property<DateTime?>("ModifiedOn");
 
                     b.Property<string>("Name")
@@ -394,19 +333,25 @@ namespace ISOOU.Data.Migrations
                     b.ToTable("Schools");
                 });
 
-            modelBuilder.Entity("ISOOU.Data.Models.SchoolClass", b =>
+            modelBuilder.Entity("ISOOU.Data.Models.SchoolCandidate", b =>
                 {
+                    b.Property<int>("CandidateId");
+
                     b.Property<int>("SchoolId");
 
-                    b.Property<int>("ClassId");
+                    b.Property<DateTime>("CreatedOn");
 
                     b.Property<int>("Id");
 
-                    b.HasKey("SchoolId", "ClassId");
+                    b.Property<DateTime?>("ModifiedOn");
 
-                    b.HasIndex("ClassId");
+                    b.HasKey("CandidateId", "SchoolId");
 
-                    b.ToTable("SchoolClasses");
+                    b.HasAlternateKey("Id");
+
+                    b.HasIndex("SchoolId");
+
+                    b.ToTable("SchoolCandidates");
                 });
 
             modelBuilder.Entity("ISOOU.Data.Models.SystemRole", b =>
@@ -449,6 +394,8 @@ namespace ISOOU.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
+
+                    b.Property<int>("AdmissionSchoolId");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -651,26 +598,6 @@ namespace ISOOU.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("ISOOU.Data.Models.CandidateSchoolClass", b =>
-                {
-                    b.HasOne("ISOOU.Data.Models.Candidate", "Candidate")
-                        .WithMany("CandidateSchoolClasses")
-                        .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ISOOU.Data.Models.SchoolClass", "SchoolClass")
-                        .WithMany("CandidateClasses")
-                        .HasForeignKey("SchoolClassSchoolId", "SchoolClassClassId");
-                });
-
-            modelBuilder.Entity("ISOOU.Data.Models.Class", b =>
-                {
-                    b.HasOne("ISOOU.Data.Models.ClassProfile", "Profile")
-                        .WithMany()
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
             modelBuilder.Entity("ISOOU.Data.Models.Criteria", b =>
                 {
                     b.HasOne("ISOOU.Data.Models.Candidate", "Candidate")
@@ -713,15 +640,15 @@ namespace ISOOU.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("ISOOU.Data.Models.SchoolClass", b =>
+            modelBuilder.Entity("ISOOU.Data.Models.SchoolCandidate", b =>
                 {
-                    b.HasOne("ISOOU.Data.Models.Class", "Class")
-                        .WithMany("SchoolClasses")
-                        .HasForeignKey("ClassId")
+                    b.HasOne("ISOOU.Data.Models.Candidate", "Candidate")
+                        .WithMany("SchoolCandidates")
+                        .HasForeignKey("CandidateId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ISOOU.Data.Models.School", "School")
-                        .WithMany("SchoolClasses")
+                        .WithMany("SchoolCandidates")
                         .HasForeignKey("SchoolId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });

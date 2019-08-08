@@ -1,7 +1,6 @@
 ﻿namespace ISOOU.Services.Data
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -11,30 +10,21 @@
 
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
-    using ISOOU.Web.ViewModels;
-    using ISOOU.Web.ViewModels.Districts;
-    using ISOOU.Web.ViewModels.Schools;
     using Microsoft.EntityFrameworkCore;
 
     public class SchoolsService : ISchoolsService
     {
         private readonly IRepository<School> schoolRepository;
-        private readonly IRepository<ClassProfile> classProfileRepository;
-        private readonly IRepository<Class> classRepository;
-        private readonly IRepository<SchoolClass>schoolClassRepository;
+        private readonly IRepository<SystemUser> userRepository;
         private readonly IDistrictsService districtsService;
 
         public SchoolsService(
                 IRepository<School> schoolRepository,
-                IRepository<ClassProfile> classProfileRepository,
-                IRepository<Class> classRepository,
-                IRepository<SchoolClass> schoolClassRepository,
+                IRepository<SystemUser> userRepository,
                 IDistrictsService districtsService)
         {
             this.schoolRepository = schoolRepository;
-            this.classProfileRepository = classProfileRepository;
-            this.classRepository = classRepository;
-            this.schoolClassRepository = schoolClassRepository;
+            this.userRepository = userRepository;
             this.districtsService = districtsService;
         }
 
@@ -95,66 +85,42 @@
             return schoolDetails;
         }
 
-        public IQueryable<ClassProfileServiceModel> GetAllClassProfiles()
+        //public async Task<bool> CreateClassProfile(string name)
+        //{
+        //    var classProfile = new ClassProfile { Name = name };
+        //    await this.classProfileRepository.AddAsync(classProfile);
+        //    var result = await this.classProfileRepository.SaveChangesAsync();
+
+        //    return result > 0;
+        //}
+
+        public async Task<SchoolServiceModel> GetSchoolForEdit(string userIdentity)
         {
-            var classProfiles = this.classProfileRepository
-                .All()
-                .To<ClassProfileServiceModel>();
+            SystemUser user = await this.userRepository
+                           .All()
+                           .FirstOrDefaultAsync(x => x.UserName == userIdentity);
 
-            return classProfiles;
-        }
-
-        public SchoolClassServiceModel GetSchoolClassBySchoolAndClass(string schoolName, string classProfile)
-        {
-            var schoolClass = this.schoolClassRepository
-                .All()
-                .To<SchoolClassServiceModel>()
-                .Where(c => c.Class.Profile.Name == classProfile)
-                .FirstOrDefault(s => s.School.Name == schoolName);
-
-            return schoolClass;
-        }
-
-        public IQueryable<ClassServiceModel> GetAllClasses()
-        {
-            var classes = this.classRepository
-                .All()
-                .To<ClassServiceModel>();
-
-            return classes;
-        }
-
-        public async Task<bool> CreateClassProfile(string name)
-        {
-            var classProfile = new ClassProfile { Name = name };
-            await this.classProfileRepository.AddAsync(classProfile);
-            var result = await this.classProfileRepository.SaveChangesAsync();
-
-            return result > 0;
-        }
-
-        public async Task<bool> EditSchool(ClassServiceModel classModel, SchoolServiceModel model)
-        {
-            var classfORdb = new Class
+            School schoolToEdit = await this.schoolRepository
+                               .All()
+                               .FirstOrDefaultAsync(s => s.Id == user.AdmissionSchoolId);
+            if (schoolToEdit == null)
             {
-                Profile = classModel.Profile.To<ClassProfile>(),
-                InitialFreeSpots = classModel.InitialFreeSpots,
-            };
-            await this.classRepository.AddAsync(classfORdb);
-            await this.classRepository.SaveChangesAsync();
+                throw new ArgumentNullException();
+            }
 
+            var model = schoolToEdit.To<SchoolServiceModel>();
+
+            return model;
+        }
+
+        public async Task<bool> EditSchool(SchoolServiceModel model)
+        {
             var schoolToEdit = model.To<School>();
 
-            SchoolClass schoolClass = new SchoolClass
+            if (schoolToEdit.District == null)
             {
-                Class = classfORdb,
-                ClassId = classfORdb.Id,
-                School = model.To<School>(),
-                SchoolId = model.To<School>().Id,
-            };
-
-            await this.schoolClassRepository.AddAsync(schoolClass);
-            await this.schoolClassRepository.SaveChangesAsync();
+                throw new ArgumentNullException();
+            }
 
             this.schoolRepository.Update(schoolToEdit);
             var result = await this.schoolRepository.SaveChangesAsync();

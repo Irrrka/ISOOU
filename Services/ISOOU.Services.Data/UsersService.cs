@@ -25,7 +25,7 @@
             SystemUser user = await this.userRepository
                             .All()
                             .FirstOrDefaultAsync(x => x.Email == userIdentity);
-            
+
             var quetsion = new Question
             {
                 Subject = model.Subject,

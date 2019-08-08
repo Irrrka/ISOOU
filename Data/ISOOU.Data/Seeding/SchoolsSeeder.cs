@@ -13,49 +13,10 @@
     {
         public async Task SeedAsync(ISOOUDbContext dbContext, IServiceProvider serviceProvider)
         {
-            Class englishClass = new Class();
-            Class russianClass = new Class();
-            Class mathClass = new Class();
-            Class paintClass = new Class();
-            Class musicClass = new Class();
-
-            if (!dbContext.Classes.Any())
-            {
-                englishClass = new Class
-                {
-                    InitialFreeSpots = GlobalConstants.FreeSpotsEnglishLangProfile,
-                    Profile = new ClassProfile { Name = GlobalConstants.EnglishLangProfile },
-                };
-                russianClass = new Class
-                {
-                    InitialFreeSpots = GlobalConstants.FreeSpotsRussianLangProfile,
-                    Profile = new ClassProfile { Name = GlobalConstants.RussianLangProfile },
-                };
-                mathClass = new Class
-                {
-                    InitialFreeSpots = GlobalConstants.FreeSpotsMathProfile,
-                    Profile = new ClassProfile { Name = GlobalConstants.MathProfile },
-                };
-                paintClass = new Class
-                {
-                    InitialFreeSpots = GlobalConstants.FreeSpotsPaintProfile,
-                    Profile = new ClassProfile { Name = GlobalConstants.PaintProfile },
-                };
-                musicClass = new Class
-                {
-                    InitialFreeSpots = GlobalConstants.FreeSpotsMusicProfile,
-                    Profile = new ClassProfile { Name = GlobalConstants.MusicProfile },
-                };
-
-                await dbContext.Classes.AddAsync(englishClass);
-                await dbContext.Classes.AddAsync(russianClass);
-                await dbContext.Classes.AddAsync(mathClass);
-                await dbContext.Classes.AddAsync(paintClass);
-                await dbContext.Classes.AddAsync(musicClass);
-            }
 
             if (!dbContext.Schools.Any())
             {
+                Random random = new Random();
                 District currDistrict;
                 //"Връбница"
                 currDistrict = dbContext.Districts.FirstOrDefault(n => n.Name == "Връбница");
@@ -63,24 +24,6 @@
                     new School
                     {
                         Name = "61 ОУ \"Св.св.Kирил и Методий\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                            new SchoolClass
-                            {
-                            Class = englishClass,
-                            ClassId = englishClass.Id,
-                            },
-                            new SchoolClass
-                            {
-                            Class = mathClass,
-                            ClassId = mathClass.Id,
-                            },
-                            new SchoolClass
-                            {
-                            Class = russianClass,
-                            //ClassId = russianClass.Id,
-                            },
-                        },
                         DirectorName = "Елизабета Колева",
                         Email = "ou_61@abv.bg",
                         PhoneNumber = "02/934-54-89",
@@ -88,28 +31,11 @@
                         URLOfSchool = "http://ou-61.org/",
                         District = currDistrict,
                         Address = "ул. \"Ломско шосе\" № 186",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "62 ОУ \"Христо Ботев\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "вр.и.д. Димитър Караиванов",
                         Email = "ou62@abv.bg",
                         PhoneNumber = "02/834-16-17",
@@ -117,23 +43,11 @@
                         URLOfSchool = "http://www.62ou.com/",
                         District = currDistrict,
                         Address = "кв. \"Обеля\", ул. \"Ефрем Чучков\" № 26",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "70 ОУ \"Св.Kлимент Охридски\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = paintClass,
-                        ClassId = paintClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = musicClass,
-                        ClassId = musicClass.Id,
-                        },
-                        },
                         DirectorName = "Величка Таседжикова",
                         Email = "school70@abv.bg",
                         PhoneNumber = "02/827-74-92",
@@ -141,6 +55,7 @@
                         URLOfSchool = "http://www.70ou.com/",
                         District = currDistrict,
                         Address = "ул. \"Адам Мицкевич\" № 10",
+                        FreeSpots = random.Next(0, 101),
                     });
 
                 //"Възраждане"
@@ -149,19 +64,6 @@
                     new School
                     {
                         Name = "46 ОУ \"Kонстантин Фотинов\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = paintClass,
-                        ClassId = paintClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = musicClass,
-                        ClassId = musicClass.Id,
-                        },
-                        },
                         DirectorName = "Маргарита Грънчарова",
                         Email = "kfotinov46@abv.bg",
                         PhoneNumber = "02/831-00-49",
@@ -169,28 +71,11 @@
                         URLOfSchool = "http://46ou.net/",
                         District = currDistrict,
                         Address = "бул. \"Христо Ботев\" № 109",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "67 ОУ \"Васил Друмев\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Красимир Вълков",
                         Email = "67_school@mail.orbitel.bg",
                         PhoneNumber = "02/822-36-21",
@@ -198,28 +83,11 @@
                         URLOfSchool = string.Empty,
                         District = currDistrict,
                         Address = "ул. \"Гюешево\" № 63",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "76 ОУ \"Уилям Сароян\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Емилия Стефанова",
                         Email = "oy76@abv.bg",
                         PhoneNumber = "02/987-43-44",
@@ -227,28 +95,11 @@
                         URLOfSchool = "http://www.76ou.eu/",
                         District = currDistrict,
                         Address = "ул. \"Братя Миладинови\" № 9",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "136 ОУ \"Любен Kаравелов\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Галина Сахиева",
                         Email = "l.karavelov@dir.bg",
                         PhoneNumber = "02/821-70-88",
@@ -256,6 +107,7 @@
                         URLOfSchool = string.Empty,
                         District = currDistrict,
                         Address = "ул. \"Димитър Петков\" № 116",
+                        FreeSpots = random.Next(0, 101),
                     });
 
                 //"Изгрев"
@@ -264,24 +116,6 @@
                     new School
                     {
                         Name = "11 ОУ \"Св.Пимен Зографски\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Августина Петрова",
                         Email = "zograf011@abv.bg",
                         PhoneNumber = "02/862-41-87",
@@ -289,6 +123,7 @@
                         URLOfSchool = "http://11oy.com",
                         District = currDistrict,
                         Address = "ул. \"Никола Габровски\" № 22",
+                        FreeSpots = random.Next(0, 101),
                     });
 
                 //"Илинден"
@@ -297,24 +132,6 @@
                     new School
                     {
                         Name = "43 ОУ \"Христо Смирненски\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                        new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Сергей Богачев",
                         Email = "ou43@mail.bg",
                         PhoneNumber = "02/822-92-7",
@@ -322,28 +139,11 @@
                         URLOfSchool = "http://43ou.net/",
                         District = currDistrict,
                         Address = "бул. \"Сливница\" № 45",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "45 ОУ \"Kонстантин Величков\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Светла Стефанова",
                         Email = "kv45ou@abv.bg",
                         PhoneNumber = "02/822-14-10",
@@ -351,6 +151,7 @@
                         URLOfSchool = "http://www.45ou.bg/",
                         District = currDistrict,
                         Address = "ул.\"Пловдив\" № 20",
+                        FreeSpots = random.Next(0, 101),
                     });
 
                 //"Искър"
@@ -359,24 +160,6 @@
                     new School
                     {
                         Name = "4 ОУ \"Проф.Джон Атанасов\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                        new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Галина Шипкалиева",
                         Email = "school4sofia@abv.bg",
                         PhoneNumber = "02/979-09-63",
@@ -384,28 +167,11 @@
                         URLOfSchool = "http://4ou.clients.info-top.com/",
                         District = currDistrict,
                         Address = "ул. \"Тирана\" № 12",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "89 ОУ \"Д - р Христо Стамболски\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Тотка Цветанова",
                         Email = "ou_89@abv.bg",
                         PhoneNumber = "02/979-08-38",
@@ -413,28 +179,11 @@
                         URLOfSchool = "http://www.89ousofia.com/",
                         District = currDistrict,
                         Address = "ж.к. \"Дружба - 1\", ул. \"Чудомир Топлодолски\" № 4",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "150 ОУ \"Цар Симеон I\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Радослав Богданов",
                         Email = "csp_150_ou@abv.bg",
                         PhoneNumber = "02/879-67-63",
@@ -442,23 +191,11 @@
                         URLOfSchool = "http://www.150ou.org/",
                         District = currDistrict,
                         Address = "ж.к. \"Дружба - 2\", ул. \"Делийска воденица\" № 11",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "163 ОУ \"Черноризец Храбър\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = paintClass,
-                        ClassId = paintClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = musicClass,
-                        ClassId = musicClass.Id,
-                        },
-                        },
                         DirectorName = "Катя Дойнова",
                         Email = "school_163@abv.bg",
                         PhoneNumber = "02/978-07-2",
@@ -466,6 +203,7 @@
                         URLOfSchool = "http://163ou.org/",
                         District = currDistrict,
                         Address = "ж.к. \"Дружба - 2\", ул. \"Обиколна\" № 36",
+                        FreeSpots = random.Next(0, 101),
                     });
 
                 //"Лозенец"
@@ -474,19 +212,6 @@
                     new School
                     {
                         Name = "122 ОУ \"Николай Лилиев\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = paintClass,
-                        ClassId = paintClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = musicClass,
-                        ClassId = musicClass.Id,
-                        },
-                        },
                         DirectorName = "Ивета Германова",
                         Email = "122ou@122ou.com",
                         PhoneNumber = "02/865-03-74",
@@ -494,28 +219,11 @@
                         URLOfSchool = "https://122ou.com/",
                         District = currDistrict,
                         Address = "ул. \"Презвитер Козма\" 2",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "107 ОУ \"Хан Крум\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Иванка Маринова",
                         Email = "ou107@abv.bg",
                         PhoneNumber = "02/866-20-29",
@@ -523,28 +231,11 @@
                         URLOfSchool = "http://www.107ou.com/",
                         District = currDistrict,
                         Address = "ул. \"Димитър Димов\" № 13",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "120 ОУ \"Георги С. Раковски\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Цветанка Тонева",
                         Email = "ou120@abv.bg",
                         PhoneNumber = "02/866-56-80",
@@ -552,28 +243,11 @@
                         URLOfSchool = "http://www.daskalo.com/ou120/",
                         District = currDistrict,
                         Address = "ул. \"Папа Йоан Павел II\" № 7\"",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "139 ОУ \"Захарий Kруша\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                        new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Румяна Дончева",
                         Email = "zaharikru6a@abv.bg",
                         PhoneNumber = "02/866-77-41",
@@ -581,6 +255,7 @@
                         URLOfSchool = "http://139ou.com/",
                         District = currDistrict,
                         Address = "ул. \"Димитър Хаджикоцев\" № 44",
+                        FreeSpots = random.Next(0, 101),
                     });
 
                 //"Люлин"
@@ -589,24 +264,6 @@
                     new School
                     {
                         Name = "33 ОУ \"Санкт Петербург\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Юлия Георгиева",
                         Email = "lulin_33ou@abv.bg",
                         PhoneNumber = "02/824-88-23",
@@ -614,28 +271,11 @@
                         URLOfSchool = "http://33ou-lulin.org/",
                         District = currDistrict,
                         Address = "ж.к. \"Люлин - 3\" ул. \"309\" № 8",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "77 ОУ \"Kирил и Методий\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Огнян Халембаков",
                         Email = "sof_77ou@abv.bg",
                         PhoneNumber = "02/826-41-63",
@@ -643,28 +283,11 @@
                         URLOfSchool = "https://www.77ousofia.com/",
                         District = currDistrict,
                         Address = "ул. \"3 март\" № 45",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "103 ОУ \"Васил Левски\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Милена Бенкова",
                         Email = "sofia103@abv.bg",
                         PhoneNumber = "02/824-48-85",
@@ -672,6 +295,7 @@
                         URLOfSchool = "http://103ouvasillevski.bg/",
                         District = currDistrict,
                         Address = "ж.к. \"Филиповци\"",
+                        FreeSpots = random.Next(0, 101),
                     });
 
                 //"Младост"
@@ -680,24 +304,6 @@
                     new School
                     {
                         Name = "145 ОУ \"Симеон Радев\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Антоанета Михайлова",
                         Email = "oy_145@abv.bg",
                         PhoneNumber = "02/877-41-36",
@@ -705,23 +311,11 @@
                         URLOfSchool = "http://145ou.com/",
                         District = currDistrict,
                         Address = "ж.к. \"Младост - 1А\", ул. \"Ресен\" № 1",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "82 ОУ \"Васил Априлов\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = paintClass,
-                        ClassId = paintClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = musicClass,
-                        ClassId = musicClass.Id,
-                        },
-                        },
                         DirectorName = "Мартин Ганчев",
                         Email = "school82@gbg.bg",
                         PhoneNumber = "02/973-60-40",
@@ -729,6 +323,7 @@
                         URLOfSchool = "",
                         District = currDistrict,
                         Address = "кв. Горубляне, ул. \"Самоковско шосе\" № 41",
+                        FreeSpots = random.Next(0, 101),
                     });
 
                 //"Надежда"
@@ -737,19 +332,6 @@
                     new School
                     {
                         Name = "98 НУ \"Св.св.Kирил и Методий\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = paintClass,
-                        ClassId = paintClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = musicClass,
-                        ClassId = musicClass.Id,
-                        },
-                        },
                         DirectorName = "Антоанета Михайлова",
                         Email = "nu98@abv.bg",
                         PhoneNumber = "02/938-31-49",
@@ -757,28 +339,11 @@
                         URLOfSchool = "http://nu98.org/",
                         District = currDistrict,
                         Address = "кв. \"Илиянци\", ул. \"Махония\" № 2",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "102 ОУ \"Панайот Волов\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Румяна-Колева",
                         Email = "p_volov@abv.bg",
                         PhoneNumber = "02/938-26-54",
@@ -786,28 +351,11 @@
                         URLOfSchool = "http://102ou.com/",
                         District = currDistrict,
                         Address = "ж.к. \"Надежда - 4\", ул. \"Звезда\" № 3",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "141 OУ  \"Народни будители\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Таня Иванова",
                         Email = "141sou@gmail.com",
                         PhoneNumber = "02/896-01-00",
@@ -815,28 +363,11 @@
                         URLOfSchool = "http://141ou.com/",
                         District = currDistrict,
                         Address = "ж.к. \"Свобода\", ул. \"Народни будители\"",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "63 ОУ \"Христо Ботев\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                        new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Карамфилка Новачкова",
                         Email = "hb_63@abv.bg",
                         PhoneNumber = "02/938-29-26",
@@ -844,28 +375,11 @@
                         URLOfSchool = "http://www.63ou-hbotev.org/",
                         District = currDistrict,
                         Address = "кв. \"Требич\", ул. \"Леденика\" № 12",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "16 ОУ \"Райко Жинзифов\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Елизабет Иванова",
                         Email = "ou16@abv.bg",
                         PhoneNumber = "02/938-28-90",
@@ -873,23 +387,11 @@
                         URLOfSchool = string.Empty,
                         District = currDistrict,
                         Address = "ул. \"Дравски бой\" № 7",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "ЦПЛР - Център за изкуства, култура и образование \"София\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = musicClass,
-                        ClassId = musicClass.Id,
-                        },
-                         new SchoolClass
-                        {
-                        Class = paintClass,
-                        ClassId = paintClass.Id,
-                        },
-                        },
                         DirectorName = "Марияна Тафрова",
                         Email = "stcrd@abv.bg",
                         PhoneNumber = "02/936-07-67",
@@ -897,6 +399,7 @@
                         URLOfSchool = "http://www.stcrd.com/",
                         District = currDistrict,
                         Address = "ж.к. \"Надежда-2\", ул. \"Св. Никола Нови\" № 22",
+                        FreeSpots = random.Next(0, 101),
                     });
 
                 //"Оборище"
@@ -905,24 +408,6 @@
                     new School
                     {
                         Name = "112 ОУ \"Стоян Заимов\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Жанета Бранкова",
                         Email = string.Empty,
                         PhoneNumber = "02/846-73-25",
@@ -930,28 +415,11 @@
                         URLOfSchool = "http://112ou.org/index.php",
                         District = currDistrict,
                         Address = "бул. \"Княз Ал.Дондуков\" № 60",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "129 ОУ \"Антим - I\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Богдана Николова",
                         Email = "ou_antim1@mail.bg",
                         PhoneNumber = "02/944-43-51",
@@ -959,6 +427,7 @@
                         URLOfSchool = "http://129ou-sofia.eu/",
                         District = currDistrict,
                         Address = "ул. \"Султан тепе\" № 1",
+                        FreeSpots = random.Next(0, 101),
                     });
 
                 //"Подуяне"
@@ -967,24 +436,6 @@
                     new School
                     {
                         Name = "199 ОУ \"Св.ап.Йоан Богослов\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Мони Иванов",
                         Email = "ou199@mail.bg",
                         PhoneNumber = "02/946 6956",
@@ -992,28 +443,11 @@
                         URLOfSchool = "http://ou-199.webnode.com/",
                         District = currDistrict,
                         Address = "ж.к. \"Левски - Г\", ул. \"Поручик Г.Кюмюрджиев\" № 30",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "143 ОУ \"Георги Бенковски\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Ирена Дойчинова",
                         Email = "ou143@abv.bg",
                         PhoneNumber = "02/846-51-67",
@@ -1021,28 +455,11 @@
                         URLOfSchool = "http://www.143ou.com/",
                         District = currDistrict,
                         Address = "ул. \"Тодорини кукли\" № 9",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "106 ОУ \"Григорий Цамблак\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Ирена Цукева",
                         Email = "ou106g.camblak@abv.bg",
                         PhoneNumber = "02/945-28-79",
@@ -1050,28 +467,11 @@
                         URLOfSchool = "http://www.106ou.info/",
                         District = currDistrict,
                         Address = "ул. \"Григорий Цамблак\" № 18",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "49 ОУ \"Бенито Хуарес\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Яница Милева",
                         Email = "ou49@abv.bg",
                         PhoneNumber = "02/847-22-40",
@@ -1079,28 +479,11 @@
                         URLOfSchool = "http://www.49ousofia.com/",
                         District = currDistrict,
                         Address = "ул. \"Константин Фотинов\" № 4",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "42 ОУ \"Хаджи Димитър\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Жулиета Александрова",
                         Email = "hdou42@abv.bg",
                         PhoneNumber = "02/840-34-58",
@@ -1108,6 +491,7 @@
                         URLOfSchool = "http://www.42ou.com/",
                         District = currDistrict,
                         Address = "ул. \"Ген.Липранди\" № 5",
+                        FreeSpots = random.Next(0, 101),
                     });
 
                 //"Триадица"
@@ -1116,24 +500,6 @@
                     new School
                     {
                         Name = "20 ОУ \"Тодор Минков\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Анелия Андреева",
                         Email = "ou20sofia@abv.bg",
                         PhoneNumber = "02/954-91-64",
@@ -1141,28 +507,11 @@
                         URLOfSchool = "http://20ou.com/",
                         District = currDistrict,
                         Address = "ул. \"Kняз Борис I\" № 27",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "41 ОУ \"Св.Патриарх Евтимий\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Александра Топалова",
                         Email = "evtimischool@abv.bg",
                         PhoneNumber = "02/987-88-47",
@@ -1170,28 +519,11 @@
                         URLOfSchool = "http://www.41ou.com/",
                         District = currDistrict,
                         Address = "ул. \"Цар Самуил\" № 24",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "104 ОУ \"Захари Стоянов\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Капка Велинова",
                         Email = "ou_104@abv.bg",
                         PhoneNumber = "02/859-51-92",
@@ -1199,28 +531,11 @@
                         URLOfSchool = "http://104ou.com/",
                         District = currDistrict,
                         Address = "ул. \"Костенски водопад\" № 60",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "126 ОУ \"Петко Ю.Тодоров\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Росен Димитров",
                         Email = "ros2@abv.bg",
                         PhoneNumber = "02/859-61-29",
@@ -1228,6 +543,7 @@
                         URLOfSchool = "http://www.126ou.net/",
                         District = currDistrict,
                         Address = "бул. \"България\" № 43",
+                        FreeSpots = random.Next(0, 101),
                     });
 
                 //"Средец"
@@ -1236,24 +552,6 @@
                     new School
                     {
                         Name = "6 ОУ \"Граф Игнатиев\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Ивелина Спасова",
                         Email = "shesto_ou@abv.bg",
                         PhoneNumber = "02/988-17-13",
@@ -1261,28 +559,11 @@
                         URLOfSchool = "http://www.6ou.org/",
                         District = currDistrict,
                         Address = "ул. \"6 - ти септември\" № 16",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "38 ОУ \"Васил Априлов\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Виолета Игова",
                         Email = "aprilov_38ou@abv.bg",
                         PhoneNumber = "02/846-53-58",
@@ -1290,6 +571,7 @@
                         URLOfSchool = "http://129ou-sofia.eu/",
                         District = currDistrict,
                         Address = "ул. \"Шипка\" № 40",
+                        FreeSpots = random.Next(0, 101),
                     });
 
                 //"Сердика"
@@ -1298,24 +580,6 @@
                     new School
                     {
                         Name = "48 ОУ \"Йосиф Kовачев\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Даниела Костова",
                         Email = "ou48@abv.bg",
                         PhoneNumber = "02/831-30-87",
@@ -1323,28 +587,11 @@
                         URLOfSchool = "http://48ou.net/ekip.html",
                         District = currDistrict,
                         Address = "ул. \"Kлокотница\" № 21",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "58 ОУ \"Сергей Румянцев\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Костадин Мустайков",
                         Email = "sergei_rumiancev@abv.bg",
                         PhoneNumber = "02/936-67-55",
@@ -1352,28 +599,11 @@
                         URLOfSchool = "http://58ou.net/",
                         District = currDistrict,
                         Address = "ул. \"Железопътна\" № 65",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "59 ОУ \"Васил Левски\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Марияна Божкова",
                         Email = "sou59@mail.bg",
                         PhoneNumber = "02/936-67-16",
@@ -1381,28 +611,11 @@
                         URLOfSchool = "http://59-ou-vasil-levski.webnode.com/",
                         District = currDistrict,
                         Address = "ул. \"Кестен\" № 1",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "60 ОУ \"Св.св.Kирил и Методий\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Таня Борисова",
                         Email = "school60@abv.bg",
                         PhoneNumber = "02/936-68-75",
@@ -1410,28 +623,11 @@
                         URLOfSchool = "http://www.60ou.org/",
                         District = currDistrict,
                         Address = "ул. \"Hаука\" № 2",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "100 ОУ \"Hайден Геров\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Румяна Темелкова",
                         Email = "oung100@mail.bg",
                         PhoneNumber = "02/931-60-53",
@@ -1439,6 +635,7 @@
                         URLOfSchool = "http://www.100oung.com/",
                         District = currDistrict,
                         Address = "ул. \"Иван Йосифов\" № 68",
+                        FreeSpots = random.Next(0, 101),
                     });
 
                 //"Красна поляна"
@@ -1447,24 +644,6 @@
                     new School
                     {
                         Name = "75 ОУ \"Тодор Kаблешков\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Антон Сивков",
                         Email = "ou75@abv.bg",
                         PhoneNumber = "02/822-15-67",
@@ -1472,28 +651,11 @@
                         URLOfSchool = "http://www.75ou.com/",
                         District = currDistrict,
                         Address = "кв. \"Факултета\", ул. \"Възкресение\" № 151",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "92 ОУ \"Димитър Талев\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Красимира Орсова",
                         Email = "dimitar_talev@mail.bg",
                         PhoneNumber = "02/828-47-33",
@@ -1501,28 +663,11 @@
                         URLOfSchool = "http://www.92dimitartalev.com/",
                         District = currDistrict,
                         Address = "ж.к. \"Красна поляна\", ул. \"Добротич\" № 21",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "147 ОУ \"Йордан Радичков\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Людмил Лачев",
                         Email = "school_147@abv.bg",
                         PhoneNumber = "02/920-80-89",
@@ -1530,6 +675,7 @@
                         URLOfSchool = "http://www.147ou.info/",
                         District = currDistrict,
                         Address = "ж.к. \"Разсадника\",ул. \"Д - р Калинков\" № 40",
+                        FreeSpots = random.Next(0, 101),
                     });
 
                 //"Красо село"
@@ -1538,24 +684,6 @@
                     new School
                     {
                         Name = "25 ОУ \"Д - р Петър Берон\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                         new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Надка Христова",
                         Email = "ou25@abv.bg",
                         PhoneNumber = "02/952-11-70",
@@ -1563,28 +691,11 @@
                         URLOfSchool = "http://www.25ou.com/",
                         District = currDistrict,
                         Address = "ул. \"Балканджи Йово\" № 22",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "34 ОУ \"Стою Шишков\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Цеца Тонева",
                         Email = "oy34@abv.bg",
                         PhoneNumber = "02/859-41-31",
@@ -1592,28 +703,11 @@
                         URLOfSchool = "http://www.34ou.org/",
                         District = currDistrict,
                         Address = "ул. \"Родопски извор\" № 43",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "142 ОУ с РЧО \"Веселин Ханчев\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Юлияна Петрова",
                         Email = "ou142@abv.bg",
                         PhoneNumber = "02/955-58-34",
@@ -1621,6 +715,7 @@
                         URLOfSchool = "http://142ou.org/",
                         District = currDistrict,
                         Address = "ул. \"Пчела\" № 21",
+                        FreeSpots = random.Next(0, 101),
                     });
 
                 //"Овча купел"
@@ -1629,24 +724,6 @@
                     new School
                     {
                         Name = "53 ОУ \"Hиколай Хрелков\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "Малинка Дилова Левакова",
                         Email = "xrelkov@abv.bg",
                         PhoneNumber = "02/957-69-59",
@@ -1654,28 +731,11 @@
                         URLOfSchool = "http://53ou.com/",
                         District = currDistrict,
                         Address = "кв. \"Горна баня\",ул. \"Обзор\" № 6",
+                        FreeSpots = random.Next(0, 101),
                     },
                     new School
                     {
                         Name = "72 ОУ \"Христо Ботев\"",
-                        SchoolClasses = new List<SchoolClass>()
-                        {
-                          new SchoolClass
-                        {
-                        Class = englishClass,
-                        ClassId = englishClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = mathClass,
-                        ClassId = mathClass.Id,
-                        },
-                        new SchoolClass
-                        {
-                        Class = russianClass,
-                        ClassId = russianClass.Id,
-                        },
-                        },
                         DirectorName = "вр.и.д. Евелина Иванова",
                         Email = "ou72@abv.bg",
                         PhoneNumber = "02/929-53-50",
@@ -1683,6 +743,7 @@
                         URLOfSchool = "http://ou72.org/",
                         District = currDistrict,
                         Address = "кв. \"Суходол\",ул. \"Овче поле\" № 14",
+                        FreeSpots = random.Next(0, 101),
                     });
             }
         }

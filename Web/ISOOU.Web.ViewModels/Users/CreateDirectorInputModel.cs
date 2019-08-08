@@ -34,5 +34,8 @@
         [Display(Name = "Повтори парола")]
         [Compare("Password", ErrorMessage = "Двете пароли не съвпадат.")]
         public string ConfirmPassword { get; set; }
+
+        [Display(Name = "Училище")]
+        public int School { get; set; }
     }
 }

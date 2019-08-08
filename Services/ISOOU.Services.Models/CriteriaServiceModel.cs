@@ -11,6 +11,8 @@ namespace ISOOU.Services.Models
 
         public int Scores { get; set; }
 
+        public string UserId { get; set; }
+
         public SystemUserServiceModel User { get; set; }
 
         public int CandidateId { get; set; }

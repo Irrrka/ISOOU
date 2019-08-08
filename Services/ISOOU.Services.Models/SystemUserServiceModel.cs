@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ISOOU.Services.Models
 {
-    public class SystemUserServiceModel : IdentityUser, IMapFrom<SystemUser>
+    public class SystemUserServiceModel : IMapTo<SystemUser>, IMapFrom<SystemUser>
     {
         public string Id { get; set; }
 

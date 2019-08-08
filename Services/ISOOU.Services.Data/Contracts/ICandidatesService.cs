@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
     using ISOOU.Services.Models;
@@ -19,10 +18,10 @@
 
         Task<bool> Delete(int id);
 
-        Task<Dictionary<string, int>> CalculateScoresByCriteria(int id);
+        Task<Dictionary<string, int>> CalculateScoresByCriteria(int id, SchoolServiceModel school);
 
         Task<List<int>> CalculateAdditionalScoresByPositionOfApplication(int id);
 
-        Task AddApplications(int candidateId, string userIdentity, List<SchoolClassServiceModel> applicationsToAdd);
+        Task<bool> AddApplications(int candidateId, string userIdentity, List<SchoolCandidateServiceModel> applicationsToAdd);
     }
 }

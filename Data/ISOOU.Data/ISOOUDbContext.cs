@@ -34,13 +34,13 @@
 
         public DbSet<School> Schools { get; set; }
 
-        public DbSet<Class> Classes { get; set; }
+        //public DbSet<Class> Classes { get; set; }
 
-        public DbSet<ClassProfile> ClassProfiles { get; set; }
+        //public DbSet<ClassProfile> ClassProfiles { get; set; }
 
-        public DbSet<SchoolClass> SchoolClasses { get; set; }
+        //public DbSet<SchoolClass> SchoolClasses { get; set; }
 
-        public DbSet<CandidateSchoolClass> CandidatesSchoolClasses { get; set; }
+        public DbSet<SchoolCandidate> SchoolCandidates { get; set; }
 
         public DbSet<AdmissionProcedure> AdmissionProcedures { get; set; }
 
@@ -81,27 +81,9 @@
             builder.Entity<Candidate>()
                .HasOne(m => m.Father);
 
-            builder.Entity<SchoolClass>()
-                .HasKey(fk => new { fk.SchoolId, fk.ClassId });
-            //builder.Entity<SchoolClass>()
-            //    .HasOne(c => c.Class)
-            //    .WithMany(s => s.SchoolClasses)
-            //    .HasForeignKey(s => s.ClassId);
-            //builder.Entity<SchoolClass>()
-            //   .HasOne(c => c.School)
-            //   .WithMany(s => s.SchoolClasses)
-            //   .HasForeignKey(s => s.SchoolId);
-
-            builder.Entity<CandidateSchoolClass>()
-               .HasKey(fk => new { fk.CandidateId, fk.SchoolClassId });
-            //builder.Entity<CandidateSchoolClass>()
-            //   .HasOne(c => c.Class)
-            //   .WithMany(s => s.CandidateClasses)
-            //   .HasForeignKey(s => s.SchoolClassId);
-            //builder.Entity<CandidateSchoolClass>()
-            //   .HasOne(c => c.Candidate)
-            //   .WithMany(s => s.CandidateSchoolClasses)
-            //   .HasForeignKey(s => s.CandidateId);
+            builder.Entity<SchoolCandidate>()
+               .HasKey(fk => new { fk.CandidateId, fk.SchoolId });
+           
 
             // Needed for Identity models configuration
             base.OnModelCreating(builder);

@@ -8,10 +8,6 @@
 
     public class SchoolForSearchResultViewModel : IMapFrom<SchoolServiceModel>
     {
-        public SchoolForSearchResultViewModel()
-        {
-            this.SchoolClasses = new List<SchoolClassForSearchResultViewModel>();
-        }
 
         public int Id { get; set; }
 
@@ -31,6 +27,6 @@
 
         public string UrlOfMap { get; set; }
 
-        public List<SchoolClassForSearchResultViewModel> SchoolClasses { get; set; }
+        public int FreeSpots { get; set; }
     }
 }

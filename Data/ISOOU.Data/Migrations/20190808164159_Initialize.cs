@@ -27,21 +27,6 @@ namespace ISOOU.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ClassProfiles",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ClassProfiles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Districts",
                 columns: table => new
                 {
@@ -116,28 +101,6 @@ namespace ISOOU.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Classes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    ProfileId = table.Column<int>(nullable: false),
-                    InitialFreeSpots = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Classes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Classes_ClassProfiles_ProfileId",
-                        column: x => x.ProfileId,
-                        principalTable: "ClassProfiles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Addresses",
                 columns: table => new
                 {
@@ -184,7 +147,8 @@ namespace ISOOU.Data.Migrations
                     PhoneNumber = table.Column<string>(nullable: false),
                     DirectorName = table.Column<string>(nullable: false),
                     URLOfSchool = table.Column<string>(nullable: true),
-                    URLOfMap = table.Column<string>(nullable: true)
+                    URLOfMap = table.Column<string>(nullable: true),
+                    FreeSpots = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -378,31 +342,6 @@ namespace ISOOU.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SchoolClasses",
-                columns: table => new
-                {
-                    SchoolId = table.Column<int>(nullable: false),
-                    ClassId = table.Column<int>(nullable: false),
-                    Id = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SchoolClasses", x => new { x.SchoolId, x.ClassId });
-                    table.ForeignKey(
-                        name: "FK_SchoolClasses_Classes_ClassId",
-                        column: x => x.ClassId,
-                        principalTable: "Classes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_SchoolClasses_Schools_SchoolId",
-                        column: x => x.SchoolId,
-                        principalTable: "Schools",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Candidates",
                 columns: table => new
                 {
@@ -483,36 +422,6 @@ namespace ISOOU.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CandidatesSchoolClasses",
-                columns: table => new
-                {
-                    CandidateId = table.Column<int>(nullable: false),
-                    SchoolClassId = table.Column<int>(nullable: false),
-                    Id = table.Column<int>(nullable: false),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    SchoolClassSchoolId = table.Column<int>(nullable: true),
-                    SchoolClassClassId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CandidatesSchoolClasses", x => new { x.CandidateId, x.SchoolClassId });
-                    table.UniqueConstraint("AK_CandidatesSchoolClasses_Id", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CandidatesSchoolClasses_Candidates_CandidateId",
-                        column: x => x.CandidateId,
-                        principalTable: "Candidates",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_CandidatesSchoolClasses_SchoolClasses_SchoolClassSchoolId_SchoolClassClassId",
-                        columns: x => new { x.SchoolClassSchoolId, x.SchoolClassClassId },
-                        principalTable: "SchoolClasses",
-                        principalColumns: new[] { "SchoolId", "ClassId" },
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Criterias",
                 columns: table => new
                 {
@@ -538,6 +447,34 @@ namespace ISOOU.Data.Migrations
                         name: "FK_Criterias_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SchoolCandidates",
+                columns: table => new
+                {
+                    CandidateId = table.Column<int>(nullable: false),
+                    SchoolId = table.Column<int>(nullable: false),
+                    Id = table.Column<int>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SchoolCandidates", x => new { x.CandidateId, x.SchoolId });
+                    table.UniqueConstraint("AK_SchoolCandidates_Id", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SchoolCandidates_Candidates_CandidateId",
+                        column: x => x.CandidateId,
+                        principalTable: "Candidates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SchoolCandidates_Schools_SchoolId",
+                        column: x => x.SchoolId,
+                        principalTable: "Schools",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -647,16 +584,6 @@ namespace ISOOU.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CandidatesSchoolClasses_SchoolClassSchoolId_SchoolClassClassId",
-                table: "CandidatesSchoolClasses",
-                columns: new[] { "SchoolClassSchoolId", "SchoolClassClassId" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Classes_ProfileId",
-                table: "Classes",
-                column: "ProfileId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Criterias_CandidateId",
                 table: "Criterias",
                 column: "CandidateId");
@@ -692,9 +619,9 @@ namespace ISOOU.Data.Migrations
                 column: "SystemUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SchoolClasses_ClassId",
-                table: "SchoolClasses",
-                column: "ClassId");
+                name: "IX_SchoolCandidates_SchoolId",
+                table: "SchoolCandidates",
+                column: "SchoolId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Schools_DistrictId",
@@ -726,31 +653,22 @@ namespace ISOOU.Data.Migrations
                 name: "CandidateParents");
 
             migrationBuilder.DropTable(
-                name: "CandidatesSchoolClasses");
-
-            migrationBuilder.DropTable(
                 name: "Criterias");
 
             migrationBuilder.DropTable(
                 name: "Questions");
 
             migrationBuilder.DropTable(
-                name: "SchoolClasses");
+                name: "SchoolCandidates");
 
             migrationBuilder.DropTable(
                 name: "Candidates");
-
-            migrationBuilder.DropTable(
-                name: "Classes");
 
             migrationBuilder.DropTable(
                 name: "Schools");
 
             migrationBuilder.DropTable(
                 name: "Parents");
-
-            migrationBuilder.DropTable(
-                name: "ClassProfiles");
 
             migrationBuilder.DropTable(
                 name: "Addresses");

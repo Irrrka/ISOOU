@@ -1,23 +1,19 @@
 ﻿namespace ISOOU.Services.Data
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
-    using ISOOU.Common;
     using ISOOU.Data.Common.Repositories;
     using ISOOU.Data.Models;
     using ISOOU.Services.Data.Contracts;
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
     public class ParentsService : IParentsService
     {
-        //TODO Refactor Repository!!!
+        //TODO Refactor Repository?!
         private readonly IRepository<SystemUser> usersRepository;
         private readonly IRepository<Parent> parentsRepository;
         private readonly IRepository<AddressDetails> addressesRepository;
@@ -137,10 +133,11 @@
                                 .All()
                                 .To<ParentServiceModel>()
                                 .FirstOrDefaultAsync(p => p.Id == id);
-            if (parent==null)
+            if (parent == null)
             {
                 throw new ArgumentNullException();
             }
+
             return parent;
         }
 
@@ -150,7 +147,7 @@
                                .All()
                                .SingleOrDefaultAsync(p => p.Id == id);
 
-            if (parentToDelete==null)
+            if (parentToDelete == null)
             {
                 throw new ArgumentNullException();
             }
@@ -159,7 +156,7 @@
             this.parentsRepository.Delete(parentToDelete);
             var result = await this.parentsRepository.SaveChangesAsync();
 
-            return result>0;
+            return result > 0;
         }
     }
 }

@@ -42,6 +42,8 @@
 
         public SystemRole UserRole { get; set; }
 
+        public int AdmissionSchoolId { get; set; }
+
         public virtual ICollection<Candidate> Candidates { get; set; }
 
         public virtual ICollection<Parent> Parents { get; set; }

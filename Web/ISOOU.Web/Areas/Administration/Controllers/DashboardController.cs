@@ -16,6 +16,7 @@
     using ISOOU.Web.Areas.Users.Models;
     using ISOOU.Common;
     using ISOOU.Web.ViewModels.Home;
+    using ISOOU.Services.Models;
 
     public class DashboardController : AdministrationController
     {
@@ -36,13 +37,17 @@
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            var message = (await this.adminService.ReadLastMessage()).To<ContactFormViewModel>();
+            QuestionServiceModel message = await this.adminService.ReadLastMessage();
+            
             return this.View(message);
         }
 
         [HttpGet]
         public ActionResult CreateDirector()
         {
+            IQueryable<SchoolServiceModel> allSchools = this.schoolsService.GetAllSchools();
+            this.ViewData["Schools"] = allSchools.To<CreateDirectorSchoolModel>().ToList();
+
             return this.View();
         }
 
@@ -60,6 +65,7 @@
                 Email = createDirectorInputModel.Email,
                 FullName = createDirectorInputModel.FirstName + " " + createDirectorInputModel.LastName,
                 UCN = createDirectorInputModel.UCN,
+                AdmissionSchoolId = createDirectorInputModel.School,
             };
 
             var result = await this.userManager.CreateAsync(user, createDirectorInputModel.Password);
@@ -68,17 +74,17 @@
             {
                 await this.userManager.AddToRoleAsync(user, GlobalConstants.DirectorRoleName);
             }
-            //TODO SPECIFY THE SCHOOL OF DIR
+
             return this.Redirect("/");
         }
 
         [HttpPost]
         public async Task<ActionResult> StartProcedure()
         {
-            Dictionary<School, Dictionary<ClassProfile, List<Candidate>>> dataFromDbForProcedure = await this.adminService.StartAdmissionProcedure();
+            //TODO ServiceModel
+            var dataFromDbForProcedure = await this.adminService.StartAdmissionProcedure();
             //var possibleYears = FreeSpotsCenter.GetAllPossibleYears();
-            var model =
-                new Dictionary<BaseSchoolModel, Dictionary<ClassProfile, List<CandidateDashboardStartProcedureViewModel>>>();
+            
             //status message KLASIRANETO E IZVYRSHENO???
             return this.View(dataFromDbForProcedure);
         }

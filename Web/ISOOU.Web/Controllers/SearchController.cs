@@ -30,16 +30,9 @@
             this.schoolsService = schoolsService;
         }
 
-        public IActionResult Index()
-        {
-            return this.View();
-        }
-
         [HttpGet]
         public IActionResult FreeSpots()
         {
-            var inputModel = new SearchFreeSpotsInputModel();
-
             var allPossibleYears = FreeSpotsCenter.GetAllPossibleYears();
             this.ViewData["Years"] = allPossibleYears;
 
@@ -49,26 +42,21 @@
             return this.View();
         }
 
+        //TODO Route WIth Params!!!
         [HttpPost]
         //[Route("/Search/FreeSpots/{selectedYearOfBirth}&{selectedDistrictId}")]
         public async Task<IActionResult> FreeSpots(SearchFreeSpotsInputModel input)
         {
             if (!this.ModelState.IsValid)
             {
+                var allPossibleYears = FreeSpotsCenter.GetAllPossibleYears();
+                this.ViewData["Years"] = allPossibleYears;
+
+                var allDistricts = this.districtsService.GetAllDistricts().ToList().To<SearchDistrictViewModel>();
+                this.ViewData["Districts"] = allDistricts;
+
                 return this.View();
             }
-
-            var allPossibleYears = FreeSpotsCenter.GetAllPossibleYears();
-            this.ViewData["Years"] = allPossibleYears;
-
-            var allDistricts = this.districtsService.GetAllDistricts().ToList().To<SearchDistrictViewModel>();
-            this.ViewData["Districts"] = allDistricts;
-
-            var allPossibleClassProfiles = this.schoolsService.GetAllClassProfiles()
-                .Select(x=>x.Name)
-                .OrderBy(name => name).ToList();
-            this.ViewData["Classes"] = allPossibleClassProfiles;
-
 
             int selectedYearOfBirth = input.SelectedYearOfBirth;
             int selectedDistrictId = input.SelectedDistrictId;

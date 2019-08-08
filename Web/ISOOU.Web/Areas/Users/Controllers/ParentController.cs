@@ -46,6 +46,7 @@
             {
                 allCityNames.Add(name);
             }
+
             this.ViewData["CityNames"] = allCityNames;
 
             return this.View();
@@ -56,22 +57,22 @@
         {
             if (!this.ModelState.IsValid)
             {
+                var allDistricts = this.districtsService.GetAllDistricts();
+                this.ViewData["Districts"] = allDistricts
+                    .Select(d => new CreateParentDistrictViewModel { Name = d.Name }).ToList();
+
+                var allCityNames = new List<string>();
+                foreach (var name in Enum.GetNames(typeof(CityName)))
+                {
+                    allCityNames.Add(name);
+                }
+                this.ViewData["CityNames"] = allCityNames;
+
+                var allParentsRole = new List<string>() { "Майка", "Баща" };
+                this.ViewData["ParentsRole"] = allParentsRole;
+
                 return this.View(input);
             }
-
-            var allDistricts = this.districtsService.GetAllDistricts();
-            this.ViewData["Districts"] = allDistricts
-                .Select(d => new CreateParentDistrictViewModel {Name = d.Name}).ToList();
-
-            var allCityNames = new List<string>();
-            foreach (var name in Enum.GetNames(typeof(CityName)))
-            {
-                allCityNames.Add(name);
-            }
-            this.ViewData["CityNames"] = allCityNames;
-
-            var allParentsRole = new List<string>() { "Майка", "Баща" };
-            this.ViewData["ParentsRole"] = allParentsRole;
 
             AddressDetailsServiceModel address = new AddressDetailsServiceModel
             {

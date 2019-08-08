@@ -8,6 +8,7 @@
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
     using ISOOU.Web.ViewModels;
+    using ISOOU.Web.ViewModels.Districts;
     using ISOOU.Web.ViewModels.Schools;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -15,13 +16,16 @@
     public class HomeController : DirectorsController
     {
         private readonly ISchoolsService schoolsService;
+        private readonly IDistrictsService districtsService;
         private readonly UserManager<SystemUser> userManager;
 
         public HomeController(
             ISchoolsService schoolsService,
+            IDistrictsService districtsService,
             UserManager<SystemUser> userManager)
         {
             this.schoolsService = schoolsService;
+            this.districtsService = districtsService;
             this.userManager = userManager;
         }
 
@@ -31,69 +35,74 @@
             return this.View();
         }
 
+        //[HttpGet]
+        //public ActionResult CreateClassProfile()
+        //{
+        //    return this.View();
+        //}
+
+        //[HttpPost]
+        //public async Task<ActionResult> CreateClassProfile(string name)
+        //{
+        //    if (!this.ModelState.IsValid)
+        //    {
+        //        return this.View();
+        //    }
+
+        //    await this.schoolsService.CreateClassProfile(name);
+
+        //    return this.Redirect("/");
+        //}
+
+        //[HttpGet]
+        //public ActionResult EditSchool([FromQuery(Name = "name")] string name)
+        //{
+        //    IQueryable<SchoolServiceModel> allSchools = this.schoolsService.GetAllSchools();
+        //    this.ViewData["Schools"] = allSchools.To<BaseSchoolModel>().ToList();
+
+        //    if (name == null)
+        //    {
+        //        return this.View();
+        //    }
+        //    else
+        //    {
+        //        var schoolToEdit = allSchools
+        //                            .FirstOrDefault(x => x.Name == name)
+        //                            .To<EditSchoolViewModel>();
+        //        return this.View(schoolToEdit);
+        //    }
+        //}
+
         [HttpGet]
-        public ActionResult CreateClassProfile()
+        public async Task<ActionResult> EditSchool()
         {
-            return this.View();
+            var allDistricts = this.districtsService.GetAllDistricts();
+            this.ViewData["Districts"] = allDistricts.Select(d => new EditSchoolDistrictModel { Id = d.Id, Name = d.Name }).ToList();
+
+            var userIdentity = this.User.Identity.Name;
+
+            var model = (await this.schoolsService.GetSchoolForEdit(userIdentity)).To<EditSchoolViewModel>();
+
+            return this.View(model);
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateClassProfile(string name)
+        public async Task<ActionResult> EditSchool(EditSchoolInputModel input)
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View();
+                var allDistricts = this.districtsService.GetAllDistricts();
+                this.ViewData["Districts"] = allDistricts.Select(d => new EditSchoolDistrictModel { Id = d.Id, Name = d.Name }).ToList();
+
+                return this.View(input);
             }
 
-            await this.schoolsService.CreateClassProfile(name);
+            DistrictServiceModel district = await this.districtsService.GetDistrictByName(input.DistrictName);
 
-            return this.Redirect("/");
-        }
+            SchoolServiceModel schoolToEdit = input.To<SchoolServiceModel>();
 
-        [HttpGet]
-        public ActionResult EditSchool([FromQuery(Name = "name")] string name)
-        {
-            IQueryable<SchoolServiceModel> allSchools = this.schoolsService.GetAllSchools();
-            this.ViewData["Schools"] = allSchools.To<BaseSchoolModel>().ToList();
-
-            IQueryable<ClassProfileServiceModel> allClassProfiles = this.schoolsService.GetAllClassProfiles();
-            this.ViewData["ClassProfiles"] = allClassProfiles.To<ClassProfileForEditSchoolViewModel>().ToList();
-
-            if (name == null)
-            {
-                return this.View();
-            }
-            else
-            {
-                var schoolToEdit = allSchools
-                                    .FirstOrDefault(x => x.Name== name)
-                                    .To<EditSchoolViewModel>();
-                return this.View(schoolToEdit);
-            }
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> EditSchool(EditSchoolInputModel model)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View(model);
-            }
-
-            string classProfileName = model.SchoolClassClassProfile;
-            int classInitialFreeSpots = model.SchoolClassClassInitialFreeSpots;
-
-            SchoolServiceModel schoolToEdit = model.To<SchoolServiceModel>();
-
-            ClassProfileServiceModel profile = this.schoolsService.GetAllClassProfiles()
-                                        .FirstOrDefault(x => x.Name == classProfileName);
-            ClassServiceModel @class = new ClassServiceModel
-            {
-                Profile = profile,
-                InitialFreeSpots = classInitialFreeSpots,
-            };
-
-            await this.schoolsService.EditSchool(@class,schoolToEdit);
+            schoolToEdit.District = district;
+            await this.schoolsService.EditSchool(schoolToEdit);
 
             return this.Redirect("/");
         }

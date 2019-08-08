@@ -14,14 +14,10 @@
             <thead class="py-2 bg">
                 <tr>
                     <th scope="col"></th>
-                    @{
-                        foreach (var classProfile in (IEnumerable<string>)this.ViewData["Classes"])
-                        {
-                            <th scope="col">
-                                <a href="~/Schools/Details/@classProfile" target="_blank">@classProfile</a>
-                            </th>
-                        }
-                    }
+                    <th scope="col">
+                        СВОБОДНИ МЕСТА
+                    </th>
+                   
                 </tr>
             </thead>
 
@@ -33,12 +29,10 @@
                         <td height="21" style="height:21px;border-top:none;">
                             <a href="/Schools/Details/@school.Key.Id">@school.Key.Name</a>
                         </td>
-                        @foreach (var classProfileFreeSpots in school.Value)
-                        {
-                            <td height="21" style="height:21px;border-top:none;">
-                                @classProfileFreeSpots
-                            </td>
-                        }
+                        <td height="21" style="height:21px;border-top:none;">
+                            @school.Value
+                        </td>
+
                     </tr>
                     }
                 }

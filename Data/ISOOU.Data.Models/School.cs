@@ -10,7 +10,7 @@
     {
         public School()
         {
-            this.SchoolClasses = new HashSet<SchoolClass>();
+            this.SchoolCandidates = new HashSet<SchoolCandidate>();
         }
 
         [Required]
@@ -40,6 +40,8 @@
         [DataType(DataType.Url)]
         public string URLOfMap { get; set; }
 
-        public virtual ICollection<SchoolClass> SchoolClasses { get; set; }
+        public int FreeSpots { get; set; }
+
+        public virtual ICollection<SchoolCandidate> SchoolCandidates { get; set; }
     }
 }

@@ -1,16 +1,16 @@
-﻿using ISOOU.Common;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
-
-namespace ISOOU.Data.Models
+﻿namespace ISOOU.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    using ISOOU.Common;
+
     //TODO Refactor >> all functionality about freespots here?
     [NotMapped]
     public static class FreeSpotsCenter
     {
-        public static void GetFreeSpotsByYearsAndDistrictBySchoolClassesBySchool()
+        public static void GetFreeSpotsByYearsAndDistrictBySchool()
         {
 
         }

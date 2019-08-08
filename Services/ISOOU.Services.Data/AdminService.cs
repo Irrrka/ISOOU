@@ -39,7 +39,7 @@
             return message;
         }
 
-        public async Task<Dictionary<School, Dictionary<ClassProfile, List<Candidate>>>> StartAdmissionProcedure()
+        public async Task<Dictionary<School, List<SchoolCandidate>>> StartAdmissionProcedure()
         {
             var schoolsFromDb = await this.schoolRepository.All()
                                                      .ToListAsync();
@@ -56,33 +56,24 @@
             }
 
             var dataForProcedure =
-                new Dictionary<School, Dictionary<ClassProfile, List<Candidate>>>();
+                new Dictionary<School, List<SchoolCandidate>>();
 
             foreach (var schoolFromDb in schoolsFromDb)
             {
                 if (!dataForProcedure.ContainsKey(schoolFromDb))
                 {
-                    dataForProcedure.Add(schoolFromDb, new Dictionary<ClassProfile, List<Candidate>>());
+                    dataForProcedure.Add(schoolFromDb, new List<SchoolCandidate>());
                 }
 
-                foreach (var schoolClass in schoolFromDb.SchoolClasses)
+                foreach (var candidateFromDb in candidatesFromDb)
                 {
-                    if (!dataForProcedure[schoolFromDb].ContainsKey(schoolClass.Class.Profile))
+                    var candidateForSchool = candidateFromDb.SchoolCandidates
+                        .Where(x => x.SchoolId == schoolFromDb.Id && x.CandidateId == candidateFromDb.Id)
+                        .FirstOrDefault();
+                    if (candidateForSchool != null)
                     {
-                        dataForProcedure[schoolFromDb].Add(schoolClass.Class.Profile, new List<Candidate>());
+                        dataForProcedure[schoolFromDb].Add(candidateForSchool);
                     }
-
-                    var candidates = new List<Candidate>();
-                    //TODO check!!!
-                    foreach (var candidateFromDb in candidatesFromDb)
-                    {
-                        var result = candidateFromDb.CandidateSchoolClasses
-                            .Where(x => x.SchoolClass.School == schoolFromDb && x.SchoolClass.Class == schoolClass.Class)
-                            .FirstOrDefault(x => x.Candidate == candidateFromDb).Candidate;
-                        candidates.Add(result);
-                    }
-
-                    dataForProcedure[schoolFromDb][schoolClass.Class.Profile].AddRange(candidates);
                 }
             }
 

@@ -163,11 +163,11 @@
         {//NOT WORKING!!!!!!!!
             CandidateServiceModel candidateModel = await this.candidatesService.GetCandidateById(id);
 
-            Dictionary<string, int> result = await this.candidatesService.CalculateScoresByCriteria(id);
+            //Dictionary<string, int> result = await this.candidatesService.CalculateScoresByCriteria(id);
 
             var viewModel = new CalculateScoresByCriteriaOnCandidateViewModel();
 
-            viewModel.ScoresByCrieria = result;
+            //viewModel.ScoresByCrieria = result;
 
             //?
             viewModel.ParentPermanentCity = candidateModel.Mother.Address.PermanentCity.ToString();
@@ -191,12 +191,6 @@
         [HttpGet(Name = "AddApplications")]
         public async Task<IActionResult> AddApplications(int id)
         {
-            var allClasses = this.schoolsService
-             .GetAllClasses();
-            this.ViewData["AllClasses"] = allClasses
-                .Select(p => new AddClassApplicationsViewModel { ProfileName = p.Profile.Name, InitialFreeSpots = p.InitialFreeSpots })
-                .ToList();
-
             var allSchools = this.schoolsService
               .GetAllSchools();
             this.ViewData["AllSchools"] = allSchools
@@ -215,13 +209,6 @@
         {
             if (!this.ModelState.IsValid)
             {
-                var allClasses = this.schoolsService
-                .GetAllClasses();
-                this.ViewData["AllClasses"] = allClasses
-                    .Select(p => new AddClassApplicationsViewModel { ProfileName = p.Profile.Name, InitialFreeSpots = p.InitialFreeSpots })
-                    .ToList()
-                    .OrderBy(x => x.ProfileName);
-
                 var allSchools = this.schoolsService
                   .GetAllSchools();
                 this.ViewData["AllSchools"] = allSchools
@@ -232,20 +219,18 @@
                 return this.View(input);
             }
 
-            List<CandidateSchoolClassServiceModel> applications = 
-                new List<CandidateSchoolClassServiceModel>();
+            var applicationsToAdd = new List<SchoolCandidateServiceModel>();
             //TODO Fix this:
-            SchoolClassServiceModel schoolClassFirstWish = this.schoolsService.GetSchoolClassBySchoolAndClass(input.FirstWishSchool, input.FirstWishClassProfile);
-            SchoolClassServiceModel schoolClassSecondWish = this.schoolsService.GetSchoolClassBySchoolAndClass(input.SecondWishSchool, input.SecondWishClassProfile);
-            SchoolClassServiceModel schoolClassThirdWish = this.schoolsService.GetSchoolClassBySchoolAndClass(input.ThirdWishSchool, input.ThirdWishClassProfile);
-            List<SchoolClassServiceModel> applicationsToAdd = new List<SchoolClassServiceModel>();
-            applicationsToAdd.Add(schoolClassFirstWish);
-            applicationsToAdd.Add(schoolClassSecondWish);
-            applicationsToAdd.Add(schoolClassThirdWish);
+            //var schoolFirstWish = this.schoolsService.GetSchoolDetailsByName(input.FirstWishSchool);
+            //var schoolSecondWish = this.schoolsService.GetSchoolDetailsByName(input.SecondWishSchool);
+            //var schoolThirdWish = this.schoolsService.GetSchoolDetailsByName(input.ThirdWishSchool);
+            //applicationsToAdd.Add(schoolFirstWish);
+            //applicationsToAdd.Add(schoolSecondWish);
+            //applicationsToAdd.Add(schoolThirdWish);
 
-            var candidateId = input.CandidateId;
-            var userIdentity = input.UserName;
-            await this.candidatesService.AddApplications(candidateId, userIdentity, applicationsToAdd);
+            //var candidateId = input.CandidateId;
+            //var userIdentity = input.UserName;
+            //await this.candidatesService.AddApplications(candidateId, userIdentity, applicationsToAdd);
 
             return this.Redirect("/");
         }

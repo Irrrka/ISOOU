@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
     using ISOOU.Common;
@@ -13,7 +12,6 @@
     using ISOOU.Services.Data.Contracts;
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
     public class CandidatesService : ICandidatesService
@@ -22,22 +20,28 @@
         private readonly IRepository<Candidate> candidatesRepository;
         private readonly IRepository<Parent> parentsRepository;
         private readonly IRepository<Criteria> criteriasRepository;
+        private readonly IRepository<SchoolCandidate> schoolCandidateRepository;
+        private readonly ISchoolsService schoolService;
 
         public CandidatesService(
             IRepository<SystemUser> usersRepository,
             IRepository<Candidate> candidatesRepository,
             IRepository<Parent> parentsRepository,
-            IRepository<Criteria> criteriasRepository)
+            IRepository<Criteria> criteriasRepository,
+            IRepository<SchoolCandidate> schoolCandidateRepository,
+            ISchoolsService schoolService)
         {
             this.usersRepository = usersRepository;
             this.candidatesRepository = candidatesRepository;
             this.parentsRepository = parentsRepository;
             this.criteriasRepository = criteriasRepository;
+            this.schoolCandidateRepository = schoolCandidateRepository;
+            this.schoolService = schoolService;
         }
 
         public async Task<bool> Create(string userIdentity, CandidateServiceModel model)
         {
-            if (model==null)
+            if (model == null)
             {
                 throw new ArgumentNullException();
             }
@@ -66,10 +70,8 @@
 
         public IQueryable<CandidateServiceModel> GetCandidates()
         {
-   
             var candidates = this.candidatesRepository
                 .All()
-                .Include(x => x.User)
                 .To<CandidateServiceModel>();
 
             return candidates;
@@ -99,6 +101,8 @@
             candidateToEdit.YearOfBirth = candidateToEdit.YearOfBirth;
             candidateToEdit.UCN = candidateToEdit.UCN;
 
+            //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
             //candidateToEdit.Mother = await this.parentsRepository
             //                    .All()
             //                    .SingleOrDefaultAsync(p => p.Id == candidateServiceModel.Mother.Id);
@@ -117,7 +121,11 @@
             var candidateToDelete = await this.candidatesRepository
                                .All()
                                .SingleOrDefaultAsync(p => p.Id == id);
-            CoreValidator.EnsureNotNull(GlobalConstants.CandidateNotFound);
+
+            if (candidateToDelete == null)
+            {
+                throw new ArgumentNullException();
+            }
 
             candidateToDelete.IsDeleted = true;
             this.candidatesRepository.Update(candidateToDelete);
@@ -126,7 +134,7 @@
             return true;
         }
 
-        public async Task<Dictionary<string, int>> CalculateScoresByCriteria(int id)
+        public async Task<Dictionary<string, int>> CalculateScoresByCriteria(int id, SchoolServiceModel school)
         {
             var scoresByCriteria = new Dictionary<string, int>();
 
@@ -135,10 +143,6 @@
                               .SingleOrDefaultAsync(p => p.Id == id);
             var mother = candidate.Mother;
             var father = candidate.Father;
-
-            //TODO additionalScoresBySchool
-            var schoolsClasses = candidate
-                                    .CandidateSchoolClasses.Select(c => c.SchoolClass);
 
             CalculateCityCriteria(scoresByCriteria, mother, father);
 
@@ -159,36 +163,36 @@
             var additionalScoresBySchool = new Dictionary<SchoolServiceModel, int>();
             scoresByCriteria.Add(nameof(additionalScoresBySchool), 0);
 
-            foreach (var schoolclass in schoolsClasses)
-            {
-                CalculateParentDistrictCriteria(scoresByCriteria, mother, father, schoolclass);
+            //foreach (var schoolclass in schoolsClasses)
+            //{
+            //    CalculateParentDistrictCriteria(scoresByCriteria, mother, father, schoolclass);
 
-                CalculateParentWorkDistrictCriteria(scoresByCriteria, mother, father, schoolclass);
+            //    CalculateParentWorkDistrictCriteria(scoresByCriteria, mother, father, schoolclass);
 
-                //this.ScoresByCriteriaByCandidates[candidate][nameof(additionalScoresBySchool)]= additionalScoresBySchool[schoolclass.School];
+            //    //this.ScoresByCriteriaByCandidates[candidate][nameof(additionalScoresBySchool)]= additionalScoresBySchool[schoolclass.School];
 
-                foreach (var kvp in scoresByCriteria)
-                {
-                    var criteria = kvp.Key;
-                    var scores = kvp.Value;
-                    var criteriaForDB = new Criteria()
-                    {
-                        Name = criteria,
-                        Scores = scores,
-                        CandidateId = candidate.Id,
-                        Candidate = candidate,
-                    };
+            //    foreach (var kvp in scoresByCriteria)
+            //    {
+            //        var criteria = kvp.Key;
+            //        var scores = kvp.Value;
+            //        var criteriaForDB = new Criteria()
+            //        {
+            //            Name = criteria,
+            //            Scores = scores,
+            //            CandidateId = candidate.Id,
+            //            Candidate = candidate,
+            //        };
 
-                    candidate.Scores.Add(criteriaForDB);
-                    await this.criteriasRepository.AddAsync(criteriaForDB);
-                    await this.criteriasRepository.SaveChangesAsync();
-                    //TODO Map by Id?
-                }
+            //        candidate.Scores.Add(criteriaForDB);
+            //        await this.criteriasRepository.AddAsync(criteriaForDB);
+            //        await this.criteriasRepository.SaveChangesAsync();
+            //        //TODO Map by Id?
+            //    }
 
-                this.candidatesRepository.Update(candidate);
-                await this.candidatesRepository.SaveChangesAsync();
+            //    this.candidatesRepository.Update(candidate);
+            //    await this.candidatesRepository.SaveChangesAsync();
 
-            }
+            //}
             //Todo CalculationOfChangingSchool????
             return scoresByCriteria;
         }
@@ -216,40 +220,51 @@
             return scoresForApplications;
         }
 
-        public async Task AddApplications(int candidateId, string userIdentity, List<SchoolClassServiceModel> applicationsToAdd)
+        public async Task<bool> AddApplications(int candidateId, string userIdentity, List<SchoolCandidateServiceModel> applicationsToAdd)
         {
             SystemUser user = await this.usersRepository
                           .All()
                           .FirstOrDefaultAsync(x => x.UserName == userIdentity);
 
-            var candidateToEdit = await this.candidatesRepository
+            var candidateFomDb = await this.candidatesRepository
                                .All()
                                .FirstOrDefaultAsync(p => p.Id == candidateId);
 
-            if (candidateToEdit == null)
+            if (candidateFomDb == null)
             {
                 throw new ArgumentNullException();
             }
 
-            foreach (var app in applicationsToAdd)
+            var result = 0;
+
+            foreach (var applicationToAdd in applicationsToAdd)
             {
-                var schoolClass = app.To<SchoolClass>();
-                candidateToEdit.CandidateSchoolClasses.Add(
-                    new CandidateSchoolClass
-                    {
-                        SchoolClass = schoolClass,
-                    });
+                var schoolFromDb = this.schoolService
+                    .GetSchoolDetailsById(applicationToAdd.SchoolId)
+                    .To<School>();
+
+                var schoolCandidate = new SchoolCandidate
+                                        {
+                                            Candidate = candidateFomDb,
+                                            CandidateId = applicationToAdd.CandidateId,
+                                            School = schoolFromDb,
+                                            SchoolId = applicationToAdd.SchoolId,
+                                        };
+
+                this.schoolCandidateRepository.Update(schoolCandidate);
+                result = await this.schoolCandidateRepository.SaveChangesAsync();
             }
 
-            this.candidatesRepository.Update(candidateToEdit);
-            await this.candidatesRepository.SaveChangesAsync();
+            return result > 0;
         }
 
 
-        private static void CalculateParentWorkDistrictCriteria(Dictionary<string, int> scoresByCriteria, Parent mother, Parent father, SchoolClass schoolclass)
+
+
+        private static void CalculateParentWorkDistrictCriteria(Dictionary<string, int> scoresByCriteria, Parent mother, Parent father, School school)
         {
-            if (mother.WorkDistrict == schoolclass.School.District
-                || father.WorkDistrict == schoolclass.School.District)
+            if (mother.WorkDistrict.Name == school.District.Name
+                || father.WorkDistrict.Name == school.District.Name)
             {
                 var parentWorksInDistrict = GlobalConstants.ParentHasWorkInDistrictCriteria;
 
@@ -260,14 +275,14 @@
 
                 scoresByCriteria[nameof(parentWorksInDistrict)] = parentWorksInDistrict;
 
-                // additionalScoresBySchool[schoolclass.School] += this.ParentWorksInDistrict;
+                //additionalScoresBySchool[schoolclass.School] += this.ParentWorksInDistrict;
             }
         }
 
-        private static void CalculateParentDistrictCriteria(Dictionary<string, int> scoresByCriteria, Parent mother, Parent father, SchoolClass schoolclass)
+        private static void CalculateParentDistrictCriteria(Dictionary<string, int> scoresByCriteria, Parent mother, Parent father, School school)
         {
-            if (mother.Address.CurrentDistrict == schoolclass.School.District
-                                || father.Address.CurrentDistrict == schoolclass.School.District)
+            if (mother.Address.CurrentDistrict.Name == school.District.Name
+                                || father.Address.CurrentDistrict.Name == school.District.Name)
             {
                 var parentAddressDistrict = GlobalConstants.ParentCurrentDistrictCriteria;
 
@@ -279,8 +294,8 @@
                 scoresByCriteria[nameof(parentAddressDistrict)] = parentAddressDistrict;
             }
 
-            if (mother.Address.PermanentDistrict == schoolclass.School.District
-                || father.Address.PermanentDistrict == schoolclass.School.District)
+            if (mother.Address.PermanentDistrict == school.District
+                || father.Address.PermanentDistrict == school.District)
             {
                 var parentAddressDistrict = GlobalConstants.ParentPermanentDistrictCriteria;
 
