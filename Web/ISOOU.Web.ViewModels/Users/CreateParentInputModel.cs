@@ -1,11 +1,11 @@
-﻿using ISOOU.Data.Models;
-using ISOOU.Services.Mapping;
-using ISOOU.Services.Models;
-using System.ComponentModel.DataAnnotations;
-
-namespace ISOOU.Web.ViewModels.Users
+﻿namespace ISOOU.Web.ViewModels.Users
 {
-    public class CreateParentInputModel : IMapTo<ParentServiceModel>
+    using System.ComponentModel.DataAnnotations;
+
+    using ISOOU.Services.Mapping;
+    using ISOOU.Services.Models;
+
+    public class CreateParentInputModel : IMapTo<ParentServiceModel>, IMapFrom<ParentServiceModel>
     {
         [Required]
         [StringLength(20, MinimumLength = 2)]

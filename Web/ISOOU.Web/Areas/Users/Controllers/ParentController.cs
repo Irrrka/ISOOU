@@ -1,23 +1,18 @@
 ﻿namespace ISOOU.Web.Areas.Users
 {
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using ISOOU.Data.Models;
     using ISOOU.Data.Models.Enums;
     using ISOOU.Services.Data.Contracts;
-    using ISOOU.Services.Models;
     using ISOOU.Services.Mapping;
+    using ISOOU.Services.Models;
     using ISOOU.Web.Areas.Users.Controllers;
-    using ISOOU.Web.Areas.Users.Models;
-    using ISOOU.Web.ViewModels.Users;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using ISOOU.Web.ViewModels.Districts;
-    using System.Collections.Generic;
-    using System;
-    using ISOOU.Common;
+    using ISOOU.Web.ViewModels.Users;
+    using Microsoft.AspNetCore.Mvc;
 
     public class ParentController : UserController
     {
@@ -86,11 +81,20 @@
 
             DistrictServiceModel workDistrict = await this.districtsService.GetDistrictByName(input.WorkDistrictName);
 
-            ParentServiceModel parent = input.To<ParentServiceModel>();
+            //Automap doesnt work!
+            //ParentServiceModel parent = input.To<ParentServiceModel>();
+            ParentServiceModel parent = new ParentServiceModel();
+            parent.FirstName = input.FirstName;
+            parent.MiddleName = input.MiddleName;
+            parent.LastName = input.LastName;
+            parent.UCN = input.UCN;
+            parent.WorkName = input.WorkName;
             parent.WorkDistrict = workDistrict;
             parent.Address = address;
             parent.Role = (ParentRole)Enum.Parse(typeof(ParentRole), input.ParentRole);
+            parent.PhoneNumber = input.PhoneNumber;
             var userIdentity = input.UserName;
+
             await this.parentsService.Create(userIdentity, parent);
 
             return this.Redirect("/");
@@ -134,8 +138,10 @@
         [HttpGet(Name = "Edit")]
         public async Task<IActionResult> Edit(int id)
         {
-            var parentEditViewModel = (await this.parentsService.GetParentById(id)).To<EditParentInputModel>();
-            if (parentEditViewModel == null)
+            var model = (await this.parentsService.GetParentById(id))
+                .To<EditParentInputModel>();
+
+            if (model == null)
             {
                 return this.Redirect("/");
             }
@@ -153,8 +159,7 @@
             }
             this.ViewData["CityNames"] = allCityNames;
 
-
-            return this.View(parentEditViewModel);
+            return this.View(model);
         }
 
         [HttpPost("/Users/Parent/Edit")]

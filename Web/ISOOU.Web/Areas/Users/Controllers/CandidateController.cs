@@ -69,15 +69,15 @@
             var userIdentity = candidateInputModel.UserName;
 
             CandidateServiceModel candidateToAdd = new CandidateServiceModel();
-            //TODO automapper doesnt work why?
-            //var father = await this.parentsService.GetParentById(candidateInputModel.FatherId);
-            //var mother = await this.parentsService.GetParentById(candidateInputModel.MotherId);
+            ParentServiceModel mother = await this.parentsService.GetParentById(candidateInputModel.MotherId);
+            ParentServiceModel father = await this.parentsService.GetParentById(candidateInputModel.FatherId);
+
             candidateToAdd.UCN = candidateInputModel.UCN;
             candidateToAdd.FirstName = candidateInputModel.FirstName;
             candidateToAdd.MiddleName = candidateInputModel.MiddleName;
             candidateToAdd.LastName = candidateInputModel.LastName;
-            //candidateToAdd.Father = father;
-           // candidateToAdd.Mother = mother;
+            candidateToAdd.Parents.Add(new CandidateParentsServiceModel { Parent = father, Candidate = candidateToAdd});
+            candidateToAdd.Parents.Add(new CandidateParentsServiceModel { Parent = mother, Candidate = candidateToAdd});
             candidateToAdd.KinderGarten = candidateInputModel.KinderGarten;
             candidateToAdd.SEN = candidateInputModel.SEN;
             candidateToAdd.Desease = candidateInputModel.Desease;
@@ -116,6 +116,7 @@
             var allusersParents = this.parentsService
                .GetParents()
                .Where(x => x.User.UserName == this.User.Identity.Name);
+
             this.ViewData["Parents"] = allusersParents
                 .Select(p => new CreateCandidateParentViewModel { Id = p.Id, FullName = p.FullName })
                 .ToList();
@@ -128,7 +129,7 @@
         {
             if (!this.ModelState.IsValid)
             {
-                var allusersParents = this.parentsService
+               var allusersParents = this.parentsService
               .GetParents()
               .Where(x => x.User.UserName == this.User.Identity.Name);
                 this.ViewData["Parents"] = allusersParents
@@ -137,16 +138,17 @@
                 return this.View(candidateInputModel);
             }
 
-            var candidateToEdit = candidateInputModel.To<CandidateServiceModel>();
-            //TODO automapper doesnt work why?
-            //var father = await this.parentsService.GetParentById(candidateInputModel.FatherId);
-            //var mother = await this.parentsService.GetParentById(candidateInputModel.MotherId);
+            //var candidateToEdit =  new CandidateServiceModel();
+           var candidateToEdit = candidateInputModel.To<CandidateServiceModel>();
+            ParentServiceModel mother = await this.parentsService.GetParentById(candidateInputModel.MotherId);
+            ParentServiceModel father = await this.parentsService.GetParentById(candidateInputModel.FatherId);
+
             candidateToEdit.UCN = candidateInputModel.UCN;
             candidateToEdit.FirstName = candidateInputModel.FirstName;
             candidateToEdit.MiddleName = candidateInputModel.MiddleName;
             candidateToEdit.LastName = candidateInputModel.LastName;
-            //candidateToAdd.Father = father;
-            // candidateToAdd.Mother = mother;
+            candidateToEdit.Parents.Add(new CandidateParentsServiceModel { Parent = father, Candidate = candidateToEdit });
+            candidateToEdit.Parents.Add(new CandidateParentsServiceModel { Parent = mother, Candidate = candidateToEdit });
             candidateToEdit.KinderGarten = candidateInputModel.KinderGarten;
             candidateToEdit.SEN = candidateInputModel.SEN;
             candidateToEdit.Desease = candidateInputModel.Desease;
@@ -170,19 +172,19 @@
             //viewModel.ScoresByCrieria = result;
 
             //?
-            viewModel.ParentPermanentCity = candidateModel.Mother.Address.PermanentCity.ToString();
-            //?
-            viewModel.ParentCurrentCity = candidateModel.Mother.Address.CurrentCity.ToString();
-            //?
-            viewModel.ParentPermanentDistrictName = candidateModel.Mother.Address.PermanentDistrict.Name;
-            //?
-            viewModel.ParentCurrentDistrictName = candidateModel.Mother.Address.CurrentDistrict.Name;
-            //?
-            viewModel.ParentWorkDistrictName = candidateModel.Mother.WorkDistrict.Name;
+            //viewModel.ParentPermanentCity = candidateModel.Mother.Address.PermanentCity.ToString();
+            ////?
+            //viewModel.ParentCurrentCity = candidateModel.Mother.Address.CurrentCity.ToString();
+            ////?
+            //viewModel.ParentPermanentDistrictName = candidateModel.Mother.Address.PermanentDistrict.Name;
+            ////?
+            //viewModel.ParentCurrentDistrictName = candidateModel.Mother.Address.CurrentDistrict.Name;
+            ////?
+            //viewModel.ParentWorkDistrictName = candidateModel.Mother.WorkDistrict.Name;
 
-            viewModel.MotherFullName = candidateModel.Mother.FullName;
+            //viewModel.MotherFullName = candidateModel.Mother.FullName;
 
-            viewModel.FatherFullName = candidateModel.Father.FullName;
+            //viewModel.FatherFullName = candidateModel.Father.FullName;
 
             return await Task.Run(() => this.View(viewModel));
         }

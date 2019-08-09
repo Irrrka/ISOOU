@@ -23,11 +23,9 @@
 
         public bool Desease { get; set; }
 
-        public virtual Parent Mother { get; set; }
-
-        public virtual Parent Father { get; set; }
-
         public virtual ICollection<SchoolCandidate> SchoolCandidates { get; set; }
+
+        public virtual ICollection<CandidateParent> CandidateParents { get; set; }
 
         public CandidateStatus Status { get; set; } = CandidateStatus.NotAdmitted;
 

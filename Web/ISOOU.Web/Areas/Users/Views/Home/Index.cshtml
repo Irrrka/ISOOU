@@ -4,13 +4,15 @@
     this.ViewData["Title"] = "Начало";
 }
 
-<section class="ftco-section img" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
+<section class="ftco-heading-2" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
 <hr />
 <div class="container">
     <div class="row">
         <div class="col-md-12">
             <div class="container d-flex justify-content-around">
-                <a class="btn btn-secondary py-3 px-4" asp-area="Users" asp-controller="Candidate" asp-action="Create">Добави дете</a>
+                <a class="btn btn-secondary py-3 px-4" asp-area="Users" asp-controller="Candidate" asp-action="Create">
+                Добави дете
+                </a>
                 @if (Model != null && Model.Parents.Count >= 2)
                 {
                     <a class="btn btn-secondary py-3 px-4 disabled" asp-area="Users" asp-controller="Parent" asp-action="Create">
@@ -42,7 +44,7 @@
                                     foreach (var candidate in Model.Candidates)
                                     {
                                     <td>
-                                        <a asp-controller="Candidate" asp-action="Edit" asp-route-id="@candidate.Id">@candidate.FullName</a>
+                                        <a asp-area="Users" asp-controller="Candidate" asp-action="Edit" asp-route-id="@candidate.Id">@candidate.FullName</a>
                                     </td>
                                         }
                                     }
@@ -65,7 +67,7 @@
                                     foreach (var parent in Model.Parents)
                                     {
                                     <td>
-                                        <a asp-controller="Parent" asp-action="Edit" asp-route-id="@parent.Id">@parent.FullName</a>
+                                        <a asp-area="Users" asp-controller="Parent" asp-action="Edit" asp-route-id="@parent.Id">@parent.FullName</a>
                                     </td>
                                         }
                                     }

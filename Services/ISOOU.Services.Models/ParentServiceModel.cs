@@ -8,12 +8,6 @@ namespace ISOOU.Services.Models
 {
     public class ParentServiceModel : IMapFrom<Parent>, IMapTo<Parent>
     {
-        public ParentServiceModel()
-           : base()
-        {
-            this.Candidates = new HashSet<CandidateParentsServiceModel>();
-        }
-
         public int Id { get; set; }
 
         public string FirstName { get; set; }
@@ -40,7 +34,7 @@ namespace ISOOU.Services.Models
 
         public virtual AddressDetailsServiceModel Address { get; set; }
 
-        public string UserId { get; set; }
+        //public string UserId { get; set; }
 
         public SystemUserServiceModel User { get; set; }
 
@@ -50,7 +44,7 @@ namespace ISOOU.Services.Models
 
         public virtual DistrictServiceModel WorkDistrict { get; set; }
 
-        public virtual ICollection<CandidateParentsServiceModel> Candidates { get; set; }
+        public virtual List<CandidateParentsServiceModel> Candidates { get; set; }
 
     }
 }

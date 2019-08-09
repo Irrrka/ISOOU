@@ -8,7 +8,7 @@
 
         public int Scores { get; set; }
 
-        public SystemUser User { get; set; }
+        //public SystemUser User { get; set; }
 
         public int CandidateId { get; set; }
 

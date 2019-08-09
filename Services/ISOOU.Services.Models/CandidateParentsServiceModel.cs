@@ -3,7 +3,7 @@ using ISOOU.Services.Mapping;
 
 namespace ISOOU.Services.Models
 {
-    public class CandidateParentsServiceModel : IMapFrom<CandidateParents>, IMapTo<CandidateParents>
+    public class CandidateParentsServiceModel : IMapFrom<CandidateParent>, IMapTo<CandidateParent>
     {
         public int Id { get; set; }
 

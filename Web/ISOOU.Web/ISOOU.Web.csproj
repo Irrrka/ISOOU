@@ -42,8 +42,4 @@
     <ProjectReference Include="..\ISOOU.Web.Infrastructure\ISOOU.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\ISOOU.Web.ViewModels\ISOOU.Web.ViewModels.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\Users\Views\Shared\" />
-  </ItemGroup>
 </Project>

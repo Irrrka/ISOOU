@@ -124,15 +124,14 @@
             this.parentsRepository.Update(parentToEdit);
             var result = await this.parentsRepository.SaveChangesAsync();
 
-            return result>0;
+            return result > 0;
         }
 
         public async Task<ParentServiceModel> GetParentById(int id)
         {
-            var parent = await this.parentsRepository
-                                .All()
-                                .To<ParentServiceModel>()
-                                .FirstOrDefaultAsync(p => p.Id == id);
+            var parents = await this.parentsRepository.All().ToListAsync();
+            var parent = parents.FirstOrDefault(p => p.Id == id).To<ParentServiceModel>();
+
             if (parent == null)
             {
                 throw new ArgumentNullException();

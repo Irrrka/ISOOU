@@ -17,8 +17,8 @@
     public class CandidatesService : ICandidatesService
     {
         private readonly IRepository<SystemUser> usersRepository;
+        private readonly IParentsService parentsService;
         private readonly IRepository<Candidate> candidatesRepository;
-        private readonly IRepository<Parent> parentsRepository;
         private readonly IRepository<Criteria> criteriasRepository;
         private readonly IRepository<SchoolCandidate> schoolCandidateRepository;
         private readonly ISchoolsService schoolService;
@@ -26,14 +26,14 @@
         public CandidatesService(
             IRepository<SystemUser> usersRepository,
             IRepository<Candidate> candidatesRepository,
-            IRepository<Parent> parentsRepository,
+            IParentsService parentsService,
             IRepository<Criteria> criteriasRepository,
             IRepository<SchoolCandidate> schoolCandidateRepository,
             ISchoolsService schoolService)
         {
             this.usersRepository = usersRepository;
             this.candidatesRepository = candidatesRepository;
-            this.parentsRepository = parentsRepository;
+            this.parentsService = parentsService;
             this.criteriasRepository = criteriasRepository;
             this.schoolCandidateRepository = schoolCandidateRepository;
             this.schoolService = schoolService;
@@ -91,24 +91,19 @@
                             .All()
                             .FirstOrDefaultAsync(x => x.UserName == userIdentity);
 
-            candidateToEdit.FirstName = candidateServiceModel.FirstName;
-            candidateToEdit.MiddleName = candidateServiceModel.MiddleName;
-            candidateToEdit.LastName = candidateServiceModel.LastName;
-            candidateToEdit.SEN = candidateServiceModel.SEN;
-            candidateToEdit.Desease = candidateServiceModel.Desease;
+            var parents = candidateServiceModel.Parents.To<Parent>();
+
+           
+            candidateToEdit = candidateServiceModel.To<Candidate>();
+            //candidateToEdit.FirstName = candidateServiceModel.FirstName;
+            //candidateToEdit.MiddleName = candidateServiceModel.MiddleName;
+            //candidateToEdit.LastName = candidateServiceModel.LastName;
+            //candidateToEdit.SEN = candidateServiceModel.SEN;
+            //candidateToEdit.Desease = candidateServiceModel.Desease;
             candidateToEdit.User = user;
-            candidateToEdit.KinderGarten = candidateToEdit.KinderGarten;
-            candidateToEdit.YearOfBirth = candidateToEdit.YearOfBirth;
-            candidateToEdit.UCN = candidateToEdit.UCN;
-
-            //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-            //candidateToEdit.Mother = await this.parentsRepository
-            //                    .All()
-            //                    .SingleOrDefaultAsync(p => p.Id == candidateServiceModel.Mother.Id);
-            //candidateToEdit.Father = await this.parentsRepository
-            //                    .All()
-            //                    .SingleOrDefaultAsync(p => p.Id == candidateServiceModel.Father.Id);
+            //candidateToEdit.KinderGarten = candidateToEdit.KinderGarten;
+            //candidateToEdit.YearOfBirth = candidateToEdit.YearOfBirth;
+            //candidateToEdit.UCN = candidateToEdit.UCN;
 
             this.candidatesRepository.Update(candidateToEdit);
             var result = await this.candidatesRepository.SaveChangesAsync();
@@ -141,8 +136,11 @@
             var candidate = await this.candidatesRepository
                               .All()
                               .SingleOrDefaultAsync(p => p.Id == id);
-            var mother = candidate.Mother;
-            var father = candidate.Father;
+
+            Parent mother = candidate.CandidateParents
+                .FirstOrDefault(m => m.Parent.Role == (ParentRole)Enum.Parse(typeof(ParentRole), "Майка")).Parent;
+            Parent father = candidate.CandidateParents
+                .FirstOrDefault(m => m.Parent.Role == (ParentRole)Enum.Parse(typeof(ParentRole), "Баща")).Parent;
 
             CalculateCityCriteria(scoresByCriteria, mother, father);
 
@@ -261,10 +259,10 @@
 
 
 
-        private static void CalculateParentWorkDistrictCriteria(Dictionary<string, int> scoresByCriteria, Parent mother, Parent father, School school)
+        private static void CalculateParentWorkDistrictCriteria(Dictionary<string, int> scoresByCriteria, CandidateParent mother, CandidateParent father, School school)
         {
-            if (mother.WorkDistrict.Name == school.District.Name
-                || father.WorkDistrict.Name == school.District.Name)
+            if (mother.Parent.WorkDistrict.Name == school.District.Name
+                || father.Parent.WorkDistrict.Name == school.District.Name)
             {
                 var parentWorksInDistrict = GlobalConstants.ParentHasWorkInDistrictCriteria;
 
@@ -338,7 +336,7 @@
 
         private static void CalculateHasManyBrosCriteria(Dictionary<string, int> scoresByCriteria, Parent mother, Parent father)
         {
-            if (mother.Candidates.Count >= GlobalConstants.ChildrenInFamily || father.Candidates.Count >= GlobalConstants.ChildrenInFamily)
+            if (mother.CandidateParents.Count >= GlobalConstants.ChildrenInFamily || father.CandidateParents.Count >= GlobalConstants.ChildrenInFamily)
             {
                 var hasManyBrothersOrSisters = GlobalConstants.HasManyBrothersOrSistersCriteria;
                 if (!scoresByCriteria.ContainsKey(nameof(hasManyBrothersOrSisters)))

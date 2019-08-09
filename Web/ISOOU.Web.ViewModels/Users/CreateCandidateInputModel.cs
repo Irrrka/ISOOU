@@ -2,12 +2,11 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    using AutoMapper;
     using ISOOU.Common;
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
 
-    public class CreateCandidateInputModel : IMapTo<CandidateServiceModel>, IHaveCustomMappings
+    public class CreateCandidateInputModel : IMapTo<CandidateServiceModel>, IMapFrom<CandidateServiceModel>
     {
         public int Id { get; set; }
 
@@ -56,21 +55,5 @@
 
         public string FatherFullName { get; set; }
 
-        public void CreateMappings(IProfileExpression configuration)
-        {
-            //configuration
-            //     .CreateMap<CreateCandidateInputModel, CandidateServiceModel>()
-            //     .ForMember(destination => destination.Mother,
-            //                 opts => opts.MapFrom(origin => new ParentServiceModel { FullName = origin.Mother }));
-            //configuration
-            //    .CreateMap<CreateCandidateInputModel, CandidateServiceModel>()
-            //    .ForMember(destination => destination.Father,
-            //                opts => opts.MapFrom(origin => new ParentServiceModel { FullName = origin.Father }));
-            //configuration
-            //    .CreateMap<CreateCandidateInputModel, CandidateServiceModel>()
-            //    .ForMember(
-            //       destination => destination.Mother.FullName,
-            //       opts => opts.MapFrom(origin => origin.Mother));
-        }
     }
 }

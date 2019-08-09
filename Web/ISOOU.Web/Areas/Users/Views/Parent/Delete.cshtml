@@ -1,12 +1,13 @@
 ﻿@model ISOOU.Web.ViewModels.Users.DeleteParentViewModel
 @{
-    ViewData["Title"] = "Родители";
+    ViewData["Title"] = "Изтриване на родител";
 }
 
-<section class="ftco-section img" id="section" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
+<section class="ftco-heading-2" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
     <div class="container">
         <div class="row">
             <div class="col-md-8">
+                <h4 class="ftco-heading-2 mt-2">@this.ViewData["Title"]</h4>
                 <form id="edit-parent" method="post">
                     <div class="form-inline mt-1 justify-content-end">
                         <label asp-for="UCN"></label>

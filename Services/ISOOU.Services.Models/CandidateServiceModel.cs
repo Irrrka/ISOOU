@@ -6,13 +6,6 @@ namespace ISOOU.Services.Models
 {
     public class CandidateServiceModel : IMapFrom<Candidate>, IMapTo<Candidate>
     {
-        public CandidateServiceModel()
-            : base()
-        {
-            this.SchoolCandidates = new HashSet<SchoolCandidateServiceModel>();
-            this.Scores = new List<CriteriaServiceModel>();
-        }
-
         public int Id { get; set; }
 
         public string FirstName { get; set; }
@@ -33,18 +26,16 @@ namespace ISOOU.Services.Models
 
         public bool Desease { get; set; }
 
-        public virtual ParentServiceModel Mother { get; set; }
-
-        public virtual ParentServiceModel Father { get; set; }
-
         public string UserId { get; set; }
 
         public SystemUserServiceModel User { get; set; }
 
-        public virtual ICollection<SchoolCandidateServiceModel> SchoolCandidates { get; set; }
+        public ICollection<SchoolCandidateServiceModel> SchoolCandidates { get; set; }
 
         public CandidateStatus Status { get; set; } = CandidateStatus.NotAdmitted;
 
         public ICollection<CriteriaServiceModel> Scores { get; set; }
+
+        public ICollection<CandidateParentsServiceModel> Parents { get; set; }
     }
 }

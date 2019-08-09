@@ -34,13 +34,9 @@
 
         public DbSet<School> Schools { get; set; }
 
-        //public DbSet<Class> Classes { get; set; }
-
-        //public DbSet<ClassProfile> ClassProfiles { get; set; }
-
-        //public DbSet<SchoolClass> SchoolClasses { get; set; }
-
         public DbSet<SchoolCandidate> SchoolCandidates { get; set; }
+
+        public DbSet<CandidateParent> CandidateParents { get; set; }
 
         public DbSet<AdmissionProcedure> AdmissionProcedures { get; set; }
 
@@ -72,18 +68,10 @@
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
-            builder.Entity<Parent>()
-               .HasMany(c => c.Candidates);
-
-            builder.Entity<Candidate>()
-               .HasOne(m => m.Mother);
-
-            builder.Entity<Candidate>()
-               .HasOne(m => m.Father);
-
             builder.Entity<SchoolCandidate>()
                .HasKey(fk => new { fk.CandidateId, fk.SchoolId });
-           
+            builder.Entity<CandidateParent>()
+               .HasKey(fk => new { fk.CandidateId, fk.ParentId });
 
             // Needed for Identity models configuration
             base.OnModelCreating(builder);

@@ -6,10 +6,9 @@
 
     public class Parent : Person
     {
-        public Parent()
-            : base()
+        public Parent() : base()
         {
-            this.Candidates = new HashSet<CandidateParents>();
+            this.CandidateParents = new HashSet<CandidateParent>();
         }
 
         public ParentRole Role { get; set; }
@@ -18,7 +17,7 @@
 
         public virtual District WorkDistrict { get; set; }
 
-        public virtual ICollection<CandidateParents> Candidates { get; set; }
+        public virtual ICollection<CandidateParent> CandidateParents { get; set; }
 
     }
 }

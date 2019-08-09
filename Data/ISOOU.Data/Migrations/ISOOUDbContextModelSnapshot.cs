@@ -97,8 +97,6 @@ namespace ISOOU.Data.Migrations
 
                     b.Property<bool>("Desease");
 
-                    b.Property<int?>("FatherId");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(20);
@@ -116,8 +114,6 @@ namespace ISOOU.Data.Migrations
                         .HasMaxLength(20);
 
                     b.Property<DateTime?>("ModifiedOn");
-
-                    b.Property<int?>("MotherId");
 
                     b.Property<string>("PhoneNumber");
 
@@ -137,30 +133,22 @@ namespace ISOOU.Data.Migrations
 
                     b.HasIndex("AddressId");
 
-                    b.HasIndex("FatherId");
-
                     b.HasIndex("IsDeleted");
-
-                    b.HasIndex("MotherId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Candidates");
                 });
 
-            modelBuilder.Entity("ISOOU.Data.Models.CandidateParents", b =>
+            modelBuilder.Entity("ISOOU.Data.Models.CandidateParent", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<int>("CandidateId");
 
                     b.Property<int>("ParentId");
 
-                    b.HasKey("Id");
+                    b.Property<int>("Id");
 
-                    b.HasIndex("CandidateId");
+                    b.HasKey("CandidateId", "ParentId");
 
                     b.HasIndex("ParentId");
 
@@ -183,13 +171,9 @@ namespace ISOOU.Data.Migrations
 
                     b.Property<int>("Scores");
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CandidateId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Criterias");
                 });
@@ -570,28 +554,20 @@ namespace ISOOU.Data.Migrations
                         .WithMany()
                         .HasForeignKey("AddressId");
 
-                    b.HasOne("ISOOU.Data.Models.Parent", "Father")
-                        .WithMany()
-                        .HasForeignKey("FatherId");
-
-                    b.HasOne("ISOOU.Data.Models.Parent", "Mother")
-                        .WithMany()
-                        .HasForeignKey("MotherId");
-
                     b.HasOne("ISOOU.Data.Models.SystemUser", "User")
                         .WithMany("Candidates")
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("ISOOU.Data.Models.CandidateParents", b =>
+            modelBuilder.Entity("ISOOU.Data.Models.CandidateParent", b =>
                 {
                     b.HasOne("ISOOU.Data.Models.Candidate", "Candidate")
-                        .WithMany()
+                        .WithMany("CandidateParents")
                         .HasForeignKey("CandidateId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ISOOU.Data.Models.Parent", "Parent")
-                        .WithMany("Candidates")
+                        .WithMany("CandidateParents")
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
@@ -602,10 +578,6 @@ namespace ISOOU.Data.Migrations
                         .WithMany("Scores")
                         .HasForeignKey("CandidateId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ISOOU.Data.Models.SystemUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ISOOU.Data.Models.Parent", b =>
