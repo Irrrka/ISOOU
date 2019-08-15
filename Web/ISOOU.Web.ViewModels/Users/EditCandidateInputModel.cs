@@ -41,6 +41,13 @@
         [Display(Name = " Хронично заболяване ")]
         public bool Desease { get; set; }
 
+        [Display(Name = " Имунизации")]
+        public bool Immunization { get; set; }
+
+        public string MotherFullName { get; set; }
+
+        public string FatherFullName { get; set; }
+
         public string UserName { get; set; }
     }
 }

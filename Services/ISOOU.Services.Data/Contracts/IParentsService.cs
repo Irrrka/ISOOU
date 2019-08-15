@@ -15,9 +15,11 @@
 
         Task<string> GetParentFullNameByRole(ClaimsPrincipal userIdentity, ParentRole role);
 
+        Task<int> GetParentIdByFullName(ClaimsPrincipal userIdentity, string fullName);
+
         Task<ParentServiceModel> GetParentById(int id);
 
-        Task<bool> Edit(string userIdentity, ParentServiceModel parentServiceModel);
+        Task<bool> Edit(int id, ParentServiceModel parentServiceModel);
 
         Task<bool> Delete(int id);
     }

@@ -49,7 +49,7 @@
             }
 
             var userId = this.userManager.GetUserId(userIdentity);
-           
+
             Candidate candidate = new Candidate
             {
                 FirstName = model.FirstName,
@@ -93,25 +93,37 @@
         public async Task<bool> Edit(int id, ClaimsPrincipal userIdentity, CandidateServiceModel candidateServiceModel)
         {
 
-            var candidateToEdit = (await this.GetCandidateById(id)).To<Candidate>();
+            Candidate candidateToEdit = await this.candidatesRepository.All()
+                                                    .FirstOrDefaultAsync(p => p.Id == id);
             if (candidateToEdit == null)
             {
                 throw new ArgumentNullException();
             }
 
-            var getParents = this.parentsService.GetParents(userIdentity).To<Parent>().ToList();
-            candidateToEdit.UserId = candidateToEdit.UserId;
+            //Parent mother = (await this.candidatesRepository.All()
+                                                  //  .FirstOrDefaultAsync(p => p.MotherId == candidateServiceModel.MotherId))
+                                                  //  .Mother;
+           // Parent father = (await this.candidatesRepository.All()
+                                                //   .FirstOrDefaultAsync(p => p.FatherId == candidateServiceModel.FatherId))
+                                                //   .Father;
+            var userId = this.userManager.GetUserId(userIdentity);
+
+            candidateToEdit.UserId = userId;
             candidateToEdit.UCN = candidateToEdit.UCN;
             candidateToEdit.YearOfBirth = candidateToEdit.YearOfBirth;
-            //HOW TO EDIT MANY TO MANY RELATIONSHIP!!!
-           // candidateToEdit.CandidateParents = getParents;
+
             candidateToEdit.Desease = candidateServiceModel.Desease;
             candidateToEdit.SEN = candidateServiceModel.SEN;
+            candidateToEdit.Immunization = candidateServiceModel.Immunization;
+            candidateToEdit.KinderGarten = candidateServiceModel.KinderGarten;
             candidateToEdit.FirstName = candidateServiceModel.FirstName;
             candidateToEdit.MiddleName = candidateServiceModel.MiddleName;
             candidateToEdit.LastName = candidateServiceModel.LastName;
 
-            await this.candidatesRepository.AddAsync(candidateToEdit);
+            candidateToEdit.FatherId = candidateServiceModel.FatherId;
+            candidateToEdit.MotherId = candidateServiceModel.MotherId;
+
+            this.candidatesRepository.Update(candidateToEdit);
             var result = await this.candidatesRepository.SaveChangesAsync();
 
             return result > 0;

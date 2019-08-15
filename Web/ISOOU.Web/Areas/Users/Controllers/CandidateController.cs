@@ -118,6 +118,87 @@
             return this.Redirect("/");
         }
 
+        [HttpGet("/Users/Candidate/Edit")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var model = (await this.candidatesService.GetCandidateById(id))
+                                    .To<EditCandidateInputModel>();
+
+            if (model == null)
+            {
+                return this.Redirect("/");
+            }
+
+            var motherFullName = await this.parentsService
+            .GetParentFullNameByRole(this.User, ParentRole.Майка);
+
+            var motherList = new List<string>
+            {
+                $"{motherFullName}",
+                ParentRole.Друг.ToString(),
+                ParentRole.Неизвестен.ToString(),
+            };
+
+            var fatherFullName = await this.parentsService
+             .GetParentFullNameByRole(this.User, ParentRole.Баща);
+
+            var fatherList = new List<string>
+            {
+                $"{fatherFullName}",
+                ParentRole.Друг.ToString(),
+                ParentRole.Неизвестен.ToString(),
+            };
+
+            this.ViewData["Mother"] = motherList;
+            this.ViewData["Father"] = fatherList;
+
+            return this.View(model);
+        }
+
+        [HttpPost("/Users/Candidate/Edit")]
+        public async Task<IActionResult> Edit(int id, EditCandidateInputModel input)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                var motherFullName = await this.parentsService
+             .GetParentFullNameByRole(this.User, ParentRole.Майка);
+
+                var motherList = new List<string>
+            {
+                $"{motherFullName}",
+                ParentRole.Друг.ToString(),
+                ParentRole.Неизвестен.ToString(),
+            };
+
+                var fatherFullName = await this.parentsService
+                 .GetParentFullNameByRole(this.User, ParentRole.Баща);
+
+                var fatherList = new List<string>
+            {
+                $"{fatherFullName}",
+                ParentRole.Друг.ToString(),
+                ParentRole.Неизвестен.ToString(),
+            };
+
+                this.ViewData["Mother"] = motherList;
+                this.ViewData["Father"] = fatherList;
+
+                return this.View(input);
+            }
+            //Radio tag helper
+            ClaimsPrincipal userIdentity = this.User;
+
+            CandidateServiceModel candidatToEdit = input.To<CandidateServiceModel>();
+            int motherId = await this.parentsService.GetParentIdByFullName(userIdentity, input.MotherFullName);
+            int fatherId = await this.parentsService.GetParentIdByFullName(userIdentity, input.FatherFullName);
+            candidatToEdit.MotherId = motherId;
+            candidatToEdit.FatherId = fatherId;
+
+            await this.candidatesService.Edit(id, userIdentity, candidatToEdit);
+
+            return this.Redirect("/");
+        }
+
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
@@ -128,49 +209,6 @@
 
             //TODO
             await this.candidatesService.Delete(id);
-
-            return this.Redirect("/");
-        }
-
-        [HttpGet("/Users/Candidate/Edit")]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var candidateEditViewModel = (await this.candidatesService.GetCandidateById(id))
-                                    .To<EditCandidateInputModel>();
-
-            if (candidateEditViewModel == null)
-            {
-                return this.Redirect("/");
-            }
-
-            return this.View(candidateEditViewModel);
-        }
-
-        [HttpPost("/Users/Candidate/Edit")]
-        public async Task<IActionResult> Edit(int id, EditCandidateInputModel candidateInputModel)
-        {
-            if (!this.ModelState.IsValid)
-            {
-              // var allusersParents = this.parentsService
-              //.GetParents()
-              //.Where(x => x.User.UserName == this.User.Identity.Name);
-              //  this.ViewData["Parents"] = allusersParents
-              //      .Select(p => new CreateCandidateParentViewModel { Id = p.Id, FullName = p.FullName })
-              //      .ToList();
-                return this.View(candidateInputModel);
-            }
-
-            var candidateToEdit = candidateInputModel.To<CandidateServiceModel>();
-            
-            // var parents = await this.parentsService.GetParents(userIdentity).ToListAsync();mmm
-            //foreach (var parent in parents)
-            //{
-            //    candidateToEdit.CandidateParents.Add(
-            //        new CandidateParentServiceModel { ParentId = parent.Id });
-            //}
-            ClaimsPrincipal userIdentity = this.User;
-
-            await this.candidatesService.Edit(id, userIdentity, candidateToEdit);
 
             return this.Redirect("/");
         }

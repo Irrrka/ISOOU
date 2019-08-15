@@ -74,7 +74,6 @@ namespace ISOOU.Web.ViewModels.Users
 
         public string UserName { get; set; }
 
-
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration
@@ -96,7 +95,13 @@ namespace ISOOU.Web.ViewModels.Users
                     opts => opts.MapFrom(origin => origin.Address.CurrentDistrict.Name))
               .ForMember(
                     destination => destination.AddressCurrentDistrictName,
-                    opts => opts.MapFrom(origin => origin.Address.PermanentDistrict.Name));
+                    opts => opts.MapFrom(origin => origin.Address.PermanentDistrict.Name))
+             .ForMember(
+                    destination => destination.AddressPermanentDistrictName,
+                    opts => opts.MapFrom(origin => origin.Address.PermanentDistrict.Name))
+             .ForMember(
+                    destination => destination.AddressCurrentDistrictName,
+                    opts => opts.MapFrom(origin => origin.Address.CurrentDistrict.Name));
 
             configuration
                .CreateMap<CreateParentInputModel, ParentServiceModel>()

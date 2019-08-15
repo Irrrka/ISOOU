@@ -5,7 +5,8 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
-
+    using ISOOU.Data.Common.Repositories;
+    using ISOOU.Data.Models;
     using ISOOU.Data.Models.Enums;
     using ISOOU.Services.Data.Contracts;
     using ISOOU.Services.Mapping;
@@ -17,15 +18,20 @@
 
     public class ParentController : UserController
     {
+
         private readonly IParentsService parentsService;
         private readonly IDistrictsService districtsService;
+        private readonly IAddressesService addressesService;
+
 
         public ParentController(
             IParentsService parentsService,
-            IDistrictsService districtsService)
+            IDistrictsService districtsService,
+            IAddressesService addressesService)
         {
             this.parentsService = parentsService;
             this.districtsService = districtsService;
+            this.addressesService = addressesService;
         }
 
         [HttpGet(Name = "Create")]
@@ -84,6 +90,71 @@
             return this.Redirect("/");
         }
 
+        [HttpGet(Name = "Edit")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var model = (await this.parentsService.GetParentById(id))
+                                        .To<EditParentInputModel>();
+
+            if (model == null)
+            {
+                return this.Redirect("/");
+            }
+
+            var allParentsRole = new List<string>() { "Майка", "Баща" };
+            this.ViewData["ParentsRole"] = allParentsRole;
+
+            var allDistricts = this.districtsService.GetAllDistricts();
+            this.ViewData["Districts"] = allDistricts.Select(d => new CreateParentDistrictViewModel { Name = d.Name }).ToList();
+
+            var allCityNames = new List<string>() { "София", "Друг" };
+            this.ViewData["CityNames"] = allCityNames;
+
+            return this.View(model);
+        }
+
+        [HttpPost("/Users/Parent/Edit")]
+        public async Task<IActionResult> Edit(int id, EditParentInputModel input)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                var allParentsRole = new List<string>() { "Майка", "Баща" };
+                this.ViewData["ParentsRole"] = allParentsRole;
+
+                var allDistricts = this.districtsService.GetAllDistricts();
+                this.ViewData["Districts"] = allDistricts.Select(d => new CreateParentDistrictViewModel { Name = d.Name }).ToList();
+
+                var allCityNames = new List<string>() { "София", "Друг" };
+                this.ViewData["CityNames"] = allCityNames;
+
+                return this.View(input);
+            }
+
+            ParentServiceModel parentToEdit = await this.parentsService.GetParentById(id);
+            var addressId = parentToEdit.AddressId;
+            AddressDetailsServiceModel address = await this.addressesService.GetAddressDetailsById(addressId);
+
+            address.Permanent = input.AddressPermanent;
+            address.Current = input.AddressCurrent;
+            address.CurrentCity = (CityName)Enum.Parse(typeof(CityName), input.AddressCurrentCity);
+            address.CurrentDistrict = await this.districtsService.GetDistrictByName(input.AddressCurrentDistrictName);
+            address.PermanentCity = (CityName)Enum.Parse(typeof(CityName), input.AddressCurrentCity);
+            address.PermanentDistrict = await this.districtsService.GetDistrictByName(input.AddressPermanentDistrictName);
+
+            DistrictServiceModel workDistrict = await this.districtsService.GetDistrictByName(input.WorkDistrictName);
+
+            ClaimsPrincipal userIdentity = this.User;
+
+            //ParentServiceModel parent = parentToEdit.To<ParentServiceModel>();
+            parentToEdit.WorkDistrict = workDistrict;
+            parentToEdit.Address = address;
+            parentToEdit.Role = (ParentRole)Enum.Parse(typeof(ParentRole), input.ParentRole);
+
+            await this.parentsService.Edit(id, parentToEdit);
+
+            return this.Redirect("/");
+        }
+
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -119,80 +190,6 @@
             return this.Redirect("/");
         }
 
-        [HttpGet(Name = "Edit")]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var model = (await this.parentsService.GetParentById(id))
-                .To<EditParentInputModel>();
-
-            if (model == null)
-            {
-                return this.Redirect("/");
-            }
-
-            var allParentsRole = new List<string>() { "Майка", "Баща" };
-            this.ViewData["ParentsRole"] = allParentsRole;
-
-            var allDistricts = this.districtsService.GetAllDistricts();
-            this.ViewData["Districts"] = allDistricts.Select(d => new CreateParentDistrictViewModel { Name = d.Name }).ToList();
-
-            var allCityNames = new List<string>();
-            foreach (var name in Enum.GetNames(typeof(CityName)))
-            {
-                allCityNames.Add(name);
-            }
-            this.ViewData["CityNames"] = allCityNames;
-
-            return this.View(model);
-        }
-
-        [HttpPost("/Users/Parent/Edit")]
-        public async Task<IActionResult> Edit(int id, EditParentInputModel input)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                var allParentsRole = new List<string>() { "Майка", "Баща" };
-                this.ViewData["ParentsRole"] = allParentsRole;
-
-                var allDistricts = this.districtsService.GetAllDistricts();
-                this.ViewData["Districts"] = allDistricts
-                    .Select(d => new CreateParentDistrictViewModel { Name = d.Name }).ToList();
-
-                var allCityNames = new List<string>();
-                foreach (var name in Enum.GetNames(typeof(CityName)))
-                {
-                    allCityNames.Add(name);
-                }
-                this.ViewData["CityNames"] = allCityNames;
-
-                return this.View(input);
-            }
-
-            ParentServiceModel parent = input.To<ParentServiceModel>();
-
-            DistrictServiceModel currDistrict = await this.districtsService.GetDistrictByName(input.AddressCurrentDistrictName);
-            DistrictServiceModel permDistrict = await this.districtsService.GetDistrictByName(input.AddressPermanentDistrictName);
-            DistrictServiceModel workDistrict = await this.districtsService.GetDistrictByName(input.WorkDistrictName);
-
-            AddressDetailsServiceModel address = (await this.parentsService.GetParentById(id)).Address;
-
-            address.Permanent = input.AddressPermanent;
-            address.Current = input.AddressCurrent;
-            address.CurrentCity = (CityName)Enum.Parse(typeof(CityName), input.AddressCurrentCity);
-            address.PermanentCity = (CityName)Enum.Parse(typeof(CityName), input.AddressCurrentCity);
-            address.PermanentDistrict = permDistrict;
-            address.CurrentDistrict = currDistrict;
-            address.PermanentDistrictId = permDistrict.Id;
-            address.CurrentDistrictId = currDistrict.Id;
-
-            parent.Address = address;
-            parent.WorkDistrict = workDistrict;
-            parent.Role = (ParentRole)Enum.Parse(typeof(ParentRole), input.ParentRole);
-            var userIdentity = input.UserName;
-
-            await this.parentsService.Edit(userIdentity, parent);
-
-            return this.Redirect("/");
-        }
+       
     }
 }
