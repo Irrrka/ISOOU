@@ -1,9 +1,10 @@
-﻿using ISOOU.Services.Mapping;
+﻿using AutoMapper;
+using ISOOU.Services.Mapping;
 using ISOOU.Services.Models;
 
 namespace ISOOU.Web.ViewModels.Schools
 {
-    public class EditSchoolViewModel : IMapFrom<SchoolServiceModel>, IMapTo<SchoolServiceModel>
+    public class EditSchoolViewModel : IMapFrom<SchoolServiceModel>, IMapTo<SchoolServiceModel>, IHaveCustomMappings
     {
         public int Id { get; set; }
 
@@ -11,7 +12,7 @@ namespace ISOOU.Web.ViewModels.Schools
 
         public string Address { get; set; }
 
-        public string DistrictName { get; set; }
+        public string District { get; set; }
 
         public string Email { get; set; }
 
@@ -25,5 +26,9 @@ namespace ISOOU.Web.ViewModels.Schools
 
         public int FreeSpots { get; set; }
 
+        public void CreateMappings(IProfileExpression configuration)
+        {
+          
+        }
     }
 }

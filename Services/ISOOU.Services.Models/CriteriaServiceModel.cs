@@ -1,8 +1,8 @@
-﻿using ISOOU.Data.Models;
-using ISOOU.Services.Mapping;
-
-namespace ISOOU.Services.Models
+﻿namespace ISOOU.Services.Models
 {
+    using ISOOU.Data.Models;
+    using ISOOU.Services.Mapping;
+
     public class CriteriaServiceModel : IMapFrom<Criteria>, IMapTo<Criteria>
     {
         public int Id { get; set; }
@@ -11,9 +11,7 @@ namespace ISOOU.Services.Models
 
         public int Scores { get; set; }
 
-        public string UserId { get; set; }
-
-        public SystemUserServiceModel User { get; set; }
+        //public SystemUser User { get; set; }
 
         public int CandidateId { get; set; }
 

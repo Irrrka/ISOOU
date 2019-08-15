@@ -2,6 +2,7 @@
 {
     using System.Reflection;
     using AutoMapper;
+    using CloudinaryDotNet;
     using ISOOU.Data;
     using ISOOU.Data.Common;
     using ISOOU.Data.Common.Repositories;
@@ -43,6 +44,15 @@
             // TODO: Add pooling when this bug is fixed: https://github.com/aspnet/EntityFrameworkCore/issues/9741
             services.AddDbContext<ISOOUDbContext>(
                 options => options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
+
+            Account cloudinaryCredentils = new Account(
+                this.configuration["Cloudinary:CloudName"],
+                this.configuration["Cloudinary:ApiKey"],
+                this.configuration["Cloudinary:ApiSecrets"]);
+
+            Cloudinary cloudinaryUtility = new Cloudinary(cloudinaryCredentils);
+
+            services.AddSingleton(cloudinaryUtility);
 
             services
                 .AddIdentity<SystemUser, SystemRole>(options =>
@@ -108,8 +118,9 @@
             services.AddTransient<ISearchService, SearchService>();
             services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<IAdminService, AdminService>();
-            services.AddSingleton<AllDistrictsViewModel>();
-            services.AddSingleton<DistrictViewModel>();
+            services.AddTransient<IAddressesService, AddressesService>();
+            services.AddTransient<ICalculatorService, CalculatorService>();
+            services.AddTransient<ICloudinaryService, CloudinaryService>();
 
         }
 

@@ -1,12 +1,12 @@
-﻿using AutoMapper;
-using ISOOU.Data.Models;
-using ISOOU.Data.Models.Enums;
-using ISOOU.Services.Mapping;
-using System.Collections.Generic;
-
-namespace ISOOU.Services.Models
+﻿namespace ISOOU.Services.Models
 {
-    public class ParentServiceModel : IMapFrom<Parent>, IMapTo<Parent>
+    using AutoMapper;
+    using ISOOU.Data.Models;
+    using ISOOU.Data.Models.Enums;
+    using ISOOU.Services.Mapping;
+    using System.Collections.Generic;
+
+    public class ParentServiceModel : IMapFrom<Parent>, IMapTo<Parent>, IHaveCustomMappings
     {
         public int Id { get; set; }
 
@@ -16,35 +16,33 @@ namespace ISOOU.Services.Models
 
         public string LastName { get; set; }
 
-        public string FullName
-        {
-            get
-            {
-                return this.FirstName + " " + this.LastName;
-            }
-            set
-            {
-                this.FullName = value;
-            }
-        }
-        
+        public string FullName { get; set; }
+
         public string UCN { get; set; }
 
-        public string PhoneNumber { get; set; }
-
-        public virtual AddressDetailsServiceModel Address { get; set; }
-
-        //public string UserId { get; set; }
+        public string UserId { get; set; }
 
         public SystemUserServiceModel User { get; set; }
 
         public ParentRole Role { get; set; }
 
+        public string PhoneNumber { get; set; }
+
+        public int AddressId { get; set; }
+
+        public AddressDetailsServiceModel Address { get; set; }
+
         public string WorkName { get; set; }
 
-        public virtual DistrictServiceModel WorkDistrict { get; set; }
+        public int WorkDistrictId { get; set; }
 
-        public virtual List<CandidateParentsServiceModel> Candidates { get; set; }
+        public DistrictServiceModel WorkDistrict { get; set; }
 
+        public ICollection<CandidateServiceModel> Candidates { get; set; }
+
+        public void CreateMappings(IProfileExpression configuration)
+        {
+            
+        }
     }
 }

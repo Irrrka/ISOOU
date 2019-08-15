@@ -1,18 +1,13 @@
-﻿using ISOOU.Data.Models;
+﻿using System.Collections.Generic;
+
+using ISOOU.Data.Common.Models;
+using ISOOU.Data.Models;
 using ISOOU.Services.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ISOOU.Services.Models
 {
     public class SchoolServiceModel : IMapFrom<School>, IMapTo<School>
     {
-        public SchoolServiceModel()
-        {
-            this.SchoolCandidates = new HashSet<SchoolCandidateServiceModel>();
-        }
-
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -33,6 +28,6 @@ namespace ISOOU.Services.Models
 
         public int FreeSpots { get; set; }
 
-        public virtual ICollection<SchoolCandidateServiceModel> SchoolCandidates { get; set; }
+        public ICollection<SchoolCandidateServiceModel> SchoolCandidates { get; set; }
     }
 }

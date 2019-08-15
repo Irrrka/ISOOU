@@ -10,6 +10,13 @@
     {
         public int Id { get; set; }
 
+
+        public string UCN { get; set; }
+
+
+        public int YearOfBirth { get; set; }
+
+
         [Required]
         [StringLength(20, MinimumLength = 2)]
         [Display(Name = "Име")]
@@ -25,14 +32,6 @@
         [Display(Name = "Фамилия")]
         public string LastName { get; set; }
 
-        public string FullName => this.FirstName + " " + this.LastName;
-
-        [Display(Name = "ЕГН")]
-        public string UCN { get; set; }
-
-        [Display(Name = "Година на раждане")]
-        public int YearOfBirth { get; set; }
-
         [Display(Name = "Име на посещавана ДГ")]
         public string KinderGarten { get; set; }
 
@@ -43,13 +42,5 @@
         public bool Desease { get; set; }
 
         public string UserName { get; set; }
-
-        public int MotherId { get; set; }
-
-        public string MotherFullName { get; set; }
-
-        public int FatherId { get; set; }
-
-        public string FatherFullName { get; set; }
     }
 }

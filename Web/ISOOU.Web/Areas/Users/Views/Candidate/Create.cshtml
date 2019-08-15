@@ -14,7 +14,6 @@
                         <label asp-for="UCN"></label>
                         <input asp-for="UCN" />
                         <span asp-validation-for="UCN" class="text-danger"></span>
-                        <input hidden asp-for="UserName" value="@this.User.Identity.Name" />
                     </div>
                     <div class="form-inline mt-1 justify-content-end">
                         <label asp-for="FirstName"></label>
@@ -36,30 +35,16 @@
                         <input asp-for="YearOfBirth" />
                         <span asp-validation-for="YearOfBirth" class="text-danger"></span>
                     </div>
-                    <div class="form-inline mt-1 justify-content-end">
-                        <label asp-for="MotherFullName">Майка</label>
-                        <select class="form-control text-primary" asp-for="MotherId">
-                            @foreach (var parent in (IEnumerable<ISOOU.Web.ViewModels.Users.CreateCandidateParentViewModel>)this.ViewData["Parents"])
-                            {
-                                <option value="@parent.Id">@parent.FullName</option>
-                            }
-                        </select>
-                        <span asp-validation-for="MotherFullName" class="text-danger"></span>
-                    </div>
-                    <div class="form-inline mt-1 justify-content-end">
-                        <label asp-for="FatherId">Баща</label>
-                        <select class="form-control text-primary" asp-for="FatherId">
-                            @foreach (var parent in (IEnumerable<ISOOU.Web.ViewModels.Users.CreateCandidateParentViewModel>)this.ViewData["Parents"])
-                            {
-                                <option value="@parent.Id">@parent.FullName</option>
-                            }
-                        </select>
-                        <span asp-validation-for="FatherFullName" class="text-danger"></span>
-                    </div>
+
                     <div class="form-inline mt-1 justify-content-end">
                         <label asp-for="KinderGarten"></label>
                         <input asp-for="KinderGarten" />
                         <span asp-validation-for="KinderGarten" class="text-danger"></span>
+                    </div>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="Immunization"> Имунизации </label>
+                        <label asp-for="Immunization"><input asp-for="Immunization" type="radio" value="false">НЕ</label>
+                        <label asp-for="Immunization"><input asp-for="Immunization" type="radio" value="true" checked>ДА</label>
                     </div>
                     <div class="form-inline mt-1 justify-content-end">
                         <label asp-for="SEN"> СОП </label>
@@ -70,6 +55,26 @@
                         <label asp-for="Desease"> Хронични заболявания </label>
                         <label asp-for="Desease"><input asp-for="Desease" type="radio" value="false" checked>НЕ</label>
                         <label asp-for="Desease"><input asp-for="Desease" type="radio" value="true">ДА</label>
+                    </div>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="MotherFullName">Майка</label>
+                        <select class="form-control text-primary" id="type" asp-for="MotherFullName">
+                            @foreach (var role in (IEnumerable<string>)this.ViewData["Mother"])
+                            {
+                                <option value="@role">@role</option>
+                            }
+                        </select>
+                        <span asp-validation-for="MotherFullName" class="text-danger"></span>
+                    </div>
+                    <div class="form-inline mt-1 justify-content-end">
+                        <label asp-for="FatherFullName">Баща</label>
+                        <select class="form-control text-primary" id="type" asp-for="FatherFullName">
+                            @foreach (var role in (IEnumerable<string>)this.ViewData["Father"])
+                            {
+                                <option value="@role">@role</option>
+                            }
+                        </select>
+                        <span asp-validation-for="FatherFullName" class="text-danger"></span>
                     </div>
                     <div class="form-inline mt-1 justify-content-end">
                         <input type="submit" class="btn btn-secondary py-3 px-4" value="Запиши" />

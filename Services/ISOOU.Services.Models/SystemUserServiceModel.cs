@@ -1,13 +1,27 @@
-﻿using ISOOU.Data.Models;
-using ISOOU.Services.Mapping;
-using Microsoft.AspNetCore.Identity;
-
-namespace ISOOU.Services.Models
+﻿namespace ISOOU.Services.Models
 {
-    public class SystemUserServiceModel : IMapTo<SystemUser>, IMapFrom<SystemUser>
-    {
-        public string Id { get; set; }
+    using System;
+    using System.Collections.Generic;
 
-        public string UserName { get; set; }
+    using ISOOU.Data.Common.Models;
+    using ISOOU.Data.Models;
+    using ISOOU.Services.Mapping;
+    using Microsoft.AspNetCore.Identity;
+
+    public class SystemUserServiceModel : IdentityUser, IMapFrom<SystemUser>, IMapTo<SystemUser>
+    { 
+        public string FullName { get; set; }
+
+        public string UCN { get; set; }
+
+        public SystemRole UserRole { get; set; }
+
+        public int AdmissionSchoolId { get; set; }
+
+        public ICollection<CandidateServiceModel> Candidates { get; set; }
+               
+        public ICollection<ParentServiceModel> Parents { get; set; }
+               
+        public ICollection<QuestionServiceModel> Questions { get; set; }
     }
 }

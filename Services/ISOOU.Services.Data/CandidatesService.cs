@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
 
     using ISOOU.Common;
@@ -12,11 +13,12 @@
     using ISOOU.Services.Data.Contracts;
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
     public class CandidatesService : ICandidatesService
     {
-        private readonly IRepository<SystemUser> usersRepository;
+        private readonly UserManager<SystemUser> userManager;
         private readonly IParentsService parentsService;
         private readonly IRepository<Candidate> candidatesRepository;
         private readonly IRepository<Criteria> criteriasRepository;
@@ -24,14 +26,14 @@
         private readonly ISchoolsService schoolService;
 
         public CandidatesService(
-            IRepository<SystemUser> usersRepository,
+            UserManager<SystemUser> userManager,
             IRepository<Candidate> candidatesRepository,
             IParentsService parentsService,
             IRepository<Criteria> criteriasRepository,
             IRepository<SchoolCandidate> schoolCandidateRepository,
             ISchoolsService schoolService)
         {
-            this.usersRepository = usersRepository;
+            this.userManager = userManager;
             this.candidatesRepository = candidatesRepository;
             this.parentsService = parentsService;
             this.criteriasRepository = criteriasRepository;
@@ -39,19 +41,30 @@
             this.schoolService = schoolService;
         }
 
-        public async Task<bool> Create(string userIdentity, CandidateServiceModel model)
+        public async Task<bool> Create(ClaimsPrincipal userIdentity, CandidateServiceModel model)
         {
             if (model == null)
             {
                 throw new ArgumentNullException();
             }
 
-            SystemUser user = await this.usersRepository
-                            .All()
-                            .FirstOrDefaultAsync(x => x.UserName == userIdentity);
-
-            var candidate = model.To<Candidate>();
-            candidate.User = user;
+            var userId = this.userManager.GetUserId(userIdentity);
+           
+            Candidate candidate = new Candidate
+            {
+                FirstName = model.FirstName,
+                MiddleName = model.MiddleName,
+                LastName = model.LastName,
+                UCN = model.UCN,
+                YearOfBirth = model.YearOfBirth,
+                UserId = userId,
+                MotherId = model.MotherId,
+                FatherId = model.FatherId,
+                Desease = model.Desease,
+                SEN = model.SEN,
+                Immunization = model.Immunization,
+                KinderGarten = model.KinderGarten,
+            };
 
             await this.candidatesRepository.AddAsync(candidate);
             var result = await this.candidatesRepository.SaveChangesAsync();
@@ -77,35 +90,28 @@
             return candidates;
         }
 
-        public async Task<bool> Edit(string userIdentity, CandidateServiceModel candidateServiceModel)
+        public async Task<bool> Edit(int id, ClaimsPrincipal userIdentity, CandidateServiceModel candidateServiceModel)
         {
-            var candidateToEdit = await this.candidatesRepository
-                                .All()
-                                .FirstOrDefaultAsync(p => p.Id == candidateServiceModel.Id);
+
+            var candidateToEdit = (await this.GetCandidateById(id)).To<Candidate>();
             if (candidateToEdit == null)
             {
                 throw new ArgumentNullException();
             }
 
-            SystemUser user = await this.usersRepository
-                            .All()
-                            .FirstOrDefaultAsync(x => x.UserName == userIdentity);
+            var getParents = this.parentsService.GetParents(userIdentity).To<Parent>().ToList();
+            candidateToEdit.UserId = candidateToEdit.UserId;
+            candidateToEdit.UCN = candidateToEdit.UCN;
+            candidateToEdit.YearOfBirth = candidateToEdit.YearOfBirth;
+            //HOW TO EDIT MANY TO MANY RELATIONSHIP!!!
+           // candidateToEdit.CandidateParents = getParents;
+            candidateToEdit.Desease = candidateServiceModel.Desease;
+            candidateToEdit.SEN = candidateServiceModel.SEN;
+            candidateToEdit.FirstName = candidateServiceModel.FirstName;
+            candidateToEdit.MiddleName = candidateServiceModel.MiddleName;
+            candidateToEdit.LastName = candidateServiceModel.LastName;
 
-            var parents = candidateServiceModel.Parents.To<Parent>();
-
-           
-            candidateToEdit = candidateServiceModel.To<Candidate>();
-            //candidateToEdit.FirstName = candidateServiceModel.FirstName;
-            //candidateToEdit.MiddleName = candidateServiceModel.MiddleName;
-            //candidateToEdit.LastName = candidateServiceModel.LastName;
-            //candidateToEdit.SEN = candidateServiceModel.SEN;
-            //candidateToEdit.Desease = candidateServiceModel.Desease;
-            candidateToEdit.User = user;
-            //candidateToEdit.KinderGarten = candidateToEdit.KinderGarten;
-            //candidateToEdit.YearOfBirth = candidateToEdit.YearOfBirth;
-            //candidateToEdit.UCN = candidateToEdit.UCN;
-
-            this.candidatesRepository.Update(candidateToEdit);
+            await this.candidatesRepository.AddAsync(candidateToEdit);
             var result = await this.candidatesRepository.SaveChangesAsync();
 
             return result > 0;
@@ -137,10 +143,8 @@
                               .All()
                               .SingleOrDefaultAsync(p => p.Id == id);
 
-            Parent mother = candidate.CandidateParents
-                .FirstOrDefault(m => m.Parent.Role == (ParentRole)Enum.Parse(typeof(ParentRole), "Майка")).Parent;
-            Parent father = candidate.CandidateParents
-                .FirstOrDefault(m => m.Parent.Role == (ParentRole)Enum.Parse(typeof(ParentRole), "Баща")).Parent;
+            Parent mother = candidate.MotherId.To<Parent>();
+            Parent father = candidate.FatherId.To<Parent>();
 
             CalculateCityCriteria(scoresByCriteria, mother, father);
 
@@ -203,7 +207,8 @@
                               .All()
                               .SingleOrDefaultAsync(p => p.Id == id);
 
-            int scores = candidate.Scores.Sum(x => x.Scores);
+            //TODO not working properly anymore
+            int scores = candidate.Criterias.Sum(x => x.Criteria.Scores);
 
             //TODO Scalability?!
             int scoresFirstApplication = scores + GlobalConstants.FirstApplicationBonusCriteria;
@@ -218,11 +223,9 @@
             return scoresForApplications;
         }
 
-        public async Task<bool> AddApplications(int candidateId, string userIdentity, List<SchoolCandidateServiceModel> applicationsToAdd)
+        public async Task<bool> AddApplications(int candidateId, ClaimsPrincipal userIdentity, List<SchoolCandidateServiceModel> applicationsToAdd)
         {
-            SystemUser user = await this.usersRepository
-                          .All()
-                          .FirstOrDefaultAsync(x => x.UserName == userIdentity);
+            
 
             var candidateFomDb = await this.candidatesRepository
                                .All()
@@ -259,10 +262,10 @@
 
 
 
-        private static void CalculateParentWorkDistrictCriteria(Dictionary<string, int> scoresByCriteria, CandidateParent mother, CandidateParent father, School school)
+        private static void CalculateParentWorkDistrictCriteria(Dictionary<string, int> scoresByCriteria, Parent mother, Parent father, School school)
         {
-            if (mother.Parent.WorkDistrict.Name == school.District.Name
-                || father.Parent.WorkDistrict.Name == school.District.Name)
+            if (mother.WorkDistrict.Name == school.District.Name
+                || father.WorkDistrict.Name == school.District.Name)
             {
                 var parentWorksInDistrict = GlobalConstants.ParentHasWorkInDistrictCriteria;
 
@@ -336,7 +339,7 @@
 
         private static void CalculateHasManyBrosCriteria(Dictionary<string, int> scoresByCriteria, Parent mother, Parent father)
         {
-            if (mother.CandidateParents.Count >= GlobalConstants.ChildrenInFamily || father.CandidateParents.Count >= GlobalConstants.ChildrenInFamily)
+            if (mother.Candidates.Count >= GlobalConstants.ChildrenInFamily || father.Candidates.Count >= GlobalConstants.ChildrenInFamily)
             {
                 var hasManyBrothersOrSisters = GlobalConstants.HasManyBrothersOrSistersCriteria;
                 if (!scoresByCriteria.ContainsKey(nameof(hasManyBrothersOrSisters)))
@@ -437,6 +440,11 @@
 
                 scoresByCriteria[nameof(parentAddressCity)] = parentAddressCity;
             }
+        }
+
+        public Task<bool> Create(string userIdentity, CandidateServiceModel model)
+        {
+            throw new NotImplementedException();
         }
     }
 }

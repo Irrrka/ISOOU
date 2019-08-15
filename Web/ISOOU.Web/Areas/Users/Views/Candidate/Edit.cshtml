@@ -53,26 +53,6 @@
                         <span asp-validation-for="YearOfBirth" class="text-danger"></span>
                     </div>
                     <div class="form-inline mt-1 justify-content-end">
-                        <label asp-for="MotherFullName">Майка</label>
-                        <select class="form-control text-primary" asp-for="MotherId">
-                            @foreach (var parent in (IEnumerable<ISOOU.Web.ViewModels.Users.CreateCandidateParentViewModel>)this.ViewData["Parents"])
-                            {
-                                <option value="@parent.Id">@parent.FullName</option>
-                            }
-                        </select>
-                        <span asp-validation-for="MotherFullName" class="text-danger"></span>
-                    </div>
-                    <div class="form-inline mt-1 justify-content-end">
-                        <label asp-for="FatherId">Баща</label>
-                        <select class="form-control text-primary" asp-for="FatherId">
-                            @foreach (var parent in (IEnumerable<ISOOU.Web.ViewModels.Users.CreateCandidateParentViewModel>)this.ViewData["Parents"])
-                            {
-                                <option value="@parent.Id">@parent.FullName</option>
-                            }
-                        </select>
-                        <span asp-validation-for="FatherFullName" class="text-danger"></span>
-                    </div>
-                    <div class="form-inline mt-1 justify-content-end">
                         <label asp-for="KinderGarten"></label>
                         <input asp-for="KinderGarten" value="@Model.KinderGarten" />
                         <span asp-validation-for="KinderGarten" class="text-danger"></span>

@@ -5,6 +5,7 @@
     using ISOOU.Data.Common.Repositories;
     using ISOOU.Data.Models;
     using ISOOU.Services.Data.Contracts;
+    using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
 
     using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,16 @@
             var result = await this.qestionRepository.SaveChangesAsync();
 
             return result > 0;
+        }
+
+        public async Task<SystemUserServiceModel> GetUserByuserName(string userIdentity)
+        {
+            SystemUserServiceModel user = (await this.userRepository
+                           .All()
+                           .FirstOrDefaultAsync(x => x.UserName == userIdentity)).To<SystemUserServiceModel>();
+
+            return user;
+
         }
     }
 }

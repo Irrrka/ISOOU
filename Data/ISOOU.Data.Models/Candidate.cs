@@ -11,7 +11,9 @@
             : base()
         {
             this.SchoolCandidates = new HashSet<SchoolCandidate>();
-            this.Scores = new List<Criteria>();
+           // this.CandidateParents = new HashSet<CandidateParent>();
+            this.Criterias = new HashSet<CriteriaForCandidate>();
+            this.Documents = new HashSet<DocumentSubmission>();
         }
 
         [Required]
@@ -23,13 +25,24 @@
 
         public bool Desease { get; set; }
 
-        public virtual ICollection<SchoolCandidate> SchoolCandidates { get; set; }
-
-        public virtual ICollection<CandidateParent> CandidateParents { get; set; }
+        public bool Immunization { get; set; }
 
         public CandidateStatus Status { get; set; } = CandidateStatus.NotAdmitted;
 
-        public ICollection<Criteria> Scores { get; set; }
+        public int MotherId { get; set; }
 
+        public Parent Mother { get; set; }
+
+        public int FatherId { get; set; }
+
+        public Parent Father { get; set; }
+
+        //public virtual ICollection<CandidateParent> CandidateParents { get; set; }
+
+        public virtual ICollection<SchoolCandidate> SchoolCandidates { get; set; }
+
+        public virtual ICollection<CriteriaForCandidate> Criterias { get; set; }
+
+        public ICollection<DocumentSubmission> Documents { get; set; }
     }
 }

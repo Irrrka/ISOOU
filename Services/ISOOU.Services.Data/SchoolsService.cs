@@ -103,26 +103,46 @@
             School schoolToEdit = await this.schoolRepository
                                .All()
                                .FirstOrDefaultAsync(s => s.Id == user.AdmissionSchoolId);
+            var districtFromDb = await this.districtsService.GetDistrictById(schoolToEdit.DistrictId);
+
             if (schoolToEdit == null)
             {
                 throw new ArgumentNullException();
             }
 
             var model = schoolToEdit.To<SchoolServiceModel>();
-
+            model.District = districtFromDb;
             return model;
         }
 
-        public async Task<bool> EditSchool(SchoolServiceModel model)
+        public async Task<bool> EditSchool(int id, SchoolServiceModel model)
         {
-            var schoolToEdit = model.To<School>();
+            District districtFromDb =
+                (await this.districtsService.GetDistrictByName(model.District.Name)).To<District>();
 
-            if (schoolToEdit.District == null)
+            if (districtFromDb == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(districtFromDb));
             }
 
-            this.schoolRepository.Update(schoolToEdit);
+            School schoolFromDb = (await this.GetSchoolDetailsById(id)).To<School>();
+
+            if (schoolFromDb == null)
+            {
+                throw new ArgumentNullException(nameof(schoolFromDb));
+            }
+
+            schoolFromDb.Name = model.Name;
+            schoolFromDb.Address = model.Address;
+            schoolFromDb.DirectorName = model.DirectorName;
+            schoolFromDb.District = districtFromDb;
+            schoolFromDb.Email = model.Email;
+            schoolFromDb.FreeSpots = model.FreeSpots;
+            schoolFromDb.PhoneNumber = model.PhoneNumber;
+            schoolFromDb.URLOfMap = model.URLOfMap;
+            schoolFromDb.URLOfSchool = model.URLOfSchool;
+
+            this.schoolRepository.Update(schoolFromDb);
             var result = await this.schoolRepository.SaveChangesAsync();
 
             return result > 0;

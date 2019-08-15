@@ -29,6 +29,7 @@
                               //new UsersSeeder(),
                               new DistrictsSeeder(),
                               new SchoolsSeeder(),
+                              new CriteriasSeeder(),
                           };
 
             foreach (var seeder in seeders)

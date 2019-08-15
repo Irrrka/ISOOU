@@ -1,20 +1,19 @@
-﻿using ISOOU.Data.Common.Models;
-using ISOOU.Data.Models;
-using ISOOU.Services.Mapping;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace ISOOU.Services.Models
+﻿namespace ISOOU.Services.Models
 {
+    using ISOOU.Data.Common.Models;
+    using ISOOU.Data.Models;
+    using ISOOU.Services.Mapping;
+
     public class QuestionServiceModel : IMapFrom<Question>, IMapTo<Question>
     {
-        [Required]
+        public int Id { get; set; }
+
         public string Subject { get; set; }
 
-        [Required]
-        [DataType(DataType.MultilineText)]
         public string Content { get; set; }
 
-        public virtual SystemUserServiceModel User { get; set; }
+        public string SystemUserId { get; set; }
+
+        public SystemUserServiceModel SystemUser { get; set; }
     }
 }

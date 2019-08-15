@@ -1,4 +1,4 @@
-﻿@model ISOOU.Web.ViewModels.Schools.EditSchoolViewModel
+﻿@model ISOOU.Web.ViewModels.Schools.EditSchoolInputModel
 @{
     this.ViewData["Title"] = "СЕКЦИЯ ДИРЕКТОРИ";
 }
@@ -35,7 +35,7 @@
                 <div class="form-inline mt-1 justify-content-end">
                     <label asp-for="DistrictName"></label>
                     <select class="form-control text-primary" id="type" asp-for="DistrictName">
-                        <option selected value="@Model.DistrictName">---Изберете район---</option>
+                        <option selected disabled value="@Model.DistrictName">---Изберете район---</option>
                         @foreach (var district in (IEnumerable<ISOOU.Web.ViewModels.Districts.EditSchoolDistrictModel>)this.ViewData["Districts"])
                         {
                             <option value="@district.Name">@district.Name</option>

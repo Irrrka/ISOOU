@@ -20,20 +20,24 @@
     using ISOOU.Web.ViewModels.Schools;
     using ISOOU.Web.ViewModels.Search;
     using ISOOU.Common;
+    using System.Security.Claims;
 
     public class CandidateController : UserController
     {
+        private readonly UserManager<SystemUser> userManager;
         private readonly IParentsService parentsService;
         private readonly ICandidatesService candidatesService;
         private readonly IDistrictsService districtsService;
         private readonly ISchoolsService schoolsService;
 
         public CandidateController(
+            UserManager<SystemUser> userManager,
             IParentsService parentsService,
             ICandidatesService candidatesService,
             IDistrictsService districtsService,
             ISchoolsService schoolsService)
         {
+            this.userManager = userManager;
             this.parentsService = parentsService;
             this.candidatesService = candidatesService;
             this.districtsService = districtsService;
@@ -41,49 +45,75 @@
         }
 
         [HttpGet("/Users/Candidate/Create")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var allusersParents = this.parentsService
-                .GetParents()
-                .Where(x => x.User.UserName == this.User.Identity.Name);
-            this.ViewData["Parents"] = allusersParents
-                .Select(p => new CreateCandidateParentViewModel { Id = p.Id, FullName = p.FullName })
-                .ToList();
+            var motherFullName = await this.parentsService
+             .GetParentFullNameByRole(this.User, ParentRole.Майка);
+
+            var motherList = new List<string>
+            {
+                $"{motherFullName}",
+                ParentRole.Друг.ToString(),
+                ParentRole.Неизвестен.ToString(),
+            };
+
+            var fatherFullName = await this.parentsService
+             .GetParentFullNameByRole(this.User, ParentRole.Баща);
+
+            var fatherList = new List<string>
+            {
+                $"{fatherFullName}",
+                ParentRole.Друг.ToString(),
+                ParentRole.Неизвестен.ToString(),
+            };
+
+            this.ViewData["Mother"] = motherList;
+            this.ViewData["Father"] = fatherList;
+
             return this.View();
         }
 
         [HttpPost("/Users/Candidate/Create")]
-        public async Task<IActionResult> Create(CreateCandidateInputModel candidateInputModel)
+        public async Task<IActionResult> Create(CreateCandidateInputModel input)
         {
             if (!this.ModelState.IsValid)
             {
-                var allusersParents = this.parentsService
-              .GetParents()
-              .Where(x => x.User.UserName == this.User.Identity.Name);
-                this.ViewData["Parents"] = allusersParents
-                    .Select(p => new CreateCandidateParentViewModel { Id = p.Id, FullName = p.FullName })
-                    .ToList();
-                return this.View(candidateInputModel);
+                var motherFullName = await this.parentsService
+                    .GetParentFullNameByRole(this.User, ParentRole.Майка);
+
+                var motherList = new List<string>
+                 {
+                    $"{motherFullName}",
+                    ParentRole.Друг.ToString(),
+                    ParentRole.Неизвестен.ToString(),
+                 };
+
+                var fatherFullName = await this.parentsService
+                 .GetParentFullNameByRole(this.User, ParentRole.Баща);
+
+                var fatherList = new List<string>
+                {
+                    $"{fatherFullName}",
+                    ParentRole.Друг.ToString(),
+                    ParentRole.Неизвестен.ToString(),
+                };
+
+                this.ViewData["Mother"] = motherList;
+                this.ViewData["Father"] = fatherList;
+                return this.View(input);
             }
 
-            var userIdentity = candidateInputModel.UserName;
+            ClaimsPrincipal userIdentity = this.User;
 
-            CandidateServiceModel candidateToAdd = new CandidateServiceModel();
-            ParentServiceModel mother = await this.parentsService.GetParentById(candidateInputModel.MotherId);
-            ParentServiceModel father = await this.parentsService.GetParentById(candidateInputModel.FatherId);
+            var parents = this.parentsService.GetParents(userIdentity);
+            ParentServiceModel motherServiceModel = await parents.Where(p => p.FullName.Equals(input.MotherFullName)).FirstOrDefaultAsync();
+            ParentServiceModel fatherServiceModel = await parents.Where(p => p.FullName.Equals(input.FatherFullName)).FirstOrDefaultAsync();
 
-            candidateToAdd.UCN = candidateInputModel.UCN;
-            candidateToAdd.FirstName = candidateInputModel.FirstName;
-            candidateToAdd.MiddleName = candidateInputModel.MiddleName;
-            candidateToAdd.LastName = candidateInputModel.LastName;
-            candidateToAdd.Parents.Add(new CandidateParentsServiceModel { Parent = father, Candidate = candidateToAdd});
-            candidateToAdd.Parents.Add(new CandidateParentsServiceModel { Parent = mother, Candidate = candidateToAdd});
-            candidateToAdd.KinderGarten = candidateInputModel.KinderGarten;
-            candidateToAdd.SEN = candidateInputModel.SEN;
-            candidateToAdd.Desease = candidateInputModel.Desease;
-            candidateToAdd.YearOfBirth = candidateInputModel.YearOfBirth;
+            CandidateServiceModel model = input.To<CandidateServiceModel>();
+            model.MotherId = motherServiceModel.Id;
+            model.FatherId = fatherServiceModel.Id;
 
-            await this.candidatesService.Create(userIdentity, candidateToAdd);
+            await this.candidatesService.Create(userIdentity, model);
 
             return this.Redirect("/");
         }
@@ -113,49 +143,34 @@
                 return this.Redirect("/");
             }
 
-            var allusersParents = this.parentsService
-               .GetParents()
-               .Where(x => x.User.UserName == this.User.Identity.Name);
-
-            this.ViewData["Parents"] = allusersParents
-                .Select(p => new CreateCandidateParentViewModel { Id = p.Id, FullName = p.FullName })
-                .ToList();
-
             return this.View(candidateEditViewModel);
         }
 
         [HttpPost("/Users/Candidate/Edit")]
-        public async Task<IActionResult> Edit(EditCandidateInputModel candidateInputModel)
+        public async Task<IActionResult> Edit(int id, EditCandidateInputModel candidateInputModel)
         {
             if (!this.ModelState.IsValid)
             {
-               var allusersParents = this.parentsService
-              .GetParents()
-              .Where(x => x.User.UserName == this.User.Identity.Name);
-                this.ViewData["Parents"] = allusersParents
-                    .Select(p => new CreateCandidateParentViewModel { Id = p.Id, FullName = p.FullName })
-                    .ToList();
+              // var allusersParents = this.parentsService
+              //.GetParents()
+              //.Where(x => x.User.UserName == this.User.Identity.Name);
+              //  this.ViewData["Parents"] = allusersParents
+              //      .Select(p => new CreateCandidateParentViewModel { Id = p.Id, FullName = p.FullName })
+              //      .ToList();
                 return this.View(candidateInputModel);
             }
 
-            //var candidateToEdit =  new CandidateServiceModel();
-           var candidateToEdit = candidateInputModel.To<CandidateServiceModel>();
-            ParentServiceModel mother = await this.parentsService.GetParentById(candidateInputModel.MotherId);
-            ParentServiceModel father = await this.parentsService.GetParentById(candidateInputModel.FatherId);
+            var candidateToEdit = candidateInputModel.To<CandidateServiceModel>();
+            
+            // var parents = await this.parentsService.GetParents(userIdentity).ToListAsync();mmm
+            //foreach (var parent in parents)
+            //{
+            //    candidateToEdit.CandidateParents.Add(
+            //        new CandidateParentServiceModel { ParentId = parent.Id });
+            //}
+            ClaimsPrincipal userIdentity = this.User;
 
-            candidateToEdit.UCN = candidateInputModel.UCN;
-            candidateToEdit.FirstName = candidateInputModel.FirstName;
-            candidateToEdit.MiddleName = candidateInputModel.MiddleName;
-            candidateToEdit.LastName = candidateInputModel.LastName;
-            candidateToEdit.Parents.Add(new CandidateParentsServiceModel { Parent = father, Candidate = candidateToEdit });
-            candidateToEdit.Parents.Add(new CandidateParentsServiceModel { Parent = mother, Candidate = candidateToEdit });
-            candidateToEdit.KinderGarten = candidateInputModel.KinderGarten;
-            candidateToEdit.SEN = candidateInputModel.SEN;
-            candidateToEdit.Desease = candidateInputModel.Desease;
-            candidateToEdit.YearOfBirth = candidateInputModel.YearOfBirth;
-
-            var userIdentity = candidateInputModel.UserName;
-            await this.candidatesService.Edit(userIdentity, candidateToEdit);
+            await this.candidatesService.Edit(id, userIdentity, candidateToEdit);
 
             return this.Redirect("/");
         }

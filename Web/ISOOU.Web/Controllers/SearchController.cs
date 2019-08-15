@@ -19,21 +19,24 @@
         private readonly ISearchService searchService;
         private readonly IDistrictsService districtsService;
         private readonly ISchoolsService schoolsService;
+        private readonly ICalculatorService calculatorService;
 
         public SearchController(
             ISearchService searchService,
+            ICalculatorService calculatorService,
             IDistrictsService districtsService,
             ISchoolsService schoolsService)
         {
             this.searchService = searchService;
             this.districtsService = districtsService;
             this.schoolsService = schoolsService;
+            this.calculatorService = calculatorService;
         }
 
         [HttpGet]
         public IActionResult FreeSpots()
         {
-            var allPossibleYears = FreeSpotsCenter.GetAllPossibleYears();
+            var allPossibleYears = this.calculatorService.GetAllPossibleYearsToApply();
             this.ViewData["Years"] = allPossibleYears;
 
             var allDistricts = this.districtsService.GetAllDistricts().ToList().To<SearchDistrictViewModel>();
@@ -49,7 +52,7 @@
         {
             if (!this.ModelState.IsValid)
             {
-                var allPossibleYears = FreeSpotsCenter.GetAllPossibleYears();
+                var allPossibleYears = this.calculatorService.GetAllPossibleYearsToApply();
                 this.ViewData["Years"] = allPossibleYears;
 
                 var allDistricts = this.districtsService.GetAllDistricts().ToList().To<SearchDistrictViewModel>();

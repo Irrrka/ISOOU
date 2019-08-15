@@ -15,7 +15,7 @@
 
         Task<SchoolServiceModel> GetSchoolDetailsByName(string name);
 
-        Task<bool> EditSchool(SchoolServiceModel model);
+        Task<bool> EditSchool(int id, SchoolServiceModel model);
 
         Task<SchoolServiceModel> GetSchoolForEdit(string userIdentity);
     }

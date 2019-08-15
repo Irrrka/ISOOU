@@ -6,5 +6,7 @@
     public interface IUsersService
     {
         Task<bool> CreateMessage(string userIdentity, QuestionServiceModel model);
+
+        Task<SystemUserServiceModel> GetUserByuserName(string userIdentity);
     }
 }

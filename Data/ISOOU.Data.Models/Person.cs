@@ -28,15 +28,10 @@
 
         public string UCN { get; set; }
 
-        [DataType(DataType.PhoneNumber)]
-        public string PhoneNumber { get; set; }
-
-        public virtual AddressDetails Address { get; set; }
-
         [ForeignKey("User")]
         public string UserId { get; set; }
 
-        public SystemUser User { get; set; }
+        public virtual SystemUser User { get; set; }
 
         public bool IsDeleted { get ; set ; }
 

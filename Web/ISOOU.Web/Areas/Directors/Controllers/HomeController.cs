@@ -1,5 +1,6 @@
 ﻿namespace ISOOU.Web.Areas.Administration.Controllers
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -77,32 +78,37 @@
         public async Task<ActionResult> EditSchool()
         {
             var allDistricts = this.districtsService.GetAllDistricts();
-            this.ViewData["Districts"] = allDistricts.Select(d => new EditSchoolDistrictModel { Id = d.Id, Name = d.Name }).ToList();
+            this.ViewData["Districts"] = allDistricts.Select(d => new EditSchoolDistrictModel { Name = d.Name }).ToList();
 
             var userIdentity = this.User.Identity.Name;
 
-            var model = (await this.schoolsService.GetSchoolForEdit(userIdentity)).To<EditSchoolViewModel>();
+            var model = (await this.schoolsService.GetSchoolForEdit(userIdentity)).To<EditSchoolInputModel>();
+
+            if (model == null)
+            {
+                return this.Redirect("/");
+            }
 
             return this.View(model);
         }
 
         [HttpPost]
-        public async Task<ActionResult> EditSchool(EditSchoolInputModel input)
+        public async Task<ActionResult> EditSchool(int id, EditSchoolInputModel input)
         {
             if (!this.ModelState.IsValid)
             {
                 var allDistricts = this.districtsService.GetAllDistricts();
-                this.ViewData["Districts"] = allDistricts.Select(d => new EditSchoolDistrictModel { Id = d.Id, Name = d.Name }).ToList();
+                this.ViewData["Districts"] = allDistricts.Select(d => new EditSchoolDistrictModel { Name = d.Name }).ToList();
 
                 return this.View(input);
             }
 
-            DistrictServiceModel district = await this.districtsService.GetDistrictByName(input.DistrictName);
-
             SchoolServiceModel schoolToEdit = input.To<SchoolServiceModel>();
 
+            DistrictServiceModel district = await this.districtsService.GetDistrictByName(input.DistrictName);
             schoolToEdit.District = district;
-            await this.schoolsService.EditSchool(schoolToEdit);
+
+            await this.schoolsService.EditSchool(id, schoolToEdit);
 
             return this.Redirect("/");
         }

@@ -14,11 +14,14 @@
     public class SearchService : ISearchService
     {
         private readonly ISchoolsService schoolsService;
+        private readonly ICalculatorService calculatorService;
 
         public SearchService(
-            ISchoolsService schoolsService)
+            ISchoolsService schoolsService,
+            ICalculatorService calculatorService)
         {
             this.schoolsService = schoolsService;
+            this.calculatorService = calculatorService;
         }
 
         public async Task<SearchFreeSpotsResultViewModel> GetSearchResult(int districtId, int year)
@@ -43,7 +46,7 @@
 
         private Dictionary<SchoolForSearchResultViewModel, int> GetFreeSpotsBySchool(List<SchoolForSearchResultViewModel> schoolsVM, int year)
         {
-            int coefByYear = FreeSpotsCenter.CalculateCoeficient(year);
+            int coefByYear = this.calculatorService.CalculateCoeficientByYear(year);
 
             var result = new Dictionary<SchoolForSearchResultViewModel, int>();
 

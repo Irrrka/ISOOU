@@ -1,10 +1,9 @@
-﻿using ISOOU.Data.Models;
-using ISOOU.Data.Models.Enums;
-using ISOOU.Services.Mapping;
-using System;
-
-namespace ISOOU.Services.Models
+﻿namespace ISOOU.Services.Models
 {
+    using ISOOU.Data.Models;
+    using ISOOU.Data.Models.Enums;
+    using ISOOU.Services.Mapping;
+
     public class AddressDetailsServiceModel : IMapFrom<AddressDetails>, IMapTo<AddressDetails>
     {
         public int Id { get; set; }
@@ -17,8 +16,12 @@ namespace ISOOU.Services.Models
 
         public string Current { get; set; }
 
-        public virtual DistrictServiceModel CurrentDistrict { get; set; }
+        public int CurrentDistrictId { get; set; }
 
-        public virtual DistrictServiceModel PermanentDistrict { get; set; }
+        public DistrictServiceModel CurrentDistrict { get; set; }
+
+        public int PermanentDistrictId { get; set; }
+
+        public DistrictServiceModel PermanentDistrict { get; set; }
     }
 }

@@ -9,8 +9,8 @@
     using ISOOU.Data.Models;
     using ISOOU.Services.Data.Contracts;
     using Microsoft.EntityFrameworkCore;
-    using ISOOU.Services.Models;
     using ISOOU.Services.Mapping;
+    using ISOOU.Services.Models;
 
     public class AdminService : IAdminService
     {

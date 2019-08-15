@@ -52,6 +52,7 @@
         public static readonly int ParentCurrentCitySofiaCriteria = 1;
         public static readonly int ParentPermanentDistrictCriteria = 2;
         public static readonly int ParentCurrentDistrictCriteria = 1;
+        public static readonly int HasAllTheImmunizations = 1;
         public static readonly int FirstApplicationBonusCriteria = 3;
         public static readonly int SecondApplicationBonusCriteria = 2;
         public static readonly int ThirdApplicationBonusCriteria = 1;

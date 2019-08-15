@@ -36,7 +36,9 @@
 
         public DbSet<SchoolCandidate> SchoolCandidates { get; set; }
 
-        public DbSet<CandidateParent> CandidateParents { get; set; }
+        public DbSet<CriteriaForCandidate> CriteriasForCandidates { get; set; }
+
+        //public DbSet<CandidateParent> CandidateParents { get; set; }
 
         public DbSet<AdmissionProcedure> AdmissionProcedures { get; set; }
 
@@ -70,9 +72,18 @@
 
             builder.Entity<SchoolCandidate>()
                .HasKey(fk => new { fk.CandidateId, fk.SchoolId });
-            builder.Entity<CandidateParent>()
-               .HasKey(fk => new { fk.CandidateId, fk.ParentId });
 
+            builder.Entity<CriteriaForCandidate>()
+              .HasKey(fk => new { fk.CriteriaId, fk.CandidateId });
+
+            builder.Entity<Candidate>()
+              .HasOne(m => m.Mother);
+
+            builder.Entity<Candidate>()
+             .HasOne(m => m.Father);
+
+            builder.Entity<Parent>()
+              .HasMany(c => c.Candidates);
             // Needed for Identity models configuration
             base.OnModelCreating(builder);
 

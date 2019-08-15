@@ -89,17 +89,19 @@ namespace ISOOU.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AddressId");
-
                     b.Property<DateTime>("CreatedOn");
 
                     b.Property<DateTime?>("DeletedOn");
 
                     b.Property<bool>("Desease");
 
+                    b.Property<int>("FatherId");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(20);
+
+                    b.Property<bool>("Immunization");
 
                     b.Property<bool>("IsDeleted");
 
@@ -115,7 +117,9 @@ namespace ISOOU.Data.Migrations
 
                     b.Property<DateTime?>("ModifiedOn");
 
-                    b.Property<string>("PhoneNumber");
+                    b.Property<int>("MotherId");
+
+                    b.Property<int?>("ParentId");
 
                     b.Property<bool>("SEN");
 
@@ -131,28 +135,17 @@ namespace ISOOU.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId");
+                    b.HasIndex("FatherId");
 
                     b.HasIndex("IsDeleted");
+
+                    b.HasIndex("MotherId");
+
+                    b.HasIndex("ParentId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Candidates");
-                });
-
-            modelBuilder.Entity("ISOOU.Data.Models.CandidateParent", b =>
-                {
-                    b.Property<int>("CandidateId");
-
-                    b.Property<int>("ParentId");
-
-                    b.Property<int>("Id");
-
-                    b.HasKey("CandidateId", "ParentId");
-
-                    b.HasIndex("ParentId");
-
-                    b.ToTable("CandidateParents");
                 });
 
             modelBuilder.Entity("ISOOU.Data.Models.Criteria", b =>
@@ -161,9 +154,9 @@ namespace ISOOU.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CandidateId");
-
                     b.Property<DateTime>("CreatedOn");
+
+                    b.Property<string>("DisplayName");
 
                     b.Property<DateTime?>("ModifiedOn");
 
@@ -173,9 +166,22 @@ namespace ISOOU.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.ToTable("Criterias");
+                });
+
+            modelBuilder.Entity("ISOOU.Data.Models.CriteriaForCandidate", b =>
+                {
+                    b.Property<int>("CriteriaId");
+
+                    b.Property<int>("CandidateId");
+
+                    b.Property<int>("Id");
+
+                    b.HasKey("CriteriaId", "CandidateId");
+
                     b.HasIndex("CandidateId");
 
-                    b.ToTable("Criterias");
+                    b.ToTable("CriteriasForCandidates");
                 });
 
             modelBuilder.Entity("ISOOU.Data.Models.District", b =>
@@ -196,13 +202,36 @@ namespace ISOOU.Data.Migrations
                     b.ToTable("Districts");
                 });
 
+            modelBuilder.Entity("ISOOU.Data.Models.DocumentSubmission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CandidateId");
+
+                    b.Property<string>("PathFile");
+
+                    b.Property<int>("SchoolId");
+
+                    b.Property<DateTime>("UploadDate");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CandidateId");
+
+                    b.HasIndex("SchoolId");
+
+                    b.ToTable("DocumentSubmission");
+                });
+
             modelBuilder.Entity("ISOOU.Data.Models.Parent", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AddressId");
+                    b.Property<int>("AddressId");
 
                     b.Property<DateTime>("CreatedOn");
 
@@ -234,7 +263,7 @@ namespace ISOOU.Data.Migrations
 
                     b.Property<string>("UserId");
 
-                    b.Property<int?>("WorkDistrictId");
+                    b.Property<int>("WorkDistrictId");
 
                     b.Property<string>("WorkName");
 
@@ -550,33 +579,48 @@ namespace ISOOU.Data.Migrations
 
             modelBuilder.Entity("ISOOU.Data.Models.Candidate", b =>
                 {
-                    b.HasOne("ISOOU.Data.Models.AddressDetails", "Address")
+                    b.HasOne("ISOOU.Data.Models.Parent", "Father")
                         .WithMany()
-                        .HasForeignKey("AddressId");
+                        .HasForeignKey("FatherId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ISOOU.Data.Models.Parent", "Mother")
+                        .WithMany()
+                        .HasForeignKey("MotherId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ISOOU.Data.Models.Parent")
+                        .WithMany("Candidates")
+                        .HasForeignKey("ParentId");
 
                     b.HasOne("ISOOU.Data.Models.SystemUser", "User")
                         .WithMany("Candidates")
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("ISOOU.Data.Models.CandidateParent", b =>
+            modelBuilder.Entity("ISOOU.Data.Models.CriteriaForCandidate", b =>
                 {
                     b.HasOne("ISOOU.Data.Models.Candidate", "Candidate")
-                        .WithMany("CandidateParents")
+                        .WithMany("Criterias")
                         .HasForeignKey("CandidateId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ISOOU.Data.Models.Parent", "Parent")
-                        .WithMany("CandidateParents")
-                        .HasForeignKey("ParentId")
+                    b.HasOne("ISOOU.Data.Models.Criteria", "Criteria")
+                        .WithMany("Candidates")
+                        .HasForeignKey("CriteriaId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("ISOOU.Data.Models.Criteria", b =>
+            modelBuilder.Entity("ISOOU.Data.Models.DocumentSubmission", b =>
                 {
                     b.HasOne("ISOOU.Data.Models.Candidate", "Candidate")
-                        .WithMany("Scores")
+                        .WithMany("Documents")
                         .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ISOOU.Data.Models.School", "School")
+                        .WithMany()
+                        .HasForeignKey("SchoolId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -584,7 +628,8 @@ namespace ISOOU.Data.Migrations
                 {
                     b.HasOne("ISOOU.Data.Models.AddressDetails", "Address")
                         .WithMany()
-                        .HasForeignKey("AddressId");
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ISOOU.Data.Models.SystemUser", "User")
                         .WithMany("Parents")
@@ -592,7 +637,8 @@ namespace ISOOU.Data.Migrations
 
                     b.HasOne("ISOOU.Data.Models.District", "WorkDistrict")
                         .WithMany()
-                        .HasForeignKey("WorkDistrictId");
+                        .HasForeignKey("WorkDistrictId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("ISOOU.Data.Models.Question", b =>

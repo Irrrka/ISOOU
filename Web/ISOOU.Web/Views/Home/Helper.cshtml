@@ -1,4 +1,5 @@
-﻿@{
+﻿@using ISOOU.Common
+@{
     this.ViewData["Title"] = "Ръководство за родители";
 }
     <section class="ftco-animate img-wrap" id="section-counter" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
@@ -91,39 +92,45 @@
                                 <li>
                                     4.1. Постоянен или настоящ адрес на територията на Столична община на поне единия от родителите/ настойниците
                                 <li>
-                                    - за постоянен адрес - 3 т.
+                                    - за постоянен адрес - @GlobalConstants.ParentPermanentCitySofiaCriteria т.
                                 </li>
                                 <li>
-                                    - за настоящ адрес - 2 т.
+                                    - за настоящ адрес - @GlobalConstants.ParentCurrentCitySofiaCriteria т.
                                 </li>
                                 <li>
-                                    4.2. Постоянен или настоящ адрес на територията на административния район на училището на поне единия от родителите/настойниците - 2 т.
-                                    <li>
-                                        - за постоянен адрес - 3 т.
-                                    </li>
-                                    <li>
-                                        - за настоящ адрес - 2 т.
-                                    </li>
+                                    4.2. Постоянен или настоящ адрес на територията на административния район на училището на поне единия от родителите/настойниците
                                 <li>
-                                    4.3. Работещ родител - по 2 т. за родител
+                                    - за постоянен адрес - @GlobalConstants.ParentPermanentDistrictCriteria т.
                                 </li>
                                 <li>
-                                    4.4. Дете, което е посещавало общинска детска градина, регистрирана на Столична община - 1 т.
+                                    - за настоящ адрес - @GlobalConstants.ParentCurrentDistrictCriteria т.
                                 </li>
                                 <li>
-                                    4.5. Дете с двама починали родители - 6 т.
+                                    4.3. Работещ родител - по @GlobalConstants.ParentHasWorkCriteria т. за родител
                                 </li>
                                 <li>
-                                    4.6. Дете с един починал родител - 3 т.
+                                    4.4. Работещ родител в района на училището - @GlobalConstants.ParentHasWorkInDistrictCriteria т.
                                 </li>
                                 <li>
-                                    4.7. Дете, което живее в семейство/домакинство с три и повече деца - 2 т.
+                                    4.5. Дете, което е посещавало общинска детска градина, регистрирана на Столична община - @GlobalConstants.HasVisitKGCriteria т.
                                 </li>
                                 <li>
-                                    4.8. Деца със специални образователни потребности - 7 т.
+                                    4.6. Дете с двама починали родители - @GlobalConstants.HasNoParentCriteria т.
                                 </li>
                                 <li>
-                                    4.9. Деца с хронични заболявания - 3 т.
+                                    4.7. Дете с един починал родител - @GlobalConstants.HasOneParentCriteria т.
+                                </li>
+                                <li>
+                                    4.8. Дете, което живее в семейство/домакинство с три и повече деца - @GlobalConstants.HasManyBrothersOrSistersCriteria т.
+                                </li>
+                                <li>
+                                    4.9. Деца със специални образователни потребности - @GlobalConstants.HasSENCriteria т.
+                                </li>
+                                <li>
+                                    4.10. Деца с хронични заболявания - @GlobalConstants.HasDeseasCriteria т.
+                                </li>
+                                <li>
+                                    4.11. Има всички задължителни имунизации - @GlobalConstants.HasAllTheImmunizations т.
                                 </li>
                             </ul>
                         </p>

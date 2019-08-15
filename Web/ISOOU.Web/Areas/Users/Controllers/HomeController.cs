@@ -14,6 +14,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using System.Security.Claims;
 
     public class HomeController : UserController
     {
@@ -38,8 +39,9 @@
         [HttpGet]
         public IActionResult Index()
         {
-            var parents = this.parentsService.GetParents()
-                .Where(x => x.User.UserName == this.User.Identity.Name)
+            ClaimsPrincipal userIdentity = this.User;
+
+            var parents = this.parentsService.GetParents(userIdentity)
                 .Select(p => new ParentsHomeViewModel
                 {
                     Id = p.Id,

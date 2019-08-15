@@ -1,12 +1,13 @@
 ﻿namespace ISOOU.Web.ViewModels.Users
 {
     using System.ComponentModel.DataAnnotations;
-
+    using System.Linq;
+    using AutoMapper;
     using ISOOU.Common;
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
 
-    public class CreateCandidateInputModel : IMapTo<CandidateServiceModel>, IMapFrom<CandidateServiceModel>
+    public class CreateCandidateInputModel : IMapTo<CandidateServiceModel>, IMapFrom<CandidateServiceModel>, IHaveCustomMappings
     {
         public int Id { get; set; }
 
@@ -45,15 +46,24 @@
         [Display(Name = " Хронично заболяване ")]
         public bool Desease { get; set; }
 
-        public string UserName { get; set; }
-
-        public int MotherId { get; set; }
+        [Display(Name = " Имунизации")]
+        public bool Immunization { get; set; }
 
         public string MotherFullName { get; set; }
 
-        public int FatherId { get; set; }
-
         public string FatherFullName { get; set; }
 
+        public void CreateMappings(IProfileExpression configuration)
+        {
+            configuration
+                 .CreateMap<CandidateServiceModel, CreateCandidateInputModel>()
+                 .ForMember(
+                    destination => destination.MotherFullName,
+                    opts => opts.MapFrom(origin => origin.Mother.FullName))
+                 .ForMember(
+                        destination => destination.FatherFullName,
+                        opts => opts.MapFrom(origin => origin.Father.FullName));
+
+        }
     }
 }
