@@ -70,19 +70,18 @@
             return schoolDetails;
         }
 
-        public async Task<SchoolServiceModel> GetSchoolDetailsByName(string name)
+        public async Task<int> GetSchoolIdByName(string name)
         {
-            var schoolDetails = await this.schoolRepository
+            var schoolId = (await this.schoolRepository
                 .All()
-                .To<SchoolServiceModel>()
-                .FirstOrDefaultAsync(x => x.Name == name);
+                .FirstOrDefaultAsync(x => x.Name == name)).Id;
 
-            if (schoolDetails == null)
+            if (schoolId == 0)
             {
-                throw new NullReferenceException();
+                throw new ArgumentNullException(nameof(schoolId));
             }
 
-            return schoolDetails;
+            return schoolId;
         }
 
         //public async Task<bool> CreateClassProfile(string name)

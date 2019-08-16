@@ -13,7 +13,7 @@
 
         Task<SchoolServiceModel> GetSchoolDetailsById(int id);
 
-        Task<SchoolServiceModel> GetSchoolDetailsByName(string name);
+        Task<int> GetSchoolIdByName(string name);
 
         Task<bool> EditSchool(int id, SchoolServiceModel model);
 

@@ -11,16 +11,29 @@
             <div class="col-md-2">
                 <ul class="nav nav-pills mt-2 nav-justified flex-col">
                     <li class="nav-item">
-                        <a class="nav-link active" href="Profile/@Model.Id">Профил</a>
+                        <a asp-area="Users" asp-controller="Candidate" asp-action="Profile" asp-route-id="@Model.Id">
+                            Профил
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="Criteria/@Model.Id">Критерии и точки</a>
+                        <a asp-area="Users" asp-controller="Candidate" asp-action="Criteria" asp-route-id="@Model.Id">
+                            Критерии / точки
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="Applications/@Model.Id">Кандидатури</a>
+                        <a asp-area="Users" asp-controller="Candidate" asp-action="AddApplications" asp-route-id="@Model.Id">
+                            Защо не работи???
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="Edit/@Model.Id">Редактирай данни</a>
+                        <a asp-area="Users" asp-controller="Candidate" asp-action="Documents" asp-route-id="@Model.Id">
+                            Качи документи
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-area="Users" asp-controller="Candidate" asp-action="Edit" asp-route-id="@Model.Id">
+                            Редактирай профил
+                        </a>
                     </li>
                 </ul>
             </div>

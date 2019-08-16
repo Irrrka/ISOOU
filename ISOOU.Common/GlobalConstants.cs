@@ -46,7 +46,8 @@
         public static readonly int HasManyBrothersOrSistersCriteria = 3;
         public static readonly int HasSENCriteria = 7;
         public static readonly int HasDeseasCriteria = 3;
-        public static readonly int ParentHasWorkCriteria = 2;
+        public static readonly int FatherHasWorkCriteria = 2;
+        public static readonly int MotherHasWorkCriteria = 2;
         public static readonly int ParentHasWorkInDistrictCriteria = 1;
         public static readonly int ParentPermanentCitySofiaCriteria = 2;
         public static readonly int ParentCurrentCitySofiaCriteria = 1;

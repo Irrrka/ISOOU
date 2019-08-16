@@ -11,9 +11,9 @@
             <div class="col-md-8">
                 @if (Model == null)
                 {
-                    <a class="btn btn-secondary py-3 px-4" asp-area="Users" asp-controller="Candidate" asp-action="AddApplications">
-                        Добави училище
-                    </a>
+                <a asp-area="Users" asp-controller="Candidate" asp-action="AddApplications" asp-route-id="@Model.Id">
+                    Добави училище
+                </a>
                 }
                 else
                 {

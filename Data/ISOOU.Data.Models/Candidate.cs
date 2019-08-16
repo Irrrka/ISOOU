@@ -37,12 +37,10 @@
 
         public Parent Father { get; set; }
 
-        //public virtual ICollection<CandidateParent> CandidateParents { get; set; }
-
         public virtual ICollection<SchoolCandidate> SchoolCandidates { get; set; }
 
         public virtual ICollection<CriteriaForCandidate> Criterias { get; set; }
 
-        public ICollection<DocumentSubmission> Documents { get; set; }
+        public virtual ICollection<DocumentSubmission> Documents { get; set; }
     }
 }

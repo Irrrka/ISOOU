@@ -1,59 +1,79 @@
-﻿
+﻿@using ISOOU.Common
+@model ISOOU.Web.ViewModels.Users.CandidateProfileViewModel
+@{
+    ViewData["Title"] = "Критерии и точки";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 <section class="ftco-heading-2 img" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-2">
-                <ul class="nav nav-pills flex-column">
+                <ul class="nav nav-pills mt-2 nav-justified flex-col">
                     <li class="nav-item">
-                        <a class="nav-link " href="Profile/">Профил</a>
+                        <a asp-area="Users" asp-controller="Candidate" asp-action="Profile" asp-route-id="@Model.CandidateId">
+                            Профил
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="Criteria/">Критерии и точки</a>
+                        <a asp-area="Users" asp-controller="Candidate" asp-action="Criteria" asp-route-id="@Model.CandidateId">
+                            Критерии / точки
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="Applications/">Кандидатури</a>
+                        <a asp-area="Users" asp-controller="Candidate" asp-action="AddApplications" asp-route-id="@Model.CandidateId">
+                            Кандидатури
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="Edit/">Редактирай продил</a>
+                        <a asp-area="Users" asp-controller="Candidate" asp-action="Documents" asp-route-id="@Model.CandidateId">
+                            Качи документи
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-area="Users" asp-controller="Candidate" asp-action="Edit" asp-route-id="@Model.CandidateId">
+                            Редактирай профил
+                        </a>
                     </li>
                 </ul>
             </div>
-            <div class="col-md-6 mt-2">
-
-            </div>
         </div>
     </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <p class="ftco-heading-2"><strong>Кандидатури за следващото класиране</strong></p>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Желание</th>
+                                        <th>Училище</th>
+                                        <th>Точки</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        var i = 1;
+                                        foreach (var schApp in Model.ScoresByApplications)
+                                        {
+                                            <tr>
+                                                <td>@(i++)</td>
+                                                <td>
+                                                    <div class="form-inline mt-1 justify-content-end">
+                                                        @schApp.Key
+                                                    </div>
+                                                </td>
+                                                <td>@schApp.Value</td>
+
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
 </section>
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-8">
-            <p class="ftco-heading-2"><strong>Кандидатури за следващото класиране</strong></p>
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Желание</th>
-                            <th>Училище</th>
-                            <th>Точки</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            @{
-                                
-                            }
-                            <td>i</td>
-                            <td>
-                                <div class="form-inline mt-1 justify-content-end">
-
-                                </div>
-                            </td>
-                            <td>Точки</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>

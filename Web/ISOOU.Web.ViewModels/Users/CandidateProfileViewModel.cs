@@ -7,13 +7,14 @@
 
     public class CandidateProfileViewModel : IMapFrom<CandidateServiceModel>, IMapTo<CandidateServiceModel>
     {
+
         public CandidateProfileViewModel()
         {
-            this.ScoresByApplications = new Dictionary<string, Dictionary<string, int>>();
+            this.ScoresByApplications = new Dictionary<string, int>();
         }
 
-        public int Id { get; set; }
+        public int CandidateId { get; set; }
 
-        public Dictionary<string, Dictionary<string, int>> ScoresByApplications { get; set; }
+        public Dictionary<string, int> ScoresByApplications { get; set; }
     }
 }

@@ -121,6 +121,7 @@
             services.AddTransient<IAddressesService, AddressesService>();
             services.AddTransient<ICalculatorService, CalculatorService>();
             services.AddTransient<ICloudinaryService, CloudinaryService>();
+            services.AddTransient<ICriteriasService, CriteriasService>();
 
         }
 

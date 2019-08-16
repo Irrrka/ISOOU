@@ -11,7 +11,6 @@
 
         public int Scores { get; set; }
 
-
         public ICollection<CriteriaForCandidate> Candidates { get; set; }
     }
 }

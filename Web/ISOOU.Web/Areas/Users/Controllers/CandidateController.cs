@@ -27,21 +27,24 @@
         private readonly UserManager<SystemUser> userManager;
         private readonly IParentsService parentsService;
         private readonly ICandidatesService candidatesService;
-        private readonly IDistrictsService districtsService;
+        private readonly ICalculatorService calculatorService;
         private readonly ISchoolsService schoolsService;
+        private readonly ICloudinaryService cloudinaryService;
 
         public CandidateController(
             UserManager<SystemUser> userManager,
             IParentsService parentsService,
             ICandidatesService candidatesService,
-            IDistrictsService districtsService,
-            ISchoolsService schoolsService)
+            ISchoolsService schoolsService,
+            ICloudinaryService cloudinaryService,
+            ICalculatorService calculatorService)
         {
             this.userManager = userManager;
             this.parentsService = parentsService;
             this.candidatesService = candidatesService;
-            this.districtsService = districtsService;
+            this.calculatorService = calculatorService;
             this.schoolsService = schoolsService;
+            this.cloudinaryService = cloudinaryService;
         }
 
         [HttpGet("/Users/Candidate/Create")]
@@ -213,88 +216,144 @@
             return this.Redirect("/");
         }
 
-        [HttpGet(Name = "Criteria")]
-        public async Task<IActionResult> Criteria(int id)
-        {//NOT WORKING!!!!!!!!
-            CandidateServiceModel candidateModel = await this.candidatesService.GetCandidateById(id);
-
-            //Dictionary<string, int> result = await this.candidatesService.CalculateScoresByCriteria(id);
-
-            var viewModel = new CalculateScoresByCriteriaOnCandidateViewModel();
-
-            //viewModel.ScoresByCrieria = result;
-
-            //?
-            //viewModel.ParentPermanentCity = candidateModel.Mother.Address.PermanentCity.ToString();
-            ////?
-            //viewModel.ParentCurrentCity = candidateModel.Mother.Address.CurrentCity.ToString();
-            ////?
-            //viewModel.ParentPermanentDistrictName = candidateModel.Mother.Address.PermanentDistrict.Name;
-            ////?
-            //viewModel.ParentCurrentDistrictName = candidateModel.Mother.Address.CurrentDistrict.Name;
-            ////?
-            //viewModel.ParentWorkDistrictName = candidateModel.Mother.WorkDistrict.Name;
-
-            //viewModel.MotherFullName = candidateModel.Mother.FullName;
-
-            //viewModel.FatherFullName = candidateModel.Father.FullName;
-
-            return await Task.Run(() => this.View(viewModel));
+        [HttpGet]
+        public IActionResult Documents(int id)
+        {
+            return this.View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Documents(UploadDocumentsInputModel input)
+        {
+            string applicationUrl = await this.cloudinaryService
+                .UploadDocument(input.Application, nameof(input.Application));
+            //string birthCertificateUrl = await this.cloudinaryService
+            //    .UploadDocument(input.BirthCertificate, nameof(input.BirthCertificate));
+            return this.Redirect("/");
+        }
+
+        [HttpGet(Name = "Criteria")]
+        public async Task<IActionResult> Criteria(int id)
+        {
+            return this.View();
+        }
 
         [HttpGet(Name = "AddApplications")]
         public async Task<IActionResult> AddApplications(int id)
         {
+            CandidateServiceModel candidate = await this.candidatesService.GetCandidateById(id);
+
             var allSchools = this.schoolsService
-              .GetAllSchools();
+                .GetAllSchools()
+                .Where(x => x.District.Id == candidate.Mother.Address.PermanentDistrictId
+                    || x.District.Id == candidate.Mother.Address.CurrentDistrictId
+                    || x.District.Id == candidate.Father.Address.PermanentDistrictId
+                    || x.District.Id == candidate.Father.Address.CurrentDistrictId
+                    || x.District.Id == candidate.Mother.WorkDistrictId
+                    || x.District.Id == candidate.Father.WorkDistrictId);
+                //.OrderBy(o => o.District.Name == candidate.Mother.Address.PermanentDistrict.Name)
+                //.ThenBy(o => o.District.Name == candidate.Father.Address.PermanentDistrict.Name)
+                //.ThenBy(o => o.District.Name == candidate.Mother.WorkDistrict.Name)
+                //.ThenBy(o => o.District.Name == candidate.Father.WorkDistrict.Name);
+
             this.ViewData["AllSchools"] = allSchools
                 .Select(p => new AddSchoolApplicationsViewModel { Id = p.Id, Name = p.Name, DistrictName = p.District.Name })
                 .ToList();
 
-            CandidateServiceModel candidateServiceModel = await this.candidatesService.GetCandidateById(id);
-            AddApplicationsInputModel model = new AddApplicationsInputModel();
-            model.CandidateId = candidateServiceModel.Id;
 
-            return this.View(model);
+            AddApplicationsInputModel model = new AddApplicationsInputModel();
+            model.CandidateId = candidate.Id;
+
+            return this.View("AddApplications", model);
         }
 
         [HttpPost(Name = "AddApplications")]
-        public async Task<IActionResult> AddApplications(AddApplicationsInputModel input)
+        public async Task<IActionResult> AddApplications(int id, AddApplicationsInputModel input)
         {
+            CandidateServiceModel candidate = await this.candidatesService.GetCandidateById(id);
+
             if (!this.ModelState.IsValid)
             {
                 var allSchools = this.schoolsService
-                  .GetAllSchools();
+               .GetAllSchools()
+               .Where(x => x.District.Id == candidate.Mother.Address.PermanentDistrictId
+                   || x.District.Id == candidate.Mother.Address.CurrentDistrictId
+                   || x.District.Id == candidate.Father.Address.PermanentDistrictId
+                   || x.District.Id == candidate.Father.Address.CurrentDistrictId
+                   || x.District.Id == candidate.Mother.WorkDistrictId
+                   || x.District.Id == candidate.Father.WorkDistrictId);
+
                 this.ViewData["AllSchools"] = allSchools
                     .Select(p => new AddSchoolApplicationsViewModel { Id = p.Id, Name = p.Name, DistrictName = p.District.Name })
-                    .ToList()
-                    .OrderBy(x => x.DistrictName);
+                    .ToList();
 
                 return this.View(input);
             }
 
-            var applicationsToAdd = new List<SchoolCandidateServiceModel>();
-            //TODO Fix this:
-            //var schoolFirstWish = this.schoolsService.GetSchoolDetailsByName(input.FirstWishSchool);
-            //var schoolSecondWish = this.schoolsService.GetSchoolDetailsByName(input.SecondWishSchool);
-            //var schoolThirdWish = this.schoolsService.GetSchoolDetailsByName(input.ThirdWishSchool);
-            //applicationsToAdd.Add(schoolFirstWish);
-            //applicationsToAdd.Add(schoolSecondWish);
-            //applicationsToAdd.Add(schoolThirdWish);
+            ClaimsPrincipal userIdentity = this.User;
+            List<int> schoolApplicationIds = new List<int>();
 
-            //var candidateId = input.CandidateId;
-            //var userIdentity = input.UserName;
-            //await this.candidatesService.AddApplications(candidateId, userIdentity, applicationsToAdd);
+            //TODO Refactor Edit SchoolApplications
+            //TODO Refactor Scalability
+            //First wish
+            int firstWishSchoolId = await this.schoolsService
+                                                  .GetSchoolIdByName(input.FirstWishSchool);
+            schoolApplicationIds.Add(firstWishSchoolId);
+            //candidate.SchoolCandidates.Add(
+            //    new SchoolCandidateServiceModel
+            //    {
+            //        CandidateId = id,
+            //        SchoolId = firstWishSchoolId,
+            //    });
 
-            return this.Redirect("/");
+            //Second wish
+            int secondWishSchoolId = await this.schoolsService
+                                                  .GetSchoolIdByName(input.SecondWishSchool);
+            schoolApplicationIds.Add(secondWishSchoolId);
+            //candidate.SchoolCandidates.Add(
+            //    new SchoolCandidateServiceModel
+            //    {
+            //        CandidateId = id,
+            //        SchoolId = secondWishSchoolId,
+            //    });
+
+            //Third wish
+            int thirdWishSchoolId = await this.schoolsService
+                                                 .GetSchoolIdByName(input.ThirdWishSchool);
+            schoolApplicationIds.Add(thirdWishSchoolId);
+            //candidate.SchoolCandidates.Add(
+            //    new SchoolCandidateServiceModel
+            //    {
+            //        CandidateId = id,
+            //        SchoolId = thirdWishSchoolId,
+            //    });
+
+            await this.candidatesService.AddApplications(id, schoolApplicationIds);
+
+            return this.Redirect("Profile");
         }
 
         [HttpGet(Name = "Profile")]
-        public IActionResult Profile(CandidateProfileViewModel model)
+        public async Task<IActionResult> Profile(int id)
         {
+            CandidateServiceModel candidate = await this.candidatesService.GetCandidateById(id);
 
-            return this.View();
+            CandidateProfileViewModel model = new CandidateProfileViewModel();
+            model.CandidateId = id;
+            int basicScores = await this.calculatorService.CalculateBasicScoresByCriteria(id);
+
+            foreach (var schApp in candidate.SchoolCandidates)
+            {
+                int additionalPoints = this.calculatorService.CalculateAdditionalScoresByWish(schApp.Id);
+
+                if (!model.ScoresByApplications.ContainsKey(schApp.School.Name))
+                {
+                    int points = basicScores + additionalPoints;
+                    model.ScoresByApplications.Add(schApp.School.Name, points);
+                }
+            }
+
+            return this.View(model);
         }
     }
 

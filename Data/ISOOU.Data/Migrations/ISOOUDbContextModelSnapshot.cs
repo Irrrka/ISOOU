@@ -175,8 +175,6 @@ namespace ISOOU.Data.Migrations
 
                     b.Property<int>("CandidateId");
 
-                    b.Property<int>("Id");
-
                     b.HasKey("CriteriaId", "CandidateId");
 
                     b.HasIndex("CandidateId");

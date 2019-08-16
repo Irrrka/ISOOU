@@ -6,10 +6,6 @@
 
     public class CandidateServiceModel : IMapFrom<Candidate>, IMapTo<Candidate>
     {
-        public CandidateServiceModel()
-        {
-           // this.CandidateParents = new List<CandidateParentServiceModel>();
-        }
         public int Id { get; set; }
 
         public string FirstName { get; set; }
@@ -17,6 +13,8 @@
         public string MiddleName { get; set; }
 
         public string LastName { get; set; }
+
+        public string FullName => this.FirstName + " " + this.LastName;
 
         public string UCN { get; set; }
 
@@ -34,6 +32,8 @@
 
         public bool Immunization { get; set; }
 
+        public CandidateStatus Status { get; set; } = CandidateStatus.NotAdmitted;
+
         public int MotherId { get; set; }
 
         public ParentServiceModel Mother { get; set; }
@@ -42,13 +42,11 @@
 
         public ParentServiceModel Father { get; set; }
 
-        public List<SchoolCandidateServiceModel> SchoolCandidates { get; set; }
-               
-       // public List<CandidateParentServiceModel> CandidateParents { get; set; }
+        public ICollection<SchoolCandidateServiceModel> SchoolCandidates { get; set; }
 
-        public CandidateStatus Status { get; set; }
+        public ICollection<CriteriaForCandidateServiceModel> Criterias { get; set; }
 
-        public List<CriteriaServiceModel> Scores { get; set; }
+        public ICollection<DocumentSubmissionServiceModel> Documents { get; set; }
 
     }
 }
