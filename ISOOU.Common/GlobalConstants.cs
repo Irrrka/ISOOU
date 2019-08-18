@@ -20,6 +20,7 @@
         public const int MaxNumberOfApplications = 3;
         public const string AdmittedStatusMessage = "{Name} е приет!";
         public const string NotAdmittedStatusMessage = "{Name} не е приет!";
+        public const string AutomaticReply = "Изчислява се автоматично";
 
 
 

@@ -1,47 +1,91 @@
-﻿@model ISOOU.Web.ViewModels.Users.CalculateScoresByCriteriaOnCandidateViewModel
+﻿@model ISOOU.Web.ViewModels.Users.ScoresByCriteriasOnCandidateViewModel
 @{
     ViewData["Title"] = "Критерии и точки";
 
 }
 
-    <section class="ftco-heading-2 img" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-6 mt-2">
-                    <div class="container">
+<section class="ftco-heading-2" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-1 border-right-1">
+                <ul class="nav nav-pills mt-2 nav-justified flex-col">
+                    <li class="nav-item">
+                        <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Profile" asp-route-id="@Model.CandidateId">
+                            Профил
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Criteria" asp-route-id="@Model.CandidateId">
+                            Критерии / точки
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="AddApplications" asp-route-id="@Model.CandidateId">
+                            Кандидатури
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Documents" asp-route-id="@Model.CandidateId">
+                            Качи документи
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Edit" asp-route-id="@Model.CandidateId">
+                            Редактирай профил
+                        </a>
+                    </li>
+                </ul>
+            </div>
+                    <div class="col-md-8 mt-3 offset-2">
                         <div class="table-responsive">
-
-                            <table class="table table-bordered">
+                            <div class="alert alert-info">
+                                Критерии и точки по правилата за прием
+                            </div>
+                            <table class="table table-bordered table-hover center">
                                 <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>Критерий</th>
                                         <th>Точки</th>
-                                        <th>Данни</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
+                                @if (Model!=null)
+                                {
+                                    <tbody>
                                         @{
-                                            var i = 0;
-                                            foreach (var kvp in Model.ScoresByCrieria)
+                                            var i = 1;
+                                            foreach (var criteria in Model.ScoresByCriteria)
                                             {
-                                                i++;
-                                                <td>@i</td>
-                                                <td>@kvp.Key</td>
-                                                <td>@kvp.Value</td>
+                                                <tr>
+                                                    <td class="ftco-animate" height="21" style="height:21px;">
+                                                        <strong>@(i++)</strong>
+                                                    </td>
+                                                    @if (criteria.SchoolName == null)
+                                                    {
+                                                        <td class="ftco-animate" height="21" style="height:21px;">
+                                                            <strong> @criteria.CriteriaDisplayName</strong>
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="ftco-animate" height="21" style="height:21px;">
+                                                            <strong> @criteria.CriteriaDisplayName - за училище @criteria.SchoolName</strong>
+                                                        </td>
+                                                    }
+
+                                                    <td class="ftco-animate" height="21" style="height:21px;">
+                                                        <strong> @criteria.CriteriaScores</strong>
+                                                    </td>
+                                                </tr>
                                             }
                                         }
-                                </tbody>
+                                    </tbody>
+                                }
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-
-
-@section Scripts{
-    <partial name="_ValidationScriptsPartial" />
-}
+    </div>
+</section>

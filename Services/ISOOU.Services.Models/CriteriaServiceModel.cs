@@ -2,6 +2,7 @@
 {
     using ISOOU.Data.Models;
     using ISOOU.Services.Mapping;
+    using System.Collections.Generic;
 
     public class CriteriaServiceModel : IMapFrom<Criteria>, IMapTo<Criteria>
     {
@@ -9,12 +10,10 @@
 
         public string Name { get; set; }
 
+        public string DisplayName { get; set; }
+
         public int Scores { get; set; }
 
-        //public SystemUser User { get; set; }
-
-        public int CandidateId { get; set; }
-
-        public CandidateServiceModel Candidate { get; set; }
+        public ICollection<CriteriaForCandidate> Candidates { get; set; }
     }
 }

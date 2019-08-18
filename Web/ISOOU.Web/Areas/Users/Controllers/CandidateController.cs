@@ -30,6 +30,7 @@
         private readonly ICalculatorService calculatorService;
         private readonly ISchoolsService schoolsService;
         private readonly ICloudinaryService cloudinaryService;
+        private readonly ICriteriasService criteriasService;
 
         public CandidateController(
             UserManager<SystemUser> userManager,
@@ -37,7 +38,8 @@
             ICandidatesService candidatesService,
             ISchoolsService schoolsService,
             ICloudinaryService cloudinaryService,
-            ICalculatorService calculatorService)
+            ICalculatorService calculatorService,
+            ICriteriasService criteriasService)
         {
             this.userManager = userManager;
             this.parentsService = parentsService;
@@ -45,6 +47,7 @@
             this.calculatorService = calculatorService;
             this.schoolsService = schoolsService;
             this.cloudinaryService = cloudinaryService;
+            this.criteriasService = criteriasService;
         }
 
         [HttpGet("/Users/Candidate/Create")]
@@ -165,7 +168,7 @@
             if (!this.ModelState.IsValid)
             {
                 var motherFullName = await this.parentsService
-             .GetParentFullNameByRole(this.User, ParentRole.Майка);
+                 .GetParentFullNameByRole(this.User, ParentRole.Майка);
 
                 var motherList = new List<string>
             {
@@ -219,9 +222,10 @@
         }
 
         [HttpGet]
-        public IActionResult Documents(int id)
+        public IActionResult Documents(int id, UploadDocumentsInputModel input)
         {
-            return this.View();
+            input.Id = id;
+            return this.View(input);
         }
 
         [HttpPost]
@@ -230,14 +234,41 @@
             string applicationUrl = await this.cloudinaryService
                 .UploadDocument(input.Application, nameof(input.Application));
             //string birthCertificateUrl = await this.cloudinaryService
-            //    .UploadDocument(input.BirthCertificate, nameof(input.BirthCertificate));
+                //.UploadDocument(input.BirthCertificate, nameof(input.BirthCertificate));
             return this.Redirect("/");
         }
 
         [HttpGet(Name = "Criteria")]
         public async Task<IActionResult> Criteria(int id)
         {
-            return this.View();
+            ScoresByCriteriasOnCandidateViewModel model =
+                new ScoresByCriteriasOnCandidateViewModel();
+            model.CandidateId = id;
+            model.ScoresByCriteria = new List<ScoreByCriteriaOnCandidateViewModel>();
+
+            IEnumerable<CriteriaForCandidateServiceModel> criteriasOfCandidate = await this.criteriasService.GetCriteriasAndScoresByCandidateId(id);
+
+            IEnumerable<CriteriaServiceModel> allcriterias = await this.criteriasService.GetAllCriterias();
+
+
+            foreach (var criteriaOfCandidate in criteriasOfCandidate)
+            {
+                ScoreByCriteriaOnCandidateViewModel criteriaModel =
+                new ScoreByCriteriaOnCandidateViewModel();
+
+                criteriaModel.CriteriaDisplayName = criteriaOfCandidate.Criteria.DisplayName;
+                criteriaModel.CriteriaScores = criteriaOfCandidate.Criteria.Scores;
+                if (criteriaOfCandidate.Sch != 0)
+                {
+                    criteriaModel.SchoolName =
+                        criteriaOfCandidate.Candidate.Applications
+                        .FirstOrDefault(sch => sch.SchoolId == criteriaOfCandidate.Sch).School.Name;
+                }
+
+                model.ScoresByCriteria.Add(criteriaModel);
+            }
+
+            return this.View(model);
         }
 
         [HttpGet(Name = "AddApplications")]
@@ -327,7 +358,6 @@
                 totalScores = basicScores + additionalScoresForApplication;
                 model.ScoresByApplications.Add(schApp.School.Name, totalScores);
             }
-
 
             var sortedApplications = model.ScoresByApplications.OrderByDescending(x=>x.Value);
             model.ScoresByApplications = sortedApplications.ToDictionary(x=>x.Key, y=>y.Value);
