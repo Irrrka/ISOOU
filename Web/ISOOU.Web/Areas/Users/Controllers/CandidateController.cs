@@ -328,6 +328,10 @@
                 model.ScoresByApplications.Add(schApp.School.Name, totalScores);
             }
 
+
+            var sortedApplications = model.ScoresByApplications.OrderByDescending(x=>x.Value);
+            model.ScoresByApplications = sortedApplications.ToDictionary(x=>x.Key, y=>y.Value);
+
             return this.View(model);
         }
     }
