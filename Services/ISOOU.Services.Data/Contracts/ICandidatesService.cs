@@ -19,8 +19,6 @@
 
         Task<bool> Delete(int id);
 
-        Task<List<int>> CalculateAdditionalScoresByPositionOfApplication(int id);
-
         Task<bool> AddApplications(int id, List<int> schoolApplicationIds);
     }
 }

@@ -42,7 +42,9 @@
 
         public ParentServiceModel Father { get; set; }
 
-        public ICollection<SchoolCandidateServiceModel> SchoolCandidates { get; set; }
+        public int BasicScores { get; set; }
+
+        public ICollection<CandidateApplicationServiceModel> Applications { get; set; }
 
         public ICollection<CriteriaForCandidateServiceModel> Criterias { get; set; }
 

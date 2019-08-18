@@ -8,10 +8,6 @@
 
     public class School : BaseModel<int>
     {
-        public School()
-        {
-            this.SchoolCandidates = new HashSet<SchoolCandidate>();
-        }
 
         [Required]
         public string Name { get; set; }
@@ -42,6 +38,6 @@
 
         public int FreeSpots { get; set; }
 
-        public virtual ICollection<SchoolCandidate> SchoolCandidates { get; set; }
+        public virtual ICollection<CandidateApplication> Candidates { get; set; }
     }
 }

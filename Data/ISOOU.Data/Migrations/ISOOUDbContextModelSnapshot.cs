@@ -89,6 +89,8 @@ namespace ISOOU.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("BasicScores");
+
                     b.Property<DateTime>("CreatedOn");
 
                     b.Property<DateTime?>("DeletedOn");
@@ -148,6 +150,21 @@ namespace ISOOU.Data.Migrations
                     b.ToTable("Candidates");
                 });
 
+            modelBuilder.Entity("ISOOU.Data.Models.CandidateApplication", b =>
+                {
+                    b.Property<int>("CandidateId");
+
+                    b.Property<int>("SchoolId");
+
+                    b.Property<int>("AdditionalScoresForSchools");
+
+                    b.HasKey("CandidateId", "SchoolId");
+
+                    b.HasIndex("SchoolId");
+
+                    b.ToTable("CandidatesApplications");
+                });
+
             modelBuilder.Entity("ISOOU.Data.Models.Criteria", b =>
                 {
                     b.Property<int>("Id")
@@ -171,13 +188,23 @@ namespace ISOOU.Data.Migrations
 
             modelBuilder.Entity("ISOOU.Data.Models.CriteriaForCandidate", b =>
                 {
-                    b.Property<int>("CriteriaId");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("CandidateId");
 
-                    b.HasKey("CriteriaId", "CandidateId");
+                    b.Property<int>("CriteriaId");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("Sch");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("CandidateId");
+
+                    b.HasIndex("CriteriaId");
 
                     b.ToTable("CriteriasForCandidates");
                 });
@@ -340,27 +367,6 @@ namespace ISOOU.Data.Migrations
                     b.HasIndex("DistrictId");
 
                     b.ToTable("Schools");
-                });
-
-            modelBuilder.Entity("ISOOU.Data.Models.SchoolCandidate", b =>
-                {
-                    b.Property<int>("CandidateId");
-
-                    b.Property<int>("SchoolId");
-
-                    b.Property<DateTime>("CreatedOn");
-
-                    b.Property<int>("Id");
-
-                    b.Property<DateTime?>("ModifiedOn");
-
-                    b.HasKey("CandidateId", "SchoolId");
-
-                    b.HasAlternateKey("Id");
-
-                    b.HasIndex("SchoolId");
-
-                    b.ToTable("SchoolCandidates");
                 });
 
             modelBuilder.Entity("ISOOU.Data.Models.SystemRole", b =>
@@ -596,6 +602,19 @@ namespace ISOOU.Data.Migrations
                         .HasForeignKey("UserId");
                 });
 
+            modelBuilder.Entity("ISOOU.Data.Models.CandidateApplication", b =>
+                {
+                    b.HasOne("ISOOU.Data.Models.Candidate", "Candidate")
+                        .WithMany("Applications")
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ISOOU.Data.Models.School", "School")
+                        .WithMany("Candidates")
+                        .HasForeignKey("SchoolId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("ISOOU.Data.Models.CriteriaForCandidate", b =>
                 {
                     b.HasOne("ISOOU.Data.Models.Candidate", "Candidate")
@@ -651,19 +670,6 @@ namespace ISOOU.Data.Migrations
                     b.HasOne("ISOOU.Data.Models.District", "District")
                         .WithMany()
                         .HasForeignKey("DistrictId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("ISOOU.Data.Models.SchoolCandidate", b =>
-                {
-                    b.HasOne("ISOOU.Data.Models.Candidate", "Candidate")
-                        .WithMany("SchoolCandidates")
-                        .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ISOOU.Data.Models.School", "School")
-                        .WithMany("SchoolCandidates")
-                        .HasForeignKey("SchoolId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

@@ -39,7 +39,7 @@
             return message;
         }
 
-        public async Task<Dictionary<School, List<SchoolCandidate>>> StartAdmissionProcedure()
+        public async Task<Dictionary<School, List<CandidateApplication>>> StartAdmissionProcedure()
         {
             var schoolsFromDb = await this.schoolRepository.All()
                                                      .ToListAsync();
@@ -56,18 +56,18 @@
             }
 
             var dataForProcedure =
-                new Dictionary<School, List<SchoolCandidate>>();
+                new Dictionary<School, List<CandidateApplication>>();
 
             foreach (var schoolFromDb in schoolsFromDb)
             {
                 if (!dataForProcedure.ContainsKey(schoolFromDb))
                 {
-                    dataForProcedure.Add(schoolFromDb, new List<SchoolCandidate>());
+                    dataForProcedure.Add(schoolFromDb, new List<CandidateApplication>());
                 }
 
                 foreach (var candidateFromDb in candidatesFromDb)
                 {
-                    var candidateForSchool = candidateFromDb.SchoolCandidates
+                    var candidateForSchool = candidateFromDb.Applications
                         .Where(x => x.SchoolId == schoolFromDb.Id && x.CandidateId == candidateFromDb.Id)
                         .FirstOrDefault();
                     if (candidateForSchool != null)

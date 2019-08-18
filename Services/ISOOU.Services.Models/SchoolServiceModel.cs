@@ -28,6 +28,6 @@ namespace ISOOU.Services.Models
 
         public int FreeSpots { get; set; }
 
-        public ICollection<SchoolCandidateServiceModel> SchoolCandidates { get; set; }
+        public ICollection<CandidateApplicationServiceModel> SchoolCandidates { get; set; }
     }
 }

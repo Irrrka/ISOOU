@@ -21,24 +21,30 @@
         private readonly UserManager<SystemUser> userManager;
         private readonly IParentsService parentsService;
         private readonly IRepository<Candidate> candidatesRepository;
+        private readonly IRepository<CandidateApplication> candidateApplicationsRepository;
         private readonly IRepository<Criteria> criteriasRepository;
-        private readonly IRepository<SchoolCandidate> schoolCandidateRepository;
+        private readonly IRepository<CandidateApplication> schoolCandidateRepository;
         private readonly ISchoolsService schoolService;
+        private readonly ICalculatorService calculatorService;
 
         public CandidatesService(
             UserManager<SystemUser> userManager,
             IRepository<Candidate> candidatesRepository,
+            IRepository<CandidateApplication> candidateApplicationsRepository,
             IParentsService parentsService,
             IRepository<Criteria> criteriasRepository,
-            IRepository<SchoolCandidate> schoolCandidateRepository,
-            ISchoolsService schoolService)
+            IRepository<CandidateApplication> schoolCandidateRepository,
+            ISchoolsService schoolService,
+            ICalculatorService calculatorService)
         {
             this.userManager = userManager;
             this.candidatesRepository = candidatesRepository;
+            this.candidateApplicationsRepository = candidateApplicationsRepository;
             this.parentsService = parentsService;
             this.criteriasRepository = criteriasRepository;
             this.schoolCandidateRepository = schoolCandidateRepository;
             this.schoolService = schoolService;
+            this.calculatorService = calculatorService;
         }
 
         public async Task<bool> Create(ClaimsPrincipal userIdentity, CandidateServiceModel model)
@@ -69,6 +75,13 @@
             await this.candidatesRepository.AddAsync(candidate);
             var result = await this.candidatesRepository.SaveChangesAsync();
 
+            int candidateId = candidate.Id;
+            int basicScores = await this.calculatorService.CalculateBasicScoresByCriteria(candidateId);
+            candidate.BasicScores = basicScores;
+
+            this.candidatesRepository.Update(candidate);
+            result = await this.candidatesRepository.SaveChangesAsync();
+
             return result > 0;
         }
 
@@ -81,7 +94,9 @@
                                .ThenInclude(y => y.Address)
                                .Include(x => x.Father)
                                .ThenInclude(y => y.Address)
-                               .Include(z => z.SchoolCandidates)
+                               .Include(z => z.Applications)
+                               .Include(a => a.BasicScores)
+                               .Include(b => b.Criterias)
                                .SingleOrDefaultAsync(p => p.Id == id);
             return candidate;
         }
@@ -105,12 +120,6 @@
                 throw new ArgumentNullException();
             }
 
-            //Parent mother = (await this.candidatesRepository.All()
-                                                  //  .FirstOrDefaultAsync(p => p.MotherId == candidateServiceModel.MotherId))
-                                                  //  .Mother;
-           // Parent father = (await this.candidatesRepository.All()
-                                                //   .FirstOrDefaultAsync(p => p.FatherId == candidateServiceModel.FatherId))
-                                                //   .Father;
             var userId = this.userManager.GetUserId(userIdentity);
 
             candidateToEdit.UserId = userId;
@@ -152,30 +161,6 @@
             return true;
         }
 
-        public async Task<List<int>> CalculateAdditionalScoresByPositionOfApplication(int id)
-        {
-            var scoresForApplications = new List<int>();
-
-            var candidate = await this.candidatesRepository
-                              .All()
-                              .SingleOrDefaultAsync(p => p.Id == id);
-
-            //TODO not working properly anymore
-            int scores = candidate.Criterias.Sum(x => x.Criteria.Scores);
-
-            //TODO Scalability?!
-            int scoresFirstApplication = scores + GlobalConstants.FirstApplicationBonusCriteria;
-            scoresForApplications.Add(scoresFirstApplication);
-
-            int scoresSecondApplication = scores + GlobalConstants.SecondApplicationBonusCriteria;
-            scoresForApplications.Add(scoresSecondApplication);
-
-            int scoresThirdApplication = scores + GlobalConstants.ThirdApplicationBonusCriteria;
-            scoresForApplications.Add(scoresThirdApplication);
-
-            return scoresForApplications;
-        }
-
         public async Task<bool> AddApplications(int id, List<int> schoolApplicationIds)
         {
             var candidateFomDb = await this.candidatesRepository
@@ -188,20 +173,33 @@
             }
 
             var result = 0;
+            //When edit the application TODO!!!
+            candidateFomDb.Applications = new List<CandidateApplication>();
+            this.candidatesRepository.Update(candidateFomDb);
+            await this.candidatesRepository.SaveChangesAsync();
 
             for (int i = 0; i < schoolApplicationIds.Count; i++)
             {
-                candidateFomDb.SchoolCandidates.Add(
-                    new SchoolCandidate
+                candidateFomDb.Applications.Add(
+                new CandidateApplication
                     {
-                        Id = i + 1,
                         CandidateId = candidateFomDb.Id,
                         SchoolId = schoolApplicationIds[i],
                     });
-            }
 
-            this.candidatesRepository.Update(candidateFomDb);
-            result = await this.candidatesRepository.SaveChangesAsync();
+                this.candidatesRepository.Update(candidateFomDb);
+                result = await this.candidatesRepository.SaveChangesAsync();
+
+
+                candidateFomDb
+                    .Applications
+                    .FirstOrDefault(sc => sc.SchoolId == schoolApplicationIds[i])
+                    .AdditionalScoresForSchools = this.calculatorService.CalculateAdditionalScoresForNumberOfWish(i + 1)
+                                          + (await this.calculatorService.CalculateAdditionalScoresForSchools(id, schoolApplicationIds[i]));
+
+                this.candidatesRepository.Update(candidateFomDb);
+                result = await this.candidatesRepository.SaveChangesAsync();
+            }
 
             return result > 0;
         }

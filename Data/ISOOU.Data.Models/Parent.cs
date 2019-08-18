@@ -10,7 +10,7 @@
         public Parent()
             : base()
         {
-            //this.CandidateParents = new HashSet<CandidateParent>();
+            this.Candidates = new List<Candidate>();
         }
 
         public ParentRole Role { get; set; }
@@ -29,6 +29,5 @@
         public virtual District WorkDistrict { get; set; }
 
         public virtual ICollection<Candidate> Candidates { get; set; }
-
     }
 }

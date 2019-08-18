@@ -4,7 +4,7 @@
     using ISOOU.Data.Models;
     using ISOOU.Services.Mapping;
 
-    public class SchoolCandidateServiceModel : IMapFrom<SchoolCandidate>, IMapTo<SchoolCandidate>
+    public class CandidateApplicationServiceModel : IMapFrom<CandidateApplication>, IMapTo<CandidateApplication>
     {
         public int Id { get; set; }
 
@@ -15,5 +15,7 @@
         public int SchoolId { get; set; }
 
         public SchoolServiceModel School { get; set; }
+
+        public int AdditionalScoresForSchools { get; set; }
     }
 }

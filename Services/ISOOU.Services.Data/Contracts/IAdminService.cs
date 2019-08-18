@@ -7,7 +7,7 @@
 
     public interface IAdminService
     {
-        Task<Dictionary<School, List<SchoolCandidate>>> StartAdmissionProcedure();
+        Task<Dictionary<School, List<CandidateApplication>>> StartAdmissionProcedure();
 
         Task<QuestionServiceModel> ReadLastMessage();
     }

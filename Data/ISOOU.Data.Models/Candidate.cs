@@ -10,8 +10,7 @@
         public Candidate()
             : base()
         {
-            this.SchoolCandidates = new HashSet<SchoolCandidate>();
-           // this.CandidateParents = new HashSet<CandidateParent>();
+            this.Applications = new HashSet<CandidateApplication>();
             this.Criterias = new HashSet<CriteriaForCandidate>();
             this.Documents = new HashSet<DocumentSubmission>();
         }
@@ -31,13 +30,17 @@
 
         public int MotherId { get; set; }
 
-        public Parent Mother { get; set; }
+        public virtual Parent Mother { get; set; }
 
         public int FatherId { get; set; }
 
-        public Parent Father { get; set; }
+        public virtual Parent Father { get; set; }
 
-        public virtual ICollection<SchoolCandidate> SchoolCandidates { get; set; }
+        public int BasicScores { get; set; }
+
+        //public int SchoolsScores { get; set; }
+
+        public virtual ICollection<CandidateApplication> Applications { get; set; }
 
         public virtual ICollection<CriteriaForCandidate> Criterias { get; set; }
 

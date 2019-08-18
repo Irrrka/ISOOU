@@ -38,7 +38,7 @@
         public static readonly int MinCoefOfAdmissionYear = 1;
         public static readonly int MaxCoefOfAdmissionYear = 1;
 
-        //Criterias
+        //BasicCriterias
         public static readonly int HasNoParentCriteria = 6;
         public static readonly int HasOneParentCriteria = 3;
         public static readonly int HasVisitKGCriteria = 1;
@@ -48,15 +48,17 @@
         public static readonly int HasDeseasCriteria = 3;
         public static readonly int FatherHasWorkCriteria = 2;
         public static readonly int MotherHasWorkCriteria = 2;
-        public static readonly int ParentHasWorkInDistrictCriteria = 1;
         public static readonly int ParentPermanentCitySofiaCriteria = 2;
         public static readonly int ParentCurrentCitySofiaCriteria = 1;
-        public static readonly int ParentPermanentDistrictCriteria = 2;
-        public static readonly int ParentCurrentDistrictCriteria = 1;
         public static readonly int HasAllTheImmunizations = 1;
-        public static readonly int FirstApplicationBonusCriteria = 3;
-        public static readonly int SecondApplicationBonusCriteria = 2;
-        public static readonly int ThirdApplicationBonusCriteria = 1;
+        //SchoolCriterias
+        public static readonly int ParentHasWorkInDistrictSchoolCriteria = 1;
+        public static readonly int ParentPermanentDistrictSchoolCriteria = 2;
+        public static readonly int ParentCurrentDistrictSchoolCriteria = 1;
+
+        public static readonly int FirstWishApplicationSchoolCriteria = 3;
+        public static readonly int SecondWishApplicationSchoolCriteria = 2;
+        public static readonly int ThirdWishApplicationSchoolCriteria = 1;
 
         // ExceptionMessages
         public static readonly string DistrictNotFound = "Моля изберете район";
