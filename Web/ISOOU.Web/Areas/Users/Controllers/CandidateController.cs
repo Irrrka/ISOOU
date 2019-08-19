@@ -31,6 +31,7 @@
         private readonly ISchoolsService schoolsService;
         private readonly ICloudinaryService cloudinaryService;
         private readonly ICriteriasService criteriasService;
+        private readonly IAdminService adminService;
 
         public CandidateController(
             UserManager<SystemUser> userManager,
@@ -39,7 +40,8 @@
             ISchoolsService schoolsService,
             ICloudinaryService cloudinaryService,
             ICalculatorService calculatorService,
-            ICriteriasService criteriasService)
+            ICriteriasService criteriasService,
+            IAdminService adminService)
         {
             this.userManager = userManager;
             this.parentsService = parentsService;
@@ -48,6 +50,7 @@
             this.schoolsService = schoolsService;
             this.cloudinaryService = cloudinaryService;
             this.criteriasService = criteriasService;
+            this.adminService = adminService;
         }
 
         [HttpGet("/Users/Candidate/Create")]
@@ -284,10 +287,6 @@
                     || x.District.Id == candidate.Father.Address.CurrentDistrictId
                     || x.District.Id == candidate.Mother.WorkDistrictId
                     || x.District.Id == candidate.Father.WorkDistrictId);
-                //.OrderBy(o => o.District.Name == candidate.Mother.Address.PermanentDistrict.Name)
-                //.ThenBy(o => o.District.Name == candidate.Father.Address.PermanentDistrict.Name)
-                //.ThenBy(o => o.District.Name == candidate.Mother.WorkDistrict.Name)
-                //.ThenBy(o => o.District.Name == candidate.Father.WorkDistrict.Name);
 
             this.ViewData["AllSchools"] = allSchools
                 .Select(p => new AddSchoolApplicationsViewModel { Id = p.Id, Name = p.Name, DistrictName = p.District.Name })
@@ -345,11 +344,13 @@
         public async Task<IActionResult> Profile(int id)
         {
             CandidateServiceModel candidate = await this.candidatesService.GetCandidateById(id);
+            var procedureStatus = this.adminService.GetProcedureStatus();
 
             CandidateProfileViewModel model = new CandidateProfileViewModel();
             model.CandidateId = id;
             model.CandidateName = candidate.FirstName;
             model.CandidateStatus = candidate.Status.ToString();
+            model.ProcedureStatus = procedureStatus;
 
             int basicScores = candidate.BasicScores;
             int totalScores = 0;

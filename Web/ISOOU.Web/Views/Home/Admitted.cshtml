@@ -1,0 +1,24 @@
+﻿@model IEnumerable<ISOOU.Web.ViewModels.Users.AdmitedCandidatesViewModel>
+@{
+    this.ViewData["Title"] = "Приети кандидати по училища";
+}
+
+<section class="ftco-heading-2" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
+    <div class="container bg">
+        @foreach (var school in Model)
+        {
+            <table class="table px-4 py-3">
+                <thead class="py-2 bg">
+                    <tr>
+                        <th scope="col">@school.Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr height="21" style="height:21px;">
+                        <td class="ftco-animate" style="border-top:none;border-left:none;">@String.Join(", ", school.AdmittedCandidates.ToList())</td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+    </div>
+</section>

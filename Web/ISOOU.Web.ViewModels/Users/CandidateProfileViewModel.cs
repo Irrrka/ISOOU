@@ -19,6 +19,8 @@
 
         public string CandidateName { get; set; }
 
+        public string ProcedureStatus { get; set; }
+
         public Dictionary<string, int> ScoresByApplications { get; set; }
     }
 }
