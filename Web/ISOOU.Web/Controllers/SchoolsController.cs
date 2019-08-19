@@ -1,15 +1,17 @@
 ﻿
 namespace ISOOU.Web.Controllers
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using ISOOU.Data.Models;
     using ISOOU.Services.Data.Contracts;
     using ISOOU.Services.Mapping;
+    using ISOOU.Web.ViewModels;
     using ISOOU.Web.ViewModels.Schools;
     using Microsoft.AspNetCore.Mvc;
 
-    public class SchoolsController : Controller
+    public class SchoolsController : BaseController
     {
         private readonly ISchoolsService schoolsService;
 
@@ -36,9 +38,15 @@ namespace ISOOU.Web.Controllers
 
         public IActionResult All()
         {
-            var schools = this.schoolsService.GetAllSchools();
+            var schools = this.schoolsService.GetAllSchools().ToList();
 
-            return this.View(schools);
+            List<AllSchoolsViewModel> models = new List<AllSchoolsViewModel>();
+
+            foreach (var school in schools)
+            {
+                models.Add(new AllSchoolsViewModel { Id = school.Id, Name = school.Name});
+            }
+            return this.View(models);
         }
 
         [HttpGet("/Schools/Details/{id}")]

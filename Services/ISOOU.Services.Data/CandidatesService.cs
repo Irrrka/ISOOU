@@ -194,7 +194,7 @@
                 candidateFomDb
                     .Applications
                     .FirstOrDefault(sc => sc.SchoolId == schoolApplicationIds[i])
-                    .AdditionalScoresForSchools = this.calculatorService.CalculateAdditionalScoresForNumberOfWish(i + 1)
+                    .AdditionalScoresForSchool = this.calculatorService.CalculateAdditionalScoresForNumberOfWish(i + 1)
                                           + (await this.calculatorService.CalculateAdditionalScoresForSchools(id, schoolApplicationIds[i]));
 
                 this.candidatesRepository.Update(candidateFomDb);

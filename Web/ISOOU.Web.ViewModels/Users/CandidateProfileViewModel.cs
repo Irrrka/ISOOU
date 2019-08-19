@@ -15,6 +15,10 @@
 
         public int CandidateId { get; set; }
 
+        public string CandidateStatus { get; set; }
+
+        public string CandidateName { get; set; }
+
         public Dictionary<string, int> ScoresByApplications { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace ISOOU.Services.Data
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -50,6 +51,7 @@
         {
             var schools = this.schoolRepository
                 .All()
+                .Include(c=>c.Candidates)
                 .To<SchoolServiceModel>();
 
             return schools;
@@ -83,15 +85,6 @@
 
             return schoolId;
         }
-
-        //public async Task<bool> CreateClassProfile(string name)
-        //{
-        //    var classProfile = new ClassProfile { Name = name };
-        //    await this.classProfileRepository.AddAsync(classProfile);
-        //    var result = await this.classProfileRepository.SaveChangesAsync();
-
-        //    return result > 0;
-        //}
 
         public async Task<SchoolServiceModel> GetSchoolForEdit(string userIdentity)
         {
@@ -145,6 +138,24 @@
             var result = await this.schoolRepository.SaveChangesAsync();
 
             return result > 0;
+        }
+
+        public async Task<List<string>> GetAdmittedCandidates()
+        {
+
+            var schools = await this.schoolRepository.All()
+                             .ToListAsync();
+
+            if (schools == null)
+            {
+                throw new ArgumentNullException(nameof(schools));
+            }
+
+            var admitted = new List<string>();
+
+           
+
+            return admitted;
         }
     }
 }

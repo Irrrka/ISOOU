@@ -11,5 +11,7 @@ namespace ISOOU.Web.ViewModels.Home
 
         public string Content { get; set; }
 
+        //цХЕЦК МАППИНГ
+        public string AdmissionProcedureStatus { get; set; }
     }
 }

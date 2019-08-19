@@ -22,10 +22,8 @@
         public const string NotAdmittedStatusMessage = "{Name} не е приет!";
         public const string AutomaticReply = "Изчислява се автоматично";
 
-
-
-
         // Classes
+        #region Classes
         public const string EnglishLangProfile = "Английски език";
         public const string RussianLangProfile = "Руски език";
         public const string MathProfile = "Математика";
@@ -38,6 +36,7 @@
         public static readonly int FreeSpotsMusicProfile = 18;
         public static readonly int MinCoefOfAdmissionYear = 1;
         public static readonly int MaxCoefOfAdmissionYear = 1;
+        #endregion
 
         //BasicCriterias
         public static readonly int HasNoParentCriteria = 6;

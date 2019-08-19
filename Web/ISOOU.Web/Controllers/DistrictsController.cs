@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ISOOU.Web.Controllers
 {
-    public class DistrictsController : Controller
+    public class DistrictsController : BaseController
     {
         private readonly IDistrictsService districtsServices;
 

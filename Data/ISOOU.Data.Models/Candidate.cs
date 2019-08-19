@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     public class Candidate : Person
     {
@@ -38,7 +39,9 @@
 
         public int BasicScores { get; set; }
 
-        //public int SchoolsScores { get; set; }
+        //public int AdmissionProcedureId { get; set; }
+
+        //public virtual AdmissionProcedure AdmissionProcedure { get; set; }
 
         public virtual ICollection<CandidateApplication> Applications { get; set; }
 

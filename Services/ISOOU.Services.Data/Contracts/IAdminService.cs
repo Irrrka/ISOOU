@@ -7,8 +7,12 @@
 
     public interface IAdminService
     {
-        Task<Dictionary<School, List<CandidateApplication>>> StartAdmissionProcedure();
+        Task<bool> AdmissionProcedure();
 
         Task<QuestionServiceModel> ReadLastMessage();
+
+        string GetProcedureStatus();
+
+        Task<bool> RevertAdmissionProcedure();
     }
 }

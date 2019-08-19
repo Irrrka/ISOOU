@@ -15,15 +15,20 @@
     <div class="row">
         <div class="col-md-12 d-flex">
             <div class="container-fluid d-flex justify-content-around">
-                <form asp-area="Administration" asp-controller="Dashboard" asp-action="StartProcedure" method="post">
-                    <div class="row d-flex justify-content-around">
-                        <input type="submit" class="btn btn-danger py-3 px-4" disabled value="СТАРТ КЛАСИРАНЕ" />
-                    </div>
-                </form>
 
-
-
-            </div>
+            <form asp-area="Administration" asp-controller="Dashboard" asp-action="StartProcedure" method="post">
+                <div class="row d-flex justify-content-around">
+                    <input type="submit" class="btn btn-danger py-3 px-4" value="СТАРТ КЛАСИРАНЕ" />
+                </div>
+            </form>
+            
+            <form asp-area="Administration" asp-controller="Dashboard" asp-action="Revert" method="post">
+                <div class="row d-flex justify-content-around">
+                    <input type="submit" class="btn btn-danger py-3 px-4" value="ПРЕКРАТИ КЛАСИРАНЕ" />
+                </div>
+            </form>
+           
+                </div>
         </div>
     </div>
     <hr />

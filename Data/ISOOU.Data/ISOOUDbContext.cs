@@ -67,15 +67,11 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-
             builder.Entity<CandidateApplication>()
                .HasKey(fk => new { fk.CandidateId, fk.SchoolId });
 
             builder.Entity<CriteriaForCandidate>()
                 .HasKey(pk => pk.Id);
-
-            //builder.Entity<CriteriaForCandidate>()
-            //  .HasKey(fk => new { fk.CriteriaId, fk.CandidateId });
 
             builder.Entity<Candidate>()
               .HasOne(m => m.Mother);
@@ -85,6 +81,9 @@
 
             builder.Entity<Parent>()
               .HasMany(c => c.Candidates);
+
+            builder.Entity<AdmissionProcedure>()
+             .HasMany(c => c.ParticipatedCandidates);
 
             // Needed for Identity models configuration
             base.OnModelCreating(builder);

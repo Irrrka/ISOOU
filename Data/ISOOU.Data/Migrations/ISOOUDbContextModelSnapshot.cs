@@ -64,9 +64,7 @@ namespace ISOOU.Data.Migrations
 
                     b.Property<DateTime?>("ModifiedOn");
 
-                    b.Property<DateTime?>("RankingDate");
-
-                    b.Property<int>("SchoolID");
+                    b.Property<DateTime>("RankingDate");
 
                     b.Property<DateTime?>("StartApplyDocuments");
 
@@ -77,8 +75,6 @@ namespace ISOOU.Data.Migrations
                     b.Property<int>("Year");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SchoolID");
 
                     b.ToTable("AdmissionProcedures");
                 });
@@ -156,9 +152,15 @@ namespace ISOOU.Data.Migrations
 
                     b.Property<int>("SchoolId");
 
-                    b.Property<int>("AdditionalScoresForSchools");
+                    b.Property<int>("AdditionalScoresForSchool");
+
+                    b.Property<int?>("AdmissionProcedureId");
+
+                    b.Property<int>("TotalScoresForSchool");
 
                     b.HasKey("CandidateId", "SchoolId");
+
+                    b.HasIndex("AdmissionProcedureId");
 
                     b.HasIndex("SchoolId");
 
@@ -573,14 +575,6 @@ namespace ISOOU.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("ISOOU.Data.Models.AdmissionProcedure", b =>
-                {
-                    b.HasOne("ISOOU.Data.Models.School", "School")
-                        .WithMany()
-                        .HasForeignKey("SchoolID")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
             modelBuilder.Entity("ISOOU.Data.Models.Candidate", b =>
                 {
                     b.HasOne("ISOOU.Data.Models.Parent", "Father")
@@ -604,6 +598,10 @@ namespace ISOOU.Data.Migrations
 
             modelBuilder.Entity("ISOOU.Data.Models.CandidateApplication", b =>
                 {
+                    b.HasOne("ISOOU.Data.Models.AdmissionProcedure", "AdmissionProcedure")
+                        .WithMany("ParticipatedCandidates")
+                        .HasForeignKey("AdmissionProcedureId");
+
                     b.HasOne("ISOOU.Data.Models.Candidate", "Candidate")
                         .WithMany("Applications")
                         .HasForeignKey("CandidateId")

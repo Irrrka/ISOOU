@@ -39,7 +39,19 @@
             </div>
             <div class="col-md-8 offset-2">
                 <div class="container justify-content-end mt-2">
-                    <div class="alert alert-info">
+                    @if (Model.CandidateStatus == "Admitted")
+                    {
+                        <div class="alert alert-info">
+                            @Model.CandidateName е приет/а!
+                        </div>
+                    }
+                    else if (Model.CandidateStatus == "NotAdmitted")
+                    {
+                        <div class="alert alert-danger">
+                            @Model.CandidateName не е приет/а!
+                        </div>
+                    }
+                    <div class="alert alert-warning mt-3">
                         Кандидатури за следващото класиране
                     </div>
                     <table class="table table-bordered table-hover end">
@@ -50,7 +62,7 @@
                                 <th>Точки</th>
                             </tr>
                         </thead>
-                        @if (Model.ScoresByApplications.Count != 0)
+                        @if (Model.ScoresByApplications.Count != 0 && Model.CandidateStatus != "Admitted")
                         {
                             <tbody>
                                 @{

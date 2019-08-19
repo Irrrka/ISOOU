@@ -14,7 +14,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class SearchController : Controller
+    public class SearchController : BaseController
     {
         private readonly ISearchService searchService;
         private readonly IDistrictsService districtsService;

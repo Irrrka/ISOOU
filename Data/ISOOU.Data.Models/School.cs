@@ -3,11 +3,16 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-
     using ISOOU.Data.Common.Models;
 
     public class School : BaseModel<int>
     {
+        public School()
+        {
+            this.Candidates = new HashSet<CandidateApplication>();
+            this.AdmittedNames = new HashSet<string>();
+            this.NotAdmittedNames = new HashSet<string>();
+        }
 
         [Required]
         public string Name { get; set; }
@@ -39,5 +44,11 @@
         public int FreeSpots { get; set; }
 
         public virtual ICollection<CandidateApplication> Candidates { get; set; }
+
+        [NotMapped]
+        public ICollection<string> AdmittedNames { get; set; }
+
+        [NotMapped]
+        public ICollection<string> NotAdmittedNames { get; set; }
     }
 }

@@ -15,23 +15,27 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using System.Security.Claims;
+    using ISOOU.Web.ViewModels.Schools;
 
     public class HomeController : UserController
     {
         private readonly UserManager<SystemUser> userManager;
         private readonly IParentsService parentsService;
         private readonly ICandidatesService candidatesService;
+        private readonly ISchoolsService schoolsService;
 
         private bool userHasParents;
 
         public HomeController(
             UserManager<SystemUser> userManager,
             IParentsService parentsService,
-            ICandidatesService candidatesService)
+            ICandidatesService candidatesService,
+            ISchoolsService schoolsService)
         {
             this.userManager = userManager;
             this.parentsService = parentsService;
             this.candidatesService = candidatesService;
+            this.schoolsService = schoolsService;
 
             this.userHasParents = false;
         }
@@ -71,5 +75,6 @@
 
             return this.View();
         }
+
     }
 }

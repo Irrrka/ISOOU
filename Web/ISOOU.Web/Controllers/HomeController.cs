@@ -1,5 +1,7 @@
 ﻿namespace ISOOU.Web.Controllers
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using ISOOU.Common;
@@ -8,17 +10,26 @@
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
     using ISOOU.Web.ViewModels.Home;
+    using ISOOU.Web.ViewModels.Schools;
+    using ISOOU.Web.ViewModels.Users;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseController
     {
         private readonly IUsersService usersService;
+        private readonly ISchoolsService schoolsService;
+        private readonly IAdminService adminService;
 
         public HomeController(
-            IUsersService usersService)
+            IUsersService usersService,
+            ISchoolsService schoolsService,
+            IAdminService adminService)
         {
             this.usersService = usersService;
+            this.schoolsService = schoolsService;
+            this.adminService = adminService;
         }
 
         public IActionResult Index()
@@ -43,17 +54,23 @@
         }
 
         public IActionResult Privacy() => this.View();
-     
-        //TODO
-        public IActionResult News() => this.View();
-       
+
+        public IActionResult News()
+        {
+            SchoolsAdmissionProcedureResultViewModel model =
+                new SchoolsAdmissionProcedureResultViewModel();
+
+            model.Status = this.adminService.GetProcedureStatus();
+            return this.View(model);
+        }
+
         //TODO
         //public IActionResult Calendar() => this.View();
-       
+
         public IActionResult Helper() => this.View();
-       
+
         public IActionResult Laws() => this.View();
-      
+
         //TODO add map
         public IActionResult ContactForm() => this.View();
 
@@ -71,6 +88,44 @@
             await this.usersService.CreateMessage(userIdentity, model);
 
             return this.Redirect("/");
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult Admitted()
+        {
+            var schools = this.schoolsService.GetAllSchools().ToList();
+
+            List<AdmitedCandidatesViewModel> models =
+                new List<AdmitedCandidatesViewModel>();
+
+            foreach (var school in schools)
+            {
+                var candidates = school.Candidates.Where(s => s.Candidate.Status == CandidateStatus.Admitted);
+                var admittedCandidatesNames = candidates.Select(n => n.Candidate.FullName).ToList();
+                models.Add(new AdmitedCandidatesViewModel { Name = school.Name, AdmittedCandidates = admittedCandidatesNames});
+            }
+
+            return this.View(models);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult NotAdmitted()
+        {
+            var schools = this.schoolsService.GetAllSchools().ToList();
+
+            List<NotAdmitedCandidatesViewModel> models =
+                new List<NotAdmitedCandidatesViewModel>();
+
+            foreach (var school in schools)
+            {
+                var candidates = school.Candidates.Where(s => s.Candidate.Status == CandidateStatus.NotAdmitted);
+                var notAdmittedCandidatesNames = candidates.Select(n => n.Candidate.FullName).ToList();
+                models.Add(new NotAdmitedCandidatesViewModel { Name = school.Name, NotAdmittedCandidates = notAdmittedCandidatesNames });
+            }
+
+            return this.View(models);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

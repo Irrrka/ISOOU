@@ -348,13 +348,15 @@
 
             CandidateProfileViewModel model = new CandidateProfileViewModel();
             model.CandidateId = id;
+            model.CandidateName = candidate.FirstName;
+            model.CandidateStatus = candidate.Status.ToString();
 
             int basicScores = candidate.BasicScores;
             int totalScores = 0;
 
             foreach (var schApp in candidate.Applications)
             {
-                int additionalScoresForApplication = schApp.AdditionalScoresForSchools;
+                int additionalScoresForApplication = schApp.AdditionalScoresForSchool;
                 totalScores = basicScores + additionalScoresForApplication;
                 model.ScoresByApplications.Add(schApp.School.Name, totalScores);
             }

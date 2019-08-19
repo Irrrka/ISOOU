@@ -8,11 +8,20 @@ namespace ISOOU.Services.Models
 {
     public class SchoolServiceModel : IMapFrom<School>, IMapTo<School>
     {
+        public SchoolServiceModel()
+        {
+            this.Candidates = new HashSet<CandidateApplicationServiceModel>();
+            this.AdmittedNames = new HashSet<string>();
+            this.NotAdmittedNames = new HashSet<string>();
+        }
+
         public int Id { get; set; }
 
         public string Name { get; set; }
 
         public string Address { get; set; }
+
+        public int DistrictId { get; set; }
 
         public DistrictServiceModel District { get; set; }
 
@@ -28,6 +37,10 @@ namespace ISOOU.Services.Models
 
         public int FreeSpots { get; set; }
 
-        public ICollection<CandidateApplicationServiceModel> SchoolCandidates { get; set; }
+        public ICollection<CandidateApplicationServiceModel> Candidates { get; set; }
+
+        public ICollection<string> AdmittedNames { get; set; }
+
+        public ICollection<string> NotAdmittedNames { get; set; }
     }
 }

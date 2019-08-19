@@ -9,8 +9,11 @@
     <div class="container-fluid bg">
         <h1>Всички общински основни училища</h1>
         <div class="container">
-            @{
-                <a href="" target="_blank">@String.Join(" ", Model.Select(n => n.Name))</a>
+
+            @{foreach (var sc in Model)
+                {
+                    <a href="/School/Details/@(sc.Id)">@sc.Name</a>
+                }
             }
         </div>
     </div>
