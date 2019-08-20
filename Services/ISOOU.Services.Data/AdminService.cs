@@ -75,7 +75,7 @@
         public string GetProcedureStatus()
         {
             var status = this.admissionProcedureRepository.All()
-                .OrderByDescending(d => d.RankingDate)
+                .OrderByDescending(d => d.Id)
                 .Select(s => s.Status)
                 .FirstOrDefault().ToString();
 

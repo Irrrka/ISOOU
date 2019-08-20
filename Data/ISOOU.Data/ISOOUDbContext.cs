@@ -74,10 +74,14 @@
                 .HasKey(pk => pk.Id);
 
             builder.Entity<Candidate>()
-              .HasOne(m => m.Mother);
+             .HasOne(m => m.Mother)
+             .WithMany()
+             .OnDelete(DeleteBehavior.ClientSetNull);
 
             builder.Entity<Candidate>()
-             .HasOne(m => m.Father);
+             .HasOne(m => m.Father)
+             .WithMany()
+             .OnDelete(DeleteBehavior.ClientSetNull);
 
             builder.Entity<Parent>()
               .HasMany(c => c.Candidates);

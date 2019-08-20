@@ -47,6 +47,7 @@
             var userId = this.userManager.GetUserId(userIdentity);
 
             var parent = parentServiceModel.To<Parent>();
+
             parent.UserId = userId;
 
             await this.parentsRepository.AddAsync(parent);
@@ -89,7 +90,7 @@
 
             var result = 0;
 
-            if (fullName != ParentRole.Друг.ToString() || fullName != ParentRole.Неизвестен.ToString())
+            if (fullName != ParentRole.Друг.ToString() || fullName != ParentRole.Няма.ToString())
             {
                 result = parent.Id;
             }
@@ -179,6 +180,7 @@
         {
             var parentToDelete = await this.parentsRepository
                                .All()
+                               .Include(c => c.Candidates)
                                .SingleOrDefaultAsync(p => p.Id == id);
 
             if (parentToDelete == null)
@@ -187,7 +189,8 @@
             }
 
             parentToDelete.IsDeleted = true;
-            this.parentsRepository.Delete(parentToDelete);
+
+            this.parentsRepository.Update(parentToDelete);
             var result = await this.parentsRepository.SaveChangesAsync();
 
             return result > 0;

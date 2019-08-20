@@ -8,6 +8,7 @@
     using ISOOU.Services.Data.Contracts;
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
+    using ISOOU.Web.ViewModels.Home;
     using ISOOU.Web.ViewModels.Schools;
     using ISOOU.Web.ViewModels.Users;
     using Microsoft.AspNetCore.Identity;
@@ -32,9 +33,17 @@
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            QuestionServiceModel message = await this.adminService.ReadLastMessage();
+            ContactFormViewModel model = new ContactFormViewModel();
 
-            return this.View(message);
+            var message = await this.adminService.ReadLastMessage();
+            if (message != null)
+            {
+                model = message.To<ContactFormViewModel>();
+            }
+
+            model.AdmissionProcedureStatus = this.adminService.GetProcedureStatus();
+
+            return this.View(model);
         }
 
         [HttpGet]

@@ -116,7 +116,9 @@
                         <div class="form-inline mt-2 justify-content-end">
                             <input type="submit" class="btn btn-secondary py-3 px-4" value="Запиши" />
                             <div class="col-2">
-                                <a href="Delete/@Model.Id" class="btn btn-danger py-3 px-4">Изтрий</a>
+                                <a class="btn btn-danger py-3 px-4" asp-area="Users" asp-controller="Candidate" asp-action="Delete" asp-route-id="@Model.Id">
+                                    Изтрий
+                                </a>
                             </div>
                         </div>
                     </form>

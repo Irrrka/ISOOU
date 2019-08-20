@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
 
     using ISOOU.Services.Models;
+    using ISOOU.Web.ViewModels.Users;
 
     public interface ICandidatesService
     {
@@ -20,5 +21,7 @@
         Task<bool> Delete(int id);
 
         Task<bool> AddApplications(int id, List<int> schoolApplicationIds);
+
+        Task<bool> CreateDocumentSubmission(CreateDocumentInputModel input);
     }
 }

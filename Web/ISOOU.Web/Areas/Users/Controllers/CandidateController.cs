@@ -63,7 +63,7 @@
             {
                 $"{motherFullName}",
                 ParentRole.Друг.ToString(),
-                ParentRole.Неизвестен.ToString(),
+                ParentRole.Няма.ToString(),
             };
 
             var fatherFullName = await this.parentsService
@@ -73,7 +73,7 @@
             {
                 $"{fatherFullName}",
                 ParentRole.Друг.ToString(),
-                ParentRole.Неизвестен.ToString(),
+                ParentRole.Няма.ToString(),
             };
 
             this.ViewData["Mother"] = motherList;
@@ -94,7 +94,7 @@
                  {
                     $"{motherFullName}",
                     ParentRole.Друг.ToString(),
-                    ParentRole.Неизвестен.ToString(),
+                    ParentRole.Няма.ToString(),
                  };
 
                 var fatherFullName = await this.parentsService
@@ -104,7 +104,7 @@
                 {
                     $"{fatherFullName}",
                     ParentRole.Друг.ToString(),
-                    ParentRole.Неизвестен.ToString(),
+                    ParentRole.Няма.ToString(),
                 };
 
                 this.ViewData["Mother"] = motherList;
@@ -119,11 +119,15 @@
             ParentServiceModel fatherServiceModel = await parents.Where(p => p.FullName.Equals(input.FatherFullName)).FirstOrDefaultAsync();
 
             CandidateServiceModel model = input.To<CandidateServiceModel>();
-            model.MotherId = motherServiceModel.Id;
-            model.FatherId = fatherServiceModel.Id;
+
+            model.MotherId = input.MotherFullName == ParentRole.Друг.ToString() ? 2000
+                : input.MotherFullName == ParentRole.Няма.ToString() ? 4000
+                : motherServiceModel.Id;
+            model.FatherId = input.FatherFullName == ParentRole.Друг.ToString() ? 2000
+               : input.FatherFullName == ParentRole.Няма.ToString() ? 4000
+               : fatherServiceModel.Id;
 
             await this.candidatesService.Create(userIdentity, model);
-
 
             return this.Redirect("/");
         }
@@ -146,7 +150,7 @@
             {
                 $"{motherFullName}",
                 ParentRole.Друг.ToString(),
-                ParentRole.Неизвестен.ToString(),
+                ParentRole.Няма.ToString(),
             };
 
             var fatherFullName = await this.parentsService
@@ -156,7 +160,7 @@
             {
                 $"{fatherFullName}",
                 ParentRole.Друг.ToString(),
-                ParentRole.Неизвестен.ToString(),
+                ParentRole.Няма.ToString(),
             };
 
             this.ViewData["Mother"] = motherList;
@@ -177,7 +181,7 @@
             {
                 $"{motherFullName}",
                 ParentRole.Друг.ToString(),
-                ParentRole.Неизвестен.ToString(),
+                ParentRole.Няма.ToString(),
             };
 
                 var fatherFullName = await this.parentsService
@@ -187,7 +191,7 @@
             {
                 $"{fatherFullName}",
                 ParentRole.Друг.ToString(),
-                ParentRole.Неизвестен.ToString(),
+                ParentRole.Няма.ToString(),
             };
 
                 this.ViewData["Mother"] = motherList;
@@ -210,34 +214,68 @@
             return this.Redirect("/");
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
+        {
+            var candidateDeleteViewModel = (await this.candidatesService.GetCandidateById(id))
+                .To<DeleteCandidateViewModel>();
+            if (candidateDeleteViewModel == null)
+            {
+                return this.Redirect($"Edit/{id}");
+            }
+
+            var motherFullName = await this.parentsService
+           .GetParentFullNameByRole(this.User, ParentRole.Майка);
+
+            var motherList = new List<string>
+            {
+                $"{motherFullName}",
+                ParentRole.Друг.ToString(),
+                ParentRole.Няма.ToString(),
+            };
+
+            var fatherFullName = await this.parentsService
+             .GetParentFullNameByRole(this.User, ParentRole.Баща);
+
+            var fatherList = new List<string>
+            {
+                $"{fatherFullName}",
+                ParentRole.Друг.ToString(),
+                ParentRole.Няма.ToString(),
+            };
+
+            this.ViewData["Mother"] = motherList;
+            this.ViewData["Father"] = fatherList;
+
+            return this.View(candidateDeleteViewModel);
+        }
+
+        [HttpPost]
+        [Route("/Users/Candidate/Delete/{id}")]
+        public async Task<IActionResult> DeleteConfirm(int id)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.RedirectToAction($"/Users/Candidate/Edit/{id}");
             }
 
-            //TODO
             await this.candidatesService.Delete(id);
 
             return this.Redirect("/");
         }
 
         [HttpGet]
-        public IActionResult Documents(int id, UploadDocumentsInputModel input)
+        public IActionResult Documents(int id, CreateDocumentInputModel input)
         {
-            input.Id = id;
+            input.CandidateId = id;
             return this.View(input);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Documents(UploadDocumentsInputModel input)
+        public async Task<IActionResult> Documents(CreateDocumentInputModel input)
         {
-            string applicationUrl = await this.cloudinaryService
-                .UploadDocument(input.Application, nameof(input.Application));
-            //string birthCertificateUrl = await this.cloudinaryService
-                //.UploadDocument(input.BirthCertificate, nameof(input.BirthCertificate));
+            await this.candidatesService.CreateDocumentSubmission(input);
+
             return this.Redirect("/");
         }
 
@@ -319,21 +357,38 @@
             //        SchoolId = firstWishSchoolId,
             //    });
             #endregion
-
             //First wish
-            int firstWishSchoolId = await this.schoolsService
-                                            .GetSchoolIdByName(input.FirstWishSchool);
-            schoolApplicationIds.Add(firstWishSchoolId);
+            if (input.FirstWishSchool!=null)
+            {
+                int firstWishSchoolId = await this.schoolsService
+                                           .GetSchoolIdByName(input.FirstWishSchool);
+                if (!schoolApplicationIds.Contains(firstWishSchoolId))
+                {
+                    schoolApplicationIds.Add(firstWishSchoolId);
+                }
+            }
 
             //Second wish
-            int secondWishSchoolId = await this.schoolsService
+            if (input.SecondWishSchool != null)
+            {
+                int secondWishSchoolId = await this.schoolsService
                                             .GetSchoolIdByName(input.SecondWishSchool);
-            schoolApplicationIds.Add(secondWishSchoolId);
+                if (!schoolApplicationIds.Contains(secondWishSchoolId))
+                {
+                    schoolApplicationIds.Add(secondWishSchoolId);
+                }
+            }
 
             //Third wish
-            int thirdWishSchoolId = await this.schoolsService
+            if (input.SecondWishSchool != null)
+            {
+                int thirdWishSchoolId = await this.schoolsService
                                             .GetSchoolIdByName(input.ThirdWishSchool);
-            schoolApplicationIds.Add(thirdWishSchoolId);
+                if (!schoolApplicationIds.Contains(thirdWishSchoolId))
+                {
+                    schoolApplicationIds.Add(thirdWishSchoolId);
+                }
+            }
 
             await this.candidatesService.AddApplications(id, schoolApplicationIds);
 

@@ -15,8 +15,6 @@
         [Display(Name = "Име")]
         public string FirstName { get; set; }
 
-        [Required]
-        [StringLength(20, MinimumLength = 4)]
         [Display(Name = "Презиме")]
         public string MiddleName { get; set; }
 
@@ -48,22 +46,22 @@
         [Display(Name = "Район по постоянен адрес")]
         public string AddressPermanentDistrictName { get; set; }
 
-
-        [Required]
+        //[Required]
         [Display(Name = "Град по настоящ адрес")]
         public string AddressCurrentCity { get; set; }
 
-        [Required]
+        //[Required]
         [Display(Name = "Настоящ адрес")]
         public string AddressCurrent { get; set; }
 
-        [Required]
+        //[Required]
         [Display(Name = "Район по настоящ адрес")]
         public string AddressCurrentDistrictName { get; set; }
 
         [Display(Name = "Месторабота - име")]
         public string WorkName { get; set; }
 
+        [Required]
         [Display(Name = "Месторабота - район")]
         public string WorkDistrictName { get; set; }
 

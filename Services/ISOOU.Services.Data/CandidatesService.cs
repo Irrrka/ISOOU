@@ -13,6 +13,7 @@
     using ISOOU.Services.Data.Contracts;
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
+    using ISOOU.Web.ViewModels.Users;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
@@ -24,8 +25,10 @@
         private readonly IRepository<CandidateApplication> candidateApplicationsRepository;
         private readonly IRepository<Criteria> criteriasRepository;
         private readonly IRepository<CandidateApplication> schoolCandidateRepository;
+        private readonly IRepository<Document> documentRepository;
         private readonly ISchoolsService schoolService;
         private readonly ICalculatorService calculatorService;
+        private readonly ICloudinaryService claudinaryService;
 
         public CandidatesService(
             UserManager<SystemUser> userManager,
@@ -35,7 +38,9 @@
             IRepository<Criteria> criteriasRepository,
             IRepository<CandidateApplication> schoolCandidateRepository,
             ISchoolsService schoolService,
-            ICalculatorService calculatorService)
+            ICalculatorService calculatorService,
+            ICloudinaryService claudinaryService,
+            IRepository<Document> documentRepository)
         {
             this.userManager = userManager;
             this.candidatesRepository = candidatesRepository;
@@ -45,6 +50,8 @@
             this.schoolCandidateRepository = schoolCandidateRepository;
             this.schoolService = schoolService;
             this.calculatorService = calculatorService;
+            this.claudinaryService = claudinaryService;
+            this.documentRepository = documentRepository;
         }
 
         public async Task<bool> Create(ClaimsPrincipal userIdentity, CandidateServiceModel model)
@@ -156,9 +163,9 @@
 
             candidateToDelete.IsDeleted = true;
             this.candidatesRepository.Update(candidateToDelete);
-            await this.candidatesRepository.SaveChangesAsync();
+            var result = await this.candidatesRepository.SaveChangesAsync();
 
-            return true;
+            return result>0;
         }
 
         public async Task<bool> AddApplications(int id, List<int> schoolApplicationIds)
@@ -174,9 +181,13 @@
 
             var result = 0;
             //When edit the application TODO!!!
-            candidateFomDb.Applications = new List<CandidateApplication>();
-            this.candidatesRepository.Update(candidateFomDb);
-            await this.candidatesRepository.SaveChangesAsync();
+            List<CandidateApplication> apps = this.candidateApplicationsRepository.All().Where(c => c.CandidateId == candidateFomDb.Id).ToList();
+
+            foreach (var app in apps)
+            {
+                this.candidateApplicationsRepository.Delete(app);
+                await this.candidatesRepository.SaveChangesAsync();
+            }
 
             for (int i = 0; i < schoolApplicationIds.Count; i++)
             {
@@ -202,6 +213,29 @@
             }
 
             return result > 0;
+        }
+
+        public async Task<bool> CreateDocumentSubmission(CreateDocumentInputModel input)
+        {
+            var file = input.Application;
+            var url = await this.claudinaryService.UploadDocument(file, Guid.NewGuid().ToString());
+            var candidate = this.candidateApplicationsRepository.All()
+                .FirstOrDefault(c => c.CandidateId == input.CandidateId);
+            var candidateId = candidate.CandidateId;
+            var schoolId = candidate.SchoolId;
+
+            var document = new Document
+            {
+                Name = file.ToString(),
+                Url = url,
+                SchoolId = schoolId,
+                CandidateId = candidateId,
+            };
+
+            await this.documentRepository.AddAsync(document);
+            var result = await this.documentRepository.SaveChangesAsync();
+
+            return result>0;
         }
     }
 }

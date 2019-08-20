@@ -93,7 +93,7 @@ namespace ISOOU.Data.Migrations
 
                     b.Property<bool>("Desease");
 
-                    b.Property<int>("FatherId");
+                    b.Property<int?>("FatherId");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -115,7 +115,7 @@ namespace ISOOU.Data.Migrations
 
                     b.Property<DateTime?>("ModifiedOn");
 
-                    b.Property<int>("MotherId");
+                    b.Property<int?>("MotherId");
 
                     b.Property<int?>("ParentId");
 
@@ -229,7 +229,7 @@ namespace ISOOU.Data.Migrations
                     b.ToTable("Districts");
                 });
 
-            modelBuilder.Entity("ISOOU.Data.Models.DocumentSubmission", b =>
+            modelBuilder.Entity("ISOOU.Data.Models.Document", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -237,11 +237,13 @@ namespace ISOOU.Data.Migrations
 
                     b.Property<int>("CandidateId");
 
-                    b.Property<string>("PathFile");
+                    b.Property<string>("Name");
 
                     b.Property<int>("SchoolId");
 
                     b.Property<DateTime>("UploadDate");
+
+                    b.Property<string>("Url");
 
                     b.HasKey("Id");
 
@@ -249,7 +251,7 @@ namespace ISOOU.Data.Migrations
 
                     b.HasIndex("SchoolId");
 
-                    b.ToTable("DocumentSubmission");
+                    b.ToTable("Document");
                 });
 
             modelBuilder.Entity("ISOOU.Data.Models.Parent", b =>
@@ -579,13 +581,11 @@ namespace ISOOU.Data.Migrations
                 {
                     b.HasOne("ISOOU.Data.Models.Parent", "Father")
                         .WithMany()
-                        .HasForeignKey("FatherId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("FatherId");
 
                     b.HasOne("ISOOU.Data.Models.Parent", "Mother")
                         .WithMany()
-                        .HasForeignKey("MotherId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("MotherId");
 
                     b.HasOne("ISOOU.Data.Models.Parent")
                         .WithMany("Candidates")
@@ -626,7 +626,7 @@ namespace ISOOU.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("ISOOU.Data.Models.DocumentSubmission", b =>
+            modelBuilder.Entity("ISOOU.Data.Models.Document", b =>
                 {
                     b.HasOne("ISOOU.Data.Models.Candidate", "Candidate")
                         .WithMany("Documents")

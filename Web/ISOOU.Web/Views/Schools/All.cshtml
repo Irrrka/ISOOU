@@ -12,7 +12,9 @@
 
             @{foreach (var sc in Model)
                 {
-                    <a href="/School/Details/@(sc.Id)">@sc.Name</a>
+                    <a asp-controller="Schools" asp-action="Details" asp-route-id="@sc.Id">
+                        @sc.Name
+                    </a>
                 }
             }
         </div>

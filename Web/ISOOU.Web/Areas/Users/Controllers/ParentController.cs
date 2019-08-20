@@ -66,6 +66,16 @@
                 return this.View(input);
             }
 
+            if (input.AddressCurrentDistrictName == null)
+            {
+                input.AddressCurrentDistrictName = input.AddressPermanentDistrictName;
+            }
+
+            if (input.AddressCurrent == null)
+            {
+                input.AddressCurrent = input.AddressPermanent;
+            }
+
             AddressDetailsServiceModel address = new AddressDetailsServiceModel
             {
                 Permanent = input.AddressPermanent,
@@ -83,6 +93,7 @@
             ParentServiceModel parent = input.To<ParentServiceModel>();
             parent.WorkDistrict = workDistrict;
             parent.Address = address;
+
             parent.Role = (ParentRole)Enum.Parse(typeof(ParentRole), input.ParentRole);
 
             await this.parentsService.Create(userIdentity, parent);
@@ -146,6 +157,12 @@
             ClaimsPrincipal userIdentity = this.User;
 
             //ParentServiceModel parent = parentToEdit.To<ParentServiceModel>();
+            parentToEdit.FirstName = input.FirstName;
+            parentToEdit.MiddleName = input.MiddleName;
+            parentToEdit.LastName = input.LastName;
+            parentToEdit.PhoneNumber = input.PhoneNumber;
+            parentToEdit.WorkName = input.WorkName;
+
             parentToEdit.WorkDistrict = workDistrict;
             parentToEdit.Address = address;
             parentToEdit.Role = (ParentRole)Enum.Parse(typeof(ParentRole), input.ParentRole);
@@ -189,7 +206,5 @@
 
             return this.Redirect("/");
         }
-
-       
     }
 }
