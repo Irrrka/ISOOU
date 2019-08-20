@@ -89,6 +89,17 @@
             this.candidatesRepository.Update(candidate);
             result = await this.candidatesRepository.SaveChangesAsync();
 
+            var brothersAndSusters = await this.candidatesRepository.All()
+                .Where(u => u.UserId == userId).ToListAsync();
+
+            if (brothersAndSusters.Count >= GlobalConstants.ChildrenInFamily)
+            {
+                foreach (var bro in brothersAndSusters)
+                {
+                    bro.BasicScores = await this.calculatorService.EditBasicScoresForManyBrothersAndSisters(bro.Id);
+                }
+            }
+
             return result > 0;
         }
 
@@ -180,8 +191,9 @@
             }
 
             var result = 0;
-            //When edit the application TODO!!!
-            List<CandidateApplication> apps = this.candidateApplicationsRepository.All().Where(c => c.CandidateId == candidateFomDb.Id).ToList();
+
+            List<CandidateApplication> apps = this.candidateApplicationsRepository.All()
+                .Where(c => c.CandidateId == candidateFomDb.Id).ToList();
 
             foreach (var app in apps)
             {
@@ -200,7 +212,6 @@
 
                 this.candidatesRepository.Update(candidateFomDb);
                 result = await this.candidatesRepository.SaveChangesAsync();
-
 
                 candidateFomDb
                     .Applications

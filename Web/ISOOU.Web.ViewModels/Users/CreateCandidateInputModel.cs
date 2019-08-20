@@ -4,6 +4,7 @@
     using System.Linq;
     using AutoMapper;
     using ISOOU.Common;
+    using ISOOU.Data.Models;
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
 
@@ -52,6 +53,10 @@
         public string MotherFullName { get; set; }
 
         public string FatherFullName { get; set; }
+
+        public string UserId { get; set; }
+
+        public SystemUser User { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {

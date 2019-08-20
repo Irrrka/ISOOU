@@ -56,6 +56,20 @@
         [HttpGet("/Users/Candidate/Create")]
         public async Task<IActionResult> Create()
         {
+            ClaimsPrincipal userIdentity = this.User;
+
+            var parents = this.parentsService.GetParents(userIdentity);
+
+            if (parents.FirstOrDefault().User.UserName != this.User.Identity.Name)
+            {
+                return this.View("_AccessDenied");
+            }
+
+            if (parents.ToList().Count <= 1)
+            {
+                return this.BadRequest(GlobalConstants.TwoParents);
+            }
+
             var motherFullName = await this.parentsService
              .GetParentFullNameByRole(this.User, ParentRole.Майка);
 
@@ -114,18 +128,15 @@
 
             ClaimsPrincipal userIdentity = this.User;
 
-            var parents = this.parentsService.GetParents(userIdentity);
-            ParentServiceModel motherServiceModel = await parents.Where(p => p.FullName.Equals(input.MotherFullName)).FirstOrDefaultAsync();
-            ParentServiceModel fatherServiceModel = await parents.Where(p => p.FullName.Equals(input.FatherFullName)).FirstOrDefaultAsync();
+            var parents = this.parentsService.GetParentsWithOtherAndNull(userIdentity);
+
+            ParentServiceModel motherServiceModel = await parents.Where(p => p.FullName.TrimEnd().Equals(input.MotherFullName)).FirstOrDefaultAsync();
+            ParentServiceModel fatherServiceModel = await parents.Where(p => p.FullName.TrimEnd().Equals(input.FatherFullName)).FirstOrDefaultAsync();
 
             CandidateServiceModel model = input.To<CandidateServiceModel>();
 
-            model.MotherId = input.MotherFullName == ParentRole.Друг.ToString() ? 2000
-                : input.MotherFullName == ParentRole.Няма.ToString() ? 4000
-                : motherServiceModel.Id;
-            model.FatherId = input.FatherFullName == ParentRole.Друг.ToString() ? 2000
-               : input.FatherFullName == ParentRole.Няма.ToString() ? 4000
-               : fatherServiceModel.Id;
+            model.MotherId = motherServiceModel.Id;
+            model.FatherId = fatherServiceModel.Id;
 
             await this.candidatesService.Create(userIdentity, model);
 
@@ -200,7 +211,6 @@
                 return this.View(input);
             }
 
-            //Radio tag helper
             ClaimsPrincipal userIdentity = this.User;
 
             CandidateServiceModel candidatToEdit = input.To<CandidateServiceModel>();
@@ -219,6 +229,7 @@
         {
             var candidateDeleteViewModel = (await this.candidatesService.GetCandidateById(id))
                 .To<DeleteCandidateViewModel>();
+
             if (candidateDeleteViewModel == null)
             {
                 return this.Redirect($"Edit/{id}");
@@ -274,6 +285,11 @@
         [HttpPost]
         public async Task<IActionResult> Documents(CreateDocumentInputModel input)
         {
+            if (input.Application == null)
+            {
+                return this.NotFound(GlobalConstants.DocumentNotFound);
+            }
+
             await this.candidatesService.CreateDocumentSubmission(input);
 
             return this.Redirect("/");
@@ -288,6 +304,11 @@
             model.ScoresByCriteria = new List<ScoreByCriteriaOnCandidateViewModel>();
 
             IEnumerable<CriteriaForCandidateServiceModel> criteriasOfCandidate = await this.criteriasService.GetCriteriasAndScoresByCandidateId(id);
+
+            if (criteriasOfCandidate.FirstOrDefault().Candidate.User.UserName != this.User.Identity.Name)
+            {
+                return this.View("_AccessDenied");
+            }
 
             IEnumerable<CriteriaServiceModel> allcriterias = await this.criteriasService.GetAllCriterias();
 
@@ -317,6 +338,16 @@
         {
             CandidateServiceModel candidate = await this.candidatesService.GetCandidateById(id);
 
+            if (candidate.User.UserName != this.User.Identity.Name)
+            {
+                return this.View("_AccessDenied");
+            }
+
+            var candidateMotherAddressPermanentDistrict = candidate.Mother.Address.PermanentDistrict.Name;
+            var candidateMotherAddressCurrentDistrict = candidate.Mother.Address.PermanentDistrict.Name;
+            var candidateFatherAddressPermanentDistrict = candidate.Father.Address.PermanentDistrict.Name;
+            var candidateFatherAddressCurrentDistrict = candidate.Father.Address.PermanentDistrict.Name;
+
             var allSchools = this.schoolsService
                 .GetAllSchools()
                 .Where(x => x.District.Id == candidate.Mother.Address.PermanentDistrictId
@@ -326,10 +357,16 @@
                     || x.District.Id == candidate.Mother.WorkDistrictId
                     || x.District.Id == candidate.Father.WorkDistrictId);
 
+            if (candidateMotherAddressPermanentDistrict != "Неизвестен" || candidateMotherAddressCurrentDistrict != "Неизвестен"
+                || candidateFatherAddressPermanentDistrict != "Неизвестен" || candidateFatherAddressCurrentDistrict != "Неизвестен")
+            {
+                allSchools = this.schoolsService
+                .GetAllSchools();
+            }
+
             this.ViewData["AllSchools"] = allSchools
                 .Select(p => new AddSchoolApplicationsViewModel { Id = p.Id, Name = p.Name, DistrictName = p.District.Name })
                 .ToList();
-
 
             AddApplicationsInputModel model = new AddApplicationsInputModel();
             model.CandidateId = candidate.Id;
@@ -398,7 +435,14 @@
         [HttpGet(Name = "Profile")]
         public async Task<IActionResult> Profile(int id)
         {
+
             CandidateServiceModel candidate = await this.candidatesService.GetCandidateById(id);
+
+            if (candidate.User.UserName != this.User.Identity.Name)
+            {
+                return this.View("_AccessDenied");
+            }
+
             var procedureStatus = this.adminService.GetProcedureStatus();
 
             CandidateProfileViewModel model = new CandidateProfileViewModel();

@@ -30,6 +30,8 @@
                               new DistrictsSeeder(),
                               new SchoolsSeeder(),
                               new CriteriasSeeder(),
+                              new AddressesSeeder(),
+                              new ParentsSeeder(),
                           };
 
             foreach (var seeder in seeders)

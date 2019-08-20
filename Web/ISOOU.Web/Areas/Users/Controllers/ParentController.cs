@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
+    using ISOOU.Common;
     using ISOOU.Data.Common.Repositories;
     using ISOOU.Data.Models;
     using ISOOU.Data.Models.Enums;
@@ -52,6 +53,7 @@
         [HttpPost("/Users/Parent/Create")]
         public async Task<IActionResult> Create(CreateParentInputModel input)
         {
+
             if (!this.ModelState.IsValid)
             {
                 var allParentsRole = new List<string>() { "Майка", "Баща" };
@@ -93,6 +95,12 @@
             ParentServiceModel parent = input.To<ParentServiceModel>();
             parent.WorkDistrict = workDistrict;
             parent.Address = address;
+
+            var role = await this.parentsService.GetParentsRoleByUser(userIdentity);
+            if ((role == ParentRole.Майка.ToString() || role == ParentRole.Баща.ToString()) && input.ParentRole == role)
+            {
+                return this.BadRequest(GlobalConstants.UniqueParentRole);
+            }
 
             parent.Role = (ParentRole)Enum.Parse(typeof(ParentRole), input.ParentRole);
 

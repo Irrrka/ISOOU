@@ -13,6 +13,8 @@
 
         IQueryable<ParentServiceModel> GetParents(ClaimsPrincipal userIdentity);
 
+        IQueryable<ParentServiceModel> GetParentsWithOtherAndNull(ClaimsPrincipal userIdentity);
+
         Task<string> GetParentFullNameByRole(ClaimsPrincipal userIdentity, ParentRole role);
 
         Task<int> GetParentIdByFullName(ClaimsPrincipal userIdentity, string fullName);
@@ -22,5 +24,7 @@
         Task<bool> Edit(int id, ParentServiceModel parentServiceModel);
 
         Task<bool> Delete(int id);
+
+        Task<string> GetParentsRoleByUser(ClaimsPrincipal userIdentity);
     }
 }

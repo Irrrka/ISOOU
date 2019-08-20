@@ -9,6 +9,7 @@
     [NotMapped]
     public abstract class Person : BaseModel<int>, IDeletableEntity
     {
+        //TODO Person with GuidId!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         [Required]
         [StringLength(20)]
         public string FirstName { get; set; }
@@ -25,7 +26,7 @@
 
         [Required]
         [StringLength(10)]
-
+        //TODO AddMoreValidation
         public string UCN { get; set; }
 
         [ForeignKey("User")]

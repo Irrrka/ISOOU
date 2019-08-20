@@ -63,7 +63,18 @@
                 .All()
                 .Where(u => u.User.Id == userId)
                 .To<ParentServiceModel>();
+            return parents;
+        }
 
+        public IQueryable<ParentServiceModel> GetParentsWithOtherAndNull(ClaimsPrincipal userIdentity)
+        {
+            var userId = this.userManager.GetUserId(userIdentity);
+            var parents = this.parentsRepository
+                .All()
+                .Where(u => u.User.Id == userId
+                || u.FullName.TrimEnd() == ParentRole.Друг.ToString()
+                || u.FullName.TrimEnd() == ParentRole.Няма.ToString())
+                .To<ParentServiceModel>();
             return parents;
         }
 
@@ -194,6 +205,19 @@
             var result = await this.parentsRepository.SaveChangesAsync();
 
             return result > 0;
+        }
+
+        public async Task<string> GetParentsRoleByUser(ClaimsPrincipal userIdentity)
+        {
+            var userId = this.userManager.GetUserId(userIdentity);
+            var exstParent = await this.parentsRepository
+                .All()
+                .Where(u => u.User.Id == userId)
+                .SingleOrDefaultAsync();
+
+            var role = exstParent.Role.ToString();
+
+            return role;
         }
     }
 }

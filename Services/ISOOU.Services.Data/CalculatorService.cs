@@ -44,6 +44,8 @@
                                .Include(f => f.Father)
                                .ThenInclude(a => a.Address)
                                .FirstOrDefaultAsync(p => p.Id == candidateId);
+            var fatherFullName = candidate.Father.FullName.TrimEnd();
+            var motherFullName = candidate.Mother.FullName.TrimEnd();
             var fatherId = candidate.FatherId;
             var motherId = candidate.MotherId;
 
@@ -65,7 +67,7 @@
                     Name = nameof(GlobalConstants.HasAllTheImmunizations),
                     CandidateId = candidateId,
                     CriteriaId = criteriaId,
-                   // SchId = 0,
+                    // SchId = 0,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
                 await this.candidatesRepository.SaveChangesAsync();
@@ -80,7 +82,7 @@
                     Name = nameof(GlobalConstants.HasDeseasCriteria),
                     CandidateId = candidateId,
                     CriteriaId = criteriaId,
-                  //  SchId = 0,
+                    //  SchId = 0,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
                 await this.candidatesRepository.SaveChangesAsync();
@@ -95,7 +97,7 @@
                     Name = nameof(GlobalConstants.HasSENCriteria),
                     CandidateId = candidateId,
                     CriteriaId = criteriaId,
-                  //  SchId = 0,
+                    //  SchId = 0,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
                 await this.candidatesRepository.SaveChangesAsync();
@@ -110,13 +112,14 @@
                     Name = nameof(GlobalConstants.HasVisitKGCriteria),
                     CandidateId = candidateId,
                     CriteriaId = criteriaId,
-                  //  SchId = 0,
+                    //  SchId = 0,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
                 await this.candidatesRepository.SaveChangesAsync();
             }
 
-            if (candidate.MotherId == 0 && candidate.FatherId == 0)
+            if ((motherFullName == ParentRole.Няма.ToString() && fatherFullName == ParentRole.Няма.ToString())
+                || (motherFullName == ParentRole.Друг.ToString() && fatherFullName == ParentRole.Друг.ToString()))
             {
                 var criteriaId = await this.criteriasService
                     .GetIdByCriteriaName(nameof(GlobalConstants.HasNoParentCriteria));
@@ -125,12 +128,12 @@
                     Name = nameof(GlobalConstants.HasNoParentCriteria),
                     CandidateId = candidateId,
                     CriteriaId = criteriaId,
-                  //  SchId = 0,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
                 await this.candidatesRepository.SaveChangesAsync();
             }
-            else if (candidate.MotherId == 0 || candidate.FatherId == 0)
+            else if ((motherFullName == ParentRole.Няма.ToString() || fatherFullName == ParentRole.Няма.ToString())
+            || (motherFullName == ParentRole.Друг.ToString() || fatherFullName == ParentRole.Друг.ToString()))
             {
                 var criteriaId = await this.criteriasService
                     .GetIdByCriteriaName(nameof(GlobalConstants.HasOneParentCriteria));
@@ -139,7 +142,6 @@
                     Name = nameof(GlobalConstants.HasOneParentCriteria),
                     CandidateId = candidateId,
                     CriteriaId = criteriaId,
-                    //SchId = 0,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
                 await this.candidatesRepository.SaveChangesAsync();
@@ -154,7 +156,6 @@
                     Name = nameof(GlobalConstants.MotherHasWorkCriteria),
                     CandidateId = candidateId,
                     CriteriaId = criteriaId,
-                   // SchId = 0,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
                 await this.candidatesRepository.SaveChangesAsync();
@@ -169,7 +170,6 @@
                     Name = nameof(GlobalConstants.FatherHasWorkCriteria),
                     CandidateId = candidateId,
                     CriteriaId = criteriaId,
-                  //  SchId = 0,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
                 await this.candidatesRepository.SaveChangesAsync();
@@ -184,7 +184,6 @@
                     Name = nameof(GlobalConstants.ParentPermanentCitySofiaCriteria),
                     CandidateId = candidateId,
                     CriteriaId = criteriaId,
-                   // SchId = 0,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
                 await this.candidatesRepository.SaveChangesAsync();
@@ -198,7 +197,6 @@
                     Name = nameof(GlobalConstants.ParentCurrentCitySofiaCriteria),
                     CandidateId = candidateId,
                     CriteriaId = criteriaId,
-                   // SchId = 0,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
                 await this.candidatesRepository.SaveChangesAsync();
@@ -213,7 +211,6 @@
                     Name = nameof(GlobalConstants.HasManyBrothersOrSistersCriteria),
                     CandidateId = candidateId,
                     CriteriaId = criteriaId,
-                   // SchId = 0,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
                 await this.candidatesRepository.SaveChangesAsync();
@@ -328,7 +325,7 @@
         public int CalculateTotalScoreForTheAdmissionProcedure(int candidateId, int schoolId)
         {
             var candidate = this.candidateApplicationRepository.All()
-                .Where(id => id.CandidateId == candidateId 
+                .Where(id => id.CandidateId == candidateId
                             && id.SchoolId == schoolId)
                 .Include(c => c.Candidate)
                 .Include(s => s.School)
@@ -339,7 +336,35 @@
             return totalScores;
         }
 
+        public async Task<int> EditBasicScoresForManyBrothersAndSisters(int candidateId)
+        {
+            var candidate = await this.candidatesRepository
+                               .All()
+                               .Include(c => c.Criterias)
+                               .FirstOrDefaultAsync(p => p.Id == candidateId);
 
+            var criteriaId = await this.criteriasService
+                .GetIdByCriteriaName(nameof(GlobalConstants.HasManyBrothersOrSistersCriteria));
+            var candCrit = this.criteriaForCandidatesRepository.All()
+                .Where(c => c.CandidateId == candidate.Id).ToList();
+
+            if (candCrit.Any(c => c.CriteriaId == criteriaId))
+            {
+                return candidate.BasicScores;
+            }
+
+            var criteriaForCandidate = new CriteriaForCandidate
+            {
+                Name = nameof(GlobalConstants.HasManyBrothersOrSistersCriteria),
+                CandidateId = candidateId,
+                CriteriaId = criteriaId,
+            };
+            await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
+            await this.candidatesRepository.SaveChangesAsync();
+
+            var basicScores = candidate.Criterias.Sum(x => x.Criteria.Scores);
+            return basicScores;
+        }
 
         public int CalculateCoeficientByYear(int yearOfBirth)
         {

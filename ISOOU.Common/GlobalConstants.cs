@@ -67,5 +67,8 @@
         public static readonly string UserNotFound = "Няма намерен потребител";
         public static readonly string AddressNotFound = "Няма намерен адрес";
         public static readonly string SchoolNotFound = "Няма намерени училища";
+        public static readonly string UniqueParentRole = "Потребителят не може да въвежда две майки/бащи!";
+        public static readonly string TwoParents = "Въведете двама родителя преди да въведете кандидат!";
+        public static readonly string DocumentNotFound = "Не е намерен документ!";
     }
 }

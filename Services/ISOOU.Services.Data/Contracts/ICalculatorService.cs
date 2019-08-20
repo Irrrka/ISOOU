@@ -18,5 +18,7 @@ namespace ISOOU.Services.Data.Contracts
         int CalculateCoeficientByYear(int yearOfBirth);
 
         int CalculateTotalScoreForTheAdmissionProcedure(int candidateId, int schoolId);
+
+        Task<int> EditBasicScoresForManyBrothersAndSisters(int candidateId);
     }
 }

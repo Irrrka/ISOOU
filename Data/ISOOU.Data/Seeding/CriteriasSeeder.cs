@@ -67,13 +67,13 @@
                     new Criteria
                     {
                         Name = nameof(GlobalConstants.HasNoParentCriteria),
-                        DisplayName = "Дете с двама починали родители",
+                        DisplayName = "Дете без родители",
                         Scores = GlobalConstants.HasNoParentCriteria,
                     },
                     new Criteria
                     {
                         Name = nameof(GlobalConstants.HasOneParentCriteria),
-                        DisplayName = "Дете с един починал родител",
+                        DisplayName = "Дете с един родител",
                         Scores = GlobalConstants.HasOneParentCriteria,
                     },
                     new Criteria
