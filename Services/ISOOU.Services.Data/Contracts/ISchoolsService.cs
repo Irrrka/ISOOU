@@ -1,5 +1,6 @@
 ﻿namespace ISOOU.Services.Data.Contracts
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -18,5 +19,7 @@
         Task<bool> EditSchool(int id, SchoolServiceModel model);
 
         Task<SchoolServiceModel> GetSchoolForEdit(string userIdentity);
+
+        IQueryable<CandidateApplicationServiceModel> GetSchoolsAndCandidates();
     }
 }

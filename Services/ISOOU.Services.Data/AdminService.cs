@@ -41,6 +41,7 @@
         {
             var message = await this.questionsRepository
                 .All()
+                .Include(u=>u.User)
                 .OrderByDescending(x => x.CreatedOn)
                 .To<QuestionServiceModel>()
                 .FirstOrDefaultAsync();

@@ -15,6 +15,8 @@
         [Display(Name = "Име")]
         public string FirstName { get; set; }
 
+        [Required]
+        [StringLength(40, MinimumLength = 4)]
         [Display(Name = "Презиме")]
         public string MiddleName { get; set; }
 

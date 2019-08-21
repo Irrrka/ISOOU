@@ -28,7 +28,7 @@
             this.SeedTestData(this.DbContext);
 
             List<SchoolServiceModel> expected = this.DbContext.Schools.To<SchoolServiceModel>().ToList();
-            List<SchoolServiceModel> actual = await this.SchoolsServiceMock.GetAllSchools().ToListAsync();
+            List<SchoolServiceModel> actual = this.SchoolsServiceMock.GetAllSchools().ToList();
 
             foreach (var data in actual)
             {
@@ -54,7 +54,7 @@
         public async Task GetAllSchools_WithEmptyData_ShouldReturnEmptyList()
         {
             List<SchoolServiceModel> expected = new List<SchoolServiceModel>();
-            List<SchoolServiceModel> actual = await this.SchoolsServiceMock.GetAllSchools().ToListAsync();
+            List<SchoolServiceModel> actual = this.SchoolsServiceMock.GetAllSchools().ToList();
 
             Assert.True(
                         actual.Count == 0,

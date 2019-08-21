@@ -11,8 +11,8 @@ namespace ISOOU.Services.Models
         public SchoolServiceModel()
         {
             this.Candidates = new HashSet<CandidateApplicationServiceModel>();
-            this.AdmittedNames = new HashSet<string>();
-            this.NotAdmittedNames = new HashSet<string>();
+            //this.AdmittedNames = new HashSet<string>();
+            //this.NotAdmittedNames = new HashSet<string>();
         }
 
         public int Id { get; set; }
@@ -39,8 +39,8 @@ namespace ISOOU.Services.Models
 
         public ICollection<CandidateApplicationServiceModel> Candidates { get; set; }
 
-        public ICollection<string> AdmittedNames { get; set; }
+       // public ICollection<string> AdmittedNames { get; set; }
 
-        public ICollection<string> NotAdmittedNames { get; set; }
+//        public ICollection<string> NotAdmittedNames { get; set; }
     }
 }

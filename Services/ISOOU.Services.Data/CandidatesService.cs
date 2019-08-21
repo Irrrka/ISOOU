@@ -23,7 +23,7 @@
         private readonly IParentsService parentsService;
         private readonly IRepository<Candidate> candidatesRepository;
         private readonly IRepository<CandidateApplication> candidateApplicationsRepository;
-        private readonly IRepository<Criteria> criteriasRepository;
+        private readonly ICriteriasService criteriasService;
         private readonly IRepository<CandidateApplication> schoolCandidateRepository;
         private readonly IRepository<Document> documentRepository;
         private readonly ISchoolsService schoolService;
@@ -35,7 +35,7 @@
             IRepository<Candidate> candidatesRepository,
             IRepository<CandidateApplication> candidateApplicationsRepository,
             IParentsService parentsService,
-            IRepository<Criteria> criteriasRepository,
+            ICriteriasService criteriasService,
             IRepository<CandidateApplication> schoolCandidateRepository,
             ISchoolsService schoolService,
             ICalculatorService calculatorService,
@@ -46,7 +46,7 @@
             this.candidatesRepository = candidatesRepository;
             this.candidateApplicationsRepository = candidateApplicationsRepository;
             this.parentsService = parentsService;
-            this.criteriasRepository = criteriasRepository;
+            this.criteriasService = criteriasService;
             this.schoolCandidateRepository = schoolCandidateRepository;
             this.schoolService = schoolService;
             this.calculatorService = calculatorService;
@@ -96,7 +96,10 @@
             {
                 foreach (var bro in brothersAndSusters)
                 {
-                    bro.BasicScores = await this.calculatorService.EditBasicScoresForManyBrothersAndSisters(bro.Id);
+                    if (bro.Id != candidateId && !bro.Criterias.Any(c => c.Name == nameof(GlobalConstants.HasManyBrothersOrSistersCriteria)))
+                    {
+                        bro.BasicScores = await this.calculatorService.EditBasicScoresForManyBrothersAndSisters(bro.Id);
+                    }
                 }
             }
 
@@ -158,6 +161,8 @@
             this.candidatesRepository.Update(candidateToEdit);
             var result = await this.candidatesRepository.SaveChangesAsync();
 
+            await this.criteriasService.DeleteCriteriasByCandidateId(candidateToEdit.Id);
+            await this.calculatorService.CalculateBasicScoresByCriteria(candidateToEdit.Id);
             return result > 0;
         }
 
@@ -176,7 +181,7 @@
             this.candidatesRepository.Update(candidateToDelete);
             var result = await this.candidatesRepository.SaveChangesAsync();
 
-            return result>0;
+            return result > 0;
         }
 
         public async Task<bool> AddApplications(int id, List<int> schoolApplicationIds)
@@ -205,10 +210,10 @@
             {
                 candidateFomDb.Applications.Add(
                 new CandidateApplication
-                    {
-                        CandidateId = candidateFomDb.Id,
-                        SchoolId = schoolApplicationIds[i],
-                    });
+                {
+                    CandidateId = candidateFomDb.Id,
+                    SchoolId = schoolApplicationIds[i],
+                });
 
                 this.candidatesRepository.Update(candidateFomDb);
                 result = await this.candidatesRepository.SaveChangesAsync();
@@ -246,7 +251,7 @@
             await this.documentRepository.AddAsync(document);
             var result = await this.documentRepository.SaveChangesAsync();
 
-            return result>0;
+            return result > 0;
         }
     }
 }

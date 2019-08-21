@@ -94,7 +94,10 @@
         [Authorize]
         public IActionResult Admitted()
         {
+            //TODO NOTWORKING ANYMORE MAPPING ? OR BROKEN DB!!!
             var schools = this.schoolsService.GetAllSchools().ToList();
+            
+            //var candidateApp = this.schoolsService.GetSchoolsAndCandidates().ToList();
 
             List<AdmitedCandidatesViewModel> models =
                 new List<AdmitedCandidatesViewModel>();

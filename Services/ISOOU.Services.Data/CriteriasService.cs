@@ -60,5 +60,21 @@ namespace ISOOU.Data.Models
 
             return criterias;
         }
+
+        public async Task<bool> DeleteCriteriasByCandidateId(int candidateId)
+        {
+            var criterias = await this.criteriasForCandidatesRepository.All()
+                .Where(c => c.CandidateId == candidateId).ToListAsync();
+
+            var result = 0;
+
+            foreach (var criteria in criterias)
+            {
+                this.criteriasForCandidatesRepository.Delete(criteria);
+                result = await this.criteriasForCandidatesRepository.SaveChangesAsync();
+            }
+
+            return result>0;
+        }
     }
 }

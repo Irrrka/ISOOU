@@ -35,12 +35,13 @@
         {
             ContactFormViewModel model = new ContactFormViewModel();
 
-            var message = await this.adminService.ReadLastMessage();
+            QuestionServiceModel message = await this.adminService.ReadLastMessage();
             if (message != null)
             {
                 model = message.To<ContactFormViewModel>();
             }
 
+            //model.UserEmail = message.SystemUser.Email;
             model.AdmissionProcedureStatus = this.adminService.GetProcedureStatus();
 
             return this.View(model);
@@ -49,7 +50,7 @@
         [HttpGet]
         public ActionResult CreateDirector()
         {
-            IQueryable<SchoolServiceModel> allSchools = this.schoolsService.GetAllSchools();
+            var allSchools = this.schoolsService.GetAllSchools();
             this.ViewData["Schools"] = allSchools.To<CreateDirectorSchoolModel>().ToList();
 
             return this.View();

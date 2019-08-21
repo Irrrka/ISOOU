@@ -1,5 +1,6 @@
 ﻿namespace ISOOU.Services.Models
 {
+    using AutoMapper;
     using ISOOU.Data.Common.Models;
     using ISOOU.Data.Models;
     using ISOOU.Services.Mapping;
@@ -15,5 +16,6 @@
         public string SystemUserId { get; set; }
 
         public SystemUserServiceModel SystemUser { get; set; }
+
     }
 }

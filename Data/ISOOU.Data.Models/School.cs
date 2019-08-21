@@ -10,8 +10,8 @@
         public School()
         {
             this.Candidates = new HashSet<CandidateApplication>();
-            this.AdmittedNames = new HashSet<string>();
-            this.NotAdmittedNames = new HashSet<string>();
+           // this.AdmittedNames = new HashSet<string>();
+           // this.NotAdmittedNames = new HashSet<string>();
         }
 
         [Required]
@@ -45,10 +45,10 @@
 
         public virtual ICollection<CandidateApplication> Candidates { get; set; }
 
-        [NotMapped]
-        public ICollection<string> AdmittedNames { get; set; }
+       // [NotMapped]
+        //public virtual ICollection<string> AdmittedNames { get; set; }
 
-        [NotMapped]
-        public ICollection<string> NotAdmittedNames { get; set; }
+       // [NotMapped]
+        //public virtual ICollection<string> NotAdmittedNames { get; set; }
     }
 }

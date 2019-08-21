@@ -171,7 +171,7 @@
             parentToEdit.PhoneNumber = input.PhoneNumber;
             parentToEdit.WorkName = input.WorkName;
 
-            parentToEdit.WorkDistrict = workDistrict;
+            parentToEdit.WorkDistrictId = workDistrict.Id;
             parentToEdit.Address = address;
             parentToEdit.Role = (ParentRole)Enum.Parse(typeof(ParentRole), input.ParentRole);
 

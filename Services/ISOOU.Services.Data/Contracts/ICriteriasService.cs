@@ -11,5 +11,7 @@
         Task<IEnumerable<CriteriaServiceModel>> GetAllCriterias();
 
         Task<IEnumerable<CriteriaForCandidateServiceModel>> GetCriteriasAndScoresByCandidateId(int candidateId);
+
+        Task<bool> DeleteCriteriasByCandidateId(int candidateId);
     }
 }

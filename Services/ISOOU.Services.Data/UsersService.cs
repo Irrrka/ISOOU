@@ -31,7 +31,7 @@
             {
                 Subject = model.Subject,
                 Content = model.Content,
-                SystemUserId = user == null ? null : user.Id,
+                SystemUserId = user.Id == null ? null : user.Id,
             };
 
             await this.qestionRepository.AddAsync(quetsion);

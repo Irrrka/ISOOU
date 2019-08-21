@@ -343,11 +343,6 @@
                 return this.View("_AccessDenied");
             }
 
-            var candidateMotherAddressPermanentDistrict = candidate.Mother.Address.PermanentDistrict.Name;
-            var candidateMotherAddressCurrentDistrict = candidate.Mother.Address.PermanentDistrict.Name;
-            var candidateFatherAddressPermanentDistrict = candidate.Father.Address.PermanentDistrict.Name;
-            var candidateFatherAddressCurrentDistrict = candidate.Father.Address.PermanentDistrict.Name;
-
             var allSchools = this.schoolsService
                 .GetAllSchools()
                 .Where(x => x.District.Id == candidate.Mother.Address.PermanentDistrictId
@@ -356,13 +351,6 @@
                     || x.District.Id == candidate.Father.Address.CurrentDistrictId
                     || x.District.Id == candidate.Mother.WorkDistrictId
                     || x.District.Id == candidate.Father.WorkDistrictId);
-
-            if (candidateMotherAddressPermanentDistrict != "Неизвестен" || candidateMotherAddressCurrentDistrict != "Неизвестен"
-                || candidateFatherAddressPermanentDistrict != "Неизвестен" || candidateFatherAddressCurrentDistrict != "Неизвестен")
-            {
-                allSchools = this.schoolsService
-                .GetAllSchools();
-            }
 
             this.ViewData["AllSchools"] = allSchools
                 .Select(p => new AddSchoolApplicationsViewModel { Id = p.Id, Name = p.Name, DistrictName = p.District.Name })
@@ -417,7 +405,7 @@
             }
 
             //Third wish
-            if (input.SecondWishSchool != null)
+            if (input.ThirdWishSchool != null)
             {
                 int thirdWishSchoolId = await this.schoolsService
                                             .GetSchoolIdByName(input.ThirdWishSchool);

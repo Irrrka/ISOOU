@@ -18,15 +18,18 @@
         private readonly IRepository<School> schoolRepository;
         private readonly IRepository<SystemUser> userRepository;
         private readonly IDistrictsService districtsService;
+        private readonly IRepository<CandidateApplication> candidateApplicationRepository;
 
         public SchoolsService(
                 IRepository<School> schoolRepository,
+                IRepository<CandidateApplication> candidateApplicationRepository,
                 IRepository<SystemUser> userRepository,
                 IDistrictsService districtsService)
         {
             this.schoolRepository = schoolRepository;
             this.userRepository = userRepository;
             this.districtsService = districtsService;
+            this.candidateApplicationRepository = candidateApplicationRepository;
         }
 
         public async Task<IQueryable<SchoolServiceModel>> GetAllSchoolsByDistrictId(int id)
@@ -156,6 +159,14 @@
            
 
             return admitted;
+        }
+
+        public IQueryable<CandidateApplicationServiceModel> GetSchoolsAndCandidates()
+        {
+            IQueryable<CandidateApplicationServiceModel> result = this.candidateApplicationRepository.All()
+                .To<CandidateApplicationServiceModel>();
+
+            return result;
         }
     }
 }

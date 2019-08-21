@@ -6,7 +6,7 @@
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
 
-    public class AdmitedCandidatesViewModel : IMapFrom<SchoolServiceModel>, IHaveCustomMappings
+    public class AdmitedCandidatesViewModel : IMapFrom<SchoolServiceModel>
     {
         public AdmitedCandidatesViewModel()
         {
@@ -15,16 +15,7 @@
 
         public string Name { get; set; }
 
-        public List<string> AdmittedCandidates{ get; set; }
+        public List<string> AdmittedCandidates { get; set; }
 
-        public void CreateMappings(IProfileExpression configuration)
-        {
-            //configuration
-            //  .CreateMap<SchoolServiceModel, AdmitedCandidatesViewModel>()
-            //    .ForMember(
-            //       destination => destination.AdmittedCandidatesCandidateFullNameUCN,
-            //       opts => opts.MapFrom(origin => origin.AdmittedCandidates
-            //       .Select(x => x.Candidate.FullName + " " + x.Candidate.UCN)));
-        }
     }
 }

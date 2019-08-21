@@ -100,8 +100,14 @@
                 .SingleOrDefaultAsync();
 
             var result = 0;
-
-            if (fullName != ParentRole.Друг.ToString() || fullName != ParentRole.Няма.ToString())
+            if (parent == null)
+            {
+                result = (await this.parentsRepository
+                .All()
+                .Where(r => r.FullName.TrimEnd().Equals(fullName.TrimEnd()))
+                .SingleOrDefaultAsync()).Id;
+            }
+            else
             {
                 result = parent.Id;
             }
@@ -118,15 +124,7 @@
                 throw new ArgumentNullException();
             }
 
-            District workDistrict = (await this.parentsRepository.All()
-                                                .FirstOrDefaultAsync(a => a.Id == parentServiceModel.Id)).WorkDistrict;
-            if (workDistrict == null)
-            {
-                throw new ArgumentNullException(nameof(workDistrict));
-            }
-
-            parentToEdit.WorkDistrict = workDistrict;
-
+            parentToEdit.WorkDistrictId = parentServiceModel.WorkDistrictId;
             parentToEdit.Address.PermanentDistrictId = parentServiceModel.Address.PermanentDistrictId;
             parentToEdit.Address.CurrentDistrictId = parentServiceModel.Address.CurrentDistrictId;
             parentToEdit.Address.CurrentCity = parentServiceModel.Address.CurrentCity;
@@ -215,7 +213,11 @@
                 .Where(u => u.User.Id == userId)
                 .SingleOrDefaultAsync();
 
-            var role = exstParent.Role.ToString();
+            string role = null;
+            if (exstParent != null)
+            {
+                role = exstParent.Role.ToString();
+            }
 
             return role;
         }
