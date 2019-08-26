@@ -1,4 +1,5 @@
-﻿using ISOOU.Data.Common.Repositories;
+﻿using ISOOU.Common;
+using ISOOU.Data.Common.Repositories;
 using ISOOU.Data.Models;
 using ISOOU.Services.Data.Contracts;
 using ISOOU.Services.Mapping;
@@ -27,10 +28,17 @@ namespace ISOOU.Services.Data
                                                     .To<AddressDetailsServiceModel>();
             if (address == null)
             {
-                throw new ArgumentNullException(nameof(address));
+                throw new ArgumentNullException(string.Format(GlobalConstants.NullReferenceAddressId, id));
             }
 
             return address;
+        }
+
+        public async Task<bool> UpdateRepository(AddressDetails addressToEdit)
+        {
+            this.addressesRepository.Update(addressToEdit);
+            var result = await this.addressesRepository.SaveChangesAsync();
+            return result > 0;
         }
 
     }

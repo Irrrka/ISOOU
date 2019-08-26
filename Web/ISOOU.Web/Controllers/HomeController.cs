@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
 
     using ISOOU.Common;
@@ -18,18 +19,21 @@
 
     public class HomeController : BaseController
     {
-        private readonly IUsersService usersService;
+        private readonly IQuestionsService questionsService;
         private readonly ISchoolsService schoolsService;
         private readonly IAdminService adminService;
+        private readonly UserManager<SystemUser> userManager;
 
         public HomeController(
-            IUsersService usersService,
+            IQuestionsService questionsService,
             ISchoolsService schoolsService,
-            IAdminService adminService)
+            IAdminService adminService,
+            UserManager<SystemUser> userManager)
         {
-            this.usersService = usersService;
+            this.questionsService = questionsService;
             this.schoolsService = schoolsService;
             this.adminService = adminService;
+            this.userManager = userManager;
         }
 
         public IActionResult Index()
@@ -82,10 +86,14 @@
                 return this.View(input);
             }
 
-            QuestionServiceModel model = new QuestionServiceModel();
-            var userIdentity = input.UserEmail;
-            model = input.To<QuestionServiceModel>();
-            await this.usersService.CreateMessage(userIdentity, model);
+            QuestionServiceModel model = input.To<QuestionServiceModel>();
+            ClaimsPrincipal userIdentity = this.User;
+            if (input.UserEmail == userIdentity.Identity.Name)
+            {
+                model.SystemUserId = this.userManager.GetUserId(userIdentity);
+            }
+
+            await this.questionsService.CreateMessage(userIdentity, model);
 
             return this.Redirect("/");
         }

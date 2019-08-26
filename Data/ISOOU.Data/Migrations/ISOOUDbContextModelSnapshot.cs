@@ -414,14 +414,14 @@ namespace ISOOU.Data.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
-                    b.Property<int>("AdmissionSchoolId");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
                     b.Property<DateTime>("CreatedOn");
 
                     b.Property<DateTime?>("DeletedOn");
+
+                    b.Property<int>("DirectorsSchoolId");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);

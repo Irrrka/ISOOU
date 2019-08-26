@@ -11,13 +11,5 @@
                 throw new ArgumentNullException(message);
             }
         }
-
-        //public static void EnsureStringIsNotNullOrEmpty(string str, string message = null)
-        //{
-        //    if (string.IsNullOrEmpty(str))
-        //    {
-        //        throw new ArgumentException(message);
-        //    }
-        //}
     }
 }

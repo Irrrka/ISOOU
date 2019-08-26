@@ -31,7 +31,7 @@
         }
 
         [HttpGet]
-        public ActionResult Index()
+        public IActionResult Index()
         {
             return this.View();
         }
@@ -75,7 +75,7 @@
         //}
 
         [HttpGet]
-        public async Task<ActionResult> EditSchool()
+        public async Task<IActionResult> EditSchool()
         {
             var allDistricts = this.districtsService.GetAllDistricts();
             this.ViewData["Districts"] = allDistricts.Select(d => new EditSchoolDistrictModel { Name = d.Name }).ToList();
@@ -93,7 +93,7 @@
         }
 
         [HttpPost]
-        public async Task<ActionResult> EditSchool(int id, EditSchoolInputModel input)
+        public IActionResult EditSchool(int id, EditSchoolInputModel input)
         {
             if (!this.ModelState.IsValid)
             {
@@ -105,15 +105,12 @@
 
             SchoolServiceModel schoolToEdit = input.To<SchoolServiceModel>();
 
-            DistrictServiceModel district = await this.districtsService.GetDistrictByName(input.DistrictName);
-            schoolToEdit.District = district;
+            //DistrictServiceModel district = await this.districtsService.GetDistrictByName(input.DistrictName);
+            //schoolToEdit.District = district;
 
-            await this.schoolsService.EditSchool(id, schoolToEdit);
+            this.schoolsService.EditSchool(id, schoolToEdit);
 
             return this.Redirect("/");
         }
-
-
-
     }
 }

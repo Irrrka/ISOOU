@@ -17,15 +17,18 @@
     public class DashboardController : AdministrationController
     {
         private readonly IAdminService adminService;
+        private readonly IQuestionsService questionsService;
         private readonly ISchoolsService schoolsService;
         private readonly UserManager<SystemUser> userManager;
 
         public DashboardController(
             IAdminService adminService,
+            IQuestionsService questionsService,
             ISchoolsService schoolsService,
             UserManager<SystemUser> userManager)
         {
             this.adminService = adminService;
+            this.questionsService = questionsService;
             this.schoolsService = schoolsService;
             this.userManager = userManager;
         }
@@ -35,13 +38,12 @@
         {
             ContactFormViewModel model = new ContactFormViewModel();
 
-            QuestionServiceModel message = await this.adminService.ReadLastMessage();
+            QuestionServiceModel message = await this.questionsService.ReadLastMessage();
             if (message != null)
             {
                 model = message.To<ContactFormViewModel>();
             }
 
-            //model.UserEmail = message.SystemUser.Email;
             model.AdmissionProcedureStatus = this.adminService.GetProcedureStatus();
 
             return this.View(model);
@@ -70,7 +72,7 @@
                 Email = createDirectorInputModel.Email,
                 FullName = createDirectorInputModel.FirstName + " " + createDirectorInputModel.LastName,
                 UCN = createDirectorInputModel.UCN,
-                AdmissionSchoolId = createDirectorInputModel.School,
+                DirectorsSchoolId = createDirectorInputModel.School,
             };
 
             var result = await this.userManager.CreateAsync(user, createDirectorInputModel.Password);

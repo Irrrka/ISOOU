@@ -20,6 +20,8 @@
 
         Task<SchoolServiceModel> GetSchoolForEdit(string userIdentity);
 
+        Task<List<string>> GetAdmittedCandidates();
+
         IQueryable<CandidateApplicationServiceModel> GetSchoolsAndCandidates();
     }
 }

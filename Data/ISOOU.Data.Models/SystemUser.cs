@@ -42,7 +42,7 @@
 
         public SystemRole UserRole { get; set; }
 
-        public int AdmissionSchoolId { get; set; }
+        public int DirectorsSchoolId { get; set; }
 
         public virtual ICollection<Candidate> Candidates { get; set; }
 

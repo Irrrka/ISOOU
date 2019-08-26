@@ -1,29 +1,29 @@
 ﻿namespace ISOOU.Services.Data.Tests
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
     using ISOOU.Data;
-    using ISOOU.Services.Mapping;
     using ISOOU.Data.Models;
-    using Xunit;
     using ISOOU.Services.Data.Contracts;
-    using Microsoft.Extensions.DependencyInjection;
-    using System;
+    using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.DependencyInjection;
+    using Xunit;
 
     public class SchoolsServiceTests : BaseServiceTests
     {
         private ISchoolsService SchoolsServiceMock =>
             this.ServiceProvider.GetRequiredService<ISchoolsService>();
+
         private IDistrictsService DistrictsServiceMock =>
             this.ServiceProvider.GetRequiredService<IDistrictsService>();
 
-
         [Fact]
-        public async Task GetAllSchools_WithCorrectInputData_ShouldReturnAllSchools()
+        public void GetAllSchools_WithCorrectInputData_ShouldReturnAllSchools()
         {
             this.SeedTestData(this.DbContext);
 
@@ -51,7 +51,7 @@
         }
 
         [Fact]
-        public async Task GetAllSchools_WithEmptyData_ShouldReturnEmptyList()
+        public void GetAllSchools_WithEmptyData_ShouldReturnEmptyList()
         {
             List<SchoolServiceModel> expected = new List<SchoolServiceModel>();
             List<SchoolServiceModel> actual = this.SchoolsServiceMock.GetAllSchools().ToList();
@@ -98,7 +98,7 @@
         }
 
         [Fact]
-        public async Task GetSchoolByDistrict_WithCorrectInputData_ShouldReturnSchoolByDistrict()
+        public async Task GetSchoolsByDistrict_WithCorrectInputData_ShouldReturnSchoolsByDistrict()
         {
             this.SeedTestData(this.DbContext);
             int districtId = this.DbContext.Districts.Select(i => i.Id).First();
@@ -130,7 +130,7 @@
         }
 
         [Fact]
-        public async Task GetSchoolByDistrictId_WithCorrectDistrictAndNoSchools_ShouldReturnEmptyList()
+        public async Task GetSchoolsByDistrictId_WithCorrectDistrictAndNoSchools_ShouldReturnEmptyList()
         {
             this.DbContext.Districts.Add(new District { Id = 100, Name = "Монте Карло",});
             this.DbContext.SaveChanges();
@@ -147,13 +147,111 @@
         }
 
         [Fact]
-        public async Task GetSchoolByDistrict_WithInCorrectDistrictId_ShouldThrowsNullRefException()
+        public async Task GetSchoolsByDistrict_WithInCorrectDistrictId_ShouldThrowsNullRefException()
         {
             this.SeedTestData(this.DbContext);
             int districtId = 100;
 
             await Assert.ThrowsAsync<NullReferenceException>(
                 () => this.SchoolsServiceMock.GetAllSchoolsByDistrictId(districtId));
+        }
+
+        [Fact]
+        public async Task GetSchoolIdByName_WithExistName_ShouldReturnSchoolId()
+        {
+            this.SeedTestData(this.DbContext);
+
+            SchoolServiceModel school = this.DbContext.Schools.To<SchoolServiceModel>().First();
+            string name = school.Name;
+            int expected = this.DbContext.Schools.First(n => n.Name == name).Id;
+
+            int actual = await this.SchoolsServiceMock.GetSchoolIdByName(name);
+
+            Assert.True(
+                        expected == actual,
+                        "SchoolsService GetSchoolIdByName() not works properly!");
+        }
+
+        [Fact]
+        public async Task GetSchoolIdByName_WithNonExistName_ShouldReturnArgumentNullException()
+        {
+            this.SeedTestData(this.DbContext);
+            string schoolName = "120-то";
+
+            await Assert.ThrowsAsync<NullReferenceException>(
+                () => this.SchoolsServiceMock.GetSchoolIdByName(schoolName));
+        }
+
+        [Fact]
+        public async Task GetSchoolForEdit_WithDirectorUser_ShouldReturnDirectorsSchool()
+        {
+           //TODO
+        }
+
+        [Fact]
+        public async Task EditSchool_WithExistSchool_ShouldReturnEditedSchool()
+        {
+            this.SeedTestData(this.DbContext);
+            var school = this.DbContext.Schools.To<SchoolServiceModel>().First();
+            school.Name = "107мо ОУ";
+
+            var result = await this.SchoolsServiceMock.EditSchool(school.Id, school);
+
+            Assert.True(
+                        result == true,
+                        "SchoolsService EditSchool() not works properly!");
+        }
+
+        [Fact]
+        public async Task EditSchool_WithNonExistSchool_ShouldReturnNullRef()
+        {
+            this.SeedTestData(this.DbContext);
+            var school = this.DbContext.Schools.To<SchoolServiceModel>().First();
+            school.Name = "107мо ОУ";
+
+            await Assert.ThrowsAsync<NullReferenceException>(
+                () => this.SchoolsServiceMock.EditSchool(100, school));
+        }
+
+        [Fact]
+        public async Task GetAdmittedCandidates_ShouldReturnAdmittedCandidates()
+        {
+            this.SeedTestData(this.DbContext);
+            var candidate1 = this.DbContext.CandidatesApplications.First(x => x.CandidateId == 1);
+            candidate1.Candidate.Status = CandidateStatus.Admitted;
+            var candidate2 = this.DbContext.CandidatesApplications.First(x => x.CandidateId == 2);
+            candidate2.Candidate.Status = CandidateStatus.Admitted;
+            var expected = new List<string> { candidate1.Candidate.FullName };
+            var notAdmitted = new List<string> { candidate2.Candidate.FullName };
+
+            var actual = await this.SchoolsServiceMock.GetAdmittedCandidates();
+
+            Assert.True(
+                        actual.Count == 1,
+                        "SchoolsService GetAdmittedCandidates() not works properly!");
+        }
+
+        [Fact]
+        public async Task GetSchoolsAndCandidates_ShouldReturnListOfCandidates()
+        {
+            this.SeedTestData(this.DbContext);
+            var actual = await this.DbContext.CandidatesApplications.ToListAsync();
+
+            var expecred = this.SchoolsServiceMock.GetSchoolsAndCandidates().ToList();
+
+            Assert.True(
+                        actual.Count == expecred.Count,
+                        "SchoolsService GetSchoolsAndCandidates() not works properly!");
+        }
+
+        [Fact]
+        public void GetSchoolsAndCandidates_WithNoCandidatesWithApplications_ReturnsEmptyList()
+        {
+            var expecred = this.SchoolsServiceMock.GetSchoolsAndCandidates().ToList();
+
+            Assert.True(
+                        expecred.Count == 0,
+                        "SchoolsService GetSchoolsAndCandidates() not works properly!");
         }
 
         private void SeedTestData(ISOOUDbContext context)
@@ -167,6 +265,23 @@
             var district1 = new District { Id = 77, Name = "Капана" };
             var district2 = new District { Id = 88, Name = "Меден Рудник" };
 
+            var candidate1 = new Candidate
+            {
+                FirstName = "Yavor",
+                MiddleName = "Ivaylov",
+                LastName = "Marinov",
+                UCN = "1309070000",
+                YearOfBirth = 2013,
+            };
+            var candidate2 = new Candidate
+            {
+                FirstName = "Yasen",
+                MiddleName = "Ivaylov",
+                LastName = "Ivanov",
+                UCN = "1307090000",
+                YearOfBirth = 2013,
+            };
+
             return new List<School>
             {
                 new School
@@ -176,6 +291,11 @@
                     DirectorName = "Мария Мария",
                     PhoneNumber = "02/000001",
                     District = district1,
+                    Candidates = new List<CandidateApplication>
+                    {
+                        new CandidateApplication { CandidateId = 1, SchoolId = 1} ,
+                        new CandidateApplication { CandidateId = 2, SchoolId = 1} ,
+                    },
                 },
                 new School
                 {
@@ -184,6 +304,11 @@
                     DirectorName = "Мария Мария Mariq",
                     PhoneNumber = "02/0011101",
                     District = district1,
+                    Candidates = new List<CandidateApplication>
+                    {
+                        new CandidateApplication { CandidateId = 1, SchoolId = 2} ,
+                        new CandidateApplication { CandidateId = 2, SchoolId = 2} ,
+                    },
                 },
                 new School
                 {

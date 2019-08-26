@@ -18,23 +18,20 @@
     {
         private readonly UserManager<SystemUser> userManager;
         private readonly IRepository<Parent> parentsRepository;
-        private readonly IRepository<AddressDetails> addressesRepository;
         private readonly IAddressesService addressesService;
         private readonly IDistrictsService districtsService;
-
 
         public ParentsService(
             UserManager<SystemUser> userManager,
             IRepository<Parent> parentsRepository,
             IAddressesService addressesService,
-            IDistrictsService districtsService,
-            IRepository<AddressDetails> addressesRepository)
+            IDistrictsService districtsService
+            )
         {
             this.userManager = userManager;
             this.parentsRepository = parentsRepository;
             this.addressesService = addressesService;
             this.districtsService = districtsService;
-            this.addressesRepository = addressesRepository;
         }
 
         public async Task<bool> Create(ClaimsPrincipal userIdentity, ParentServiceModel parentServiceModel)
@@ -143,10 +140,10 @@
             parentToEdit.UCN = parentToEdit.UCN;
             parentToEdit.Role = parentToEdit.Role;
 
-            this.addressesRepository.Update(addressToEdit);
+            await this.addressesService.UpdateRepository(addressToEdit);
+
             this.parentsRepository.Update(parentToEdit);
             var result = await this.parentsRepository.SaveChangesAsync();
-            result = await this.addressesRepository.SaveChangesAsync();
 
             return result > 0;
         }

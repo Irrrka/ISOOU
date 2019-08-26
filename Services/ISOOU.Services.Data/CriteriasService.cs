@@ -1,4 +1,5 @@
-﻿using ISOOU.Data.Common.Repositories;
+﻿using ISOOU.Common;
+using ISOOU.Data.Common.Repositories;
 using ISOOU.Services.Data.Contracts;
 using ISOOU.Services.Mapping;
 using ISOOU.Services.Models;
@@ -31,7 +32,7 @@ namespace ISOOU.Data.Models
 
             if (id == 0)
             {
-                throw new ArgumentNullException(nameof(criteriaName));
+                throw new NullReferenceException(string.Format(GlobalConstants.NullReferenceCriteriaName, criteriaName));
             }
 
             return id;
@@ -74,7 +75,7 @@ namespace ISOOU.Data.Models
                 result = await this.criteriasForCandidatesRepository.SaveChangesAsync();
             }
 
-            return result>0;
+            return result > 0;
         }
     }
 }

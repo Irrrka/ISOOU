@@ -5,21 +5,21 @@
     using System.Threading.Tasks;
 
     using ISOOU.Data;
-    using ISOOU.Services.Mapping;
     using ISOOU.Data.Models;
-    using Xunit;
     using ISOOU.Services.Data.Contracts;
-    using Microsoft.Extensions.DependencyInjection;
-    using System;
+    using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
-    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.DependencyInjection;
+    using Xunit;
 
     public class SearchServiceTests : BaseServiceTests
     {
         private ISearchService SearchServiceMock =>
             this.ServiceProvider.GetRequiredService<ISearchService>();
+
         private IDistrictsService DistrictsServiceMock =>
             this.ServiceProvider.GetRequiredService<IDistrictsService>();
+
         private ISchoolsService SchoolsServiceMock =>
             this.ServiceProvider.GetRequiredService<ISchoolsService>();
 
@@ -32,8 +32,8 @@
             this.SeedTestData(this.DbContext);
             var schools = this.DbContext.Schools.To<SchoolServiceModel>().ToList();
             //TODO
+            //NEED REFACTOR
         }
-
 
         private void SeedTestData(ISOOUDbContext context)
         {
@@ -56,7 +56,7 @@
                     PhoneNumber = "02/000001",
                     District = district1,
                 },
-                 new School
+                new School
                 {
                     Name = "108мо",
                     Address = "ул. Хан Кру2",
@@ -64,7 +64,7 @@
                     PhoneNumber = "02/0011101",
                     District = district1,
                 },
-                   new School
+                new School
                 {
                     Name = "109то",
                     Address = "ул. Хан Кру22",
@@ -72,7 +72,7 @@
                     PhoneNumber = "02/111111",
                     District = district2,
                 },
-                      new School
+                new School
                 {
                     Name = "110то",
                     Address = "ул. Хан Кру222",

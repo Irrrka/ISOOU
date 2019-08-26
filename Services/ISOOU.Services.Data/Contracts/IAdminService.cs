@@ -9,8 +9,6 @@
     {
         Task<bool> AdmissionProcedure();
 
-        Task<QuestionServiceModel> ReadLastMessage();
-
         string GetProcedureStatus();
 
         Task<bool> RevertAdmissionProcedure();

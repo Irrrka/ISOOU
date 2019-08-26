@@ -55,10 +55,18 @@
             services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
-           
             services.AddScoped<IDistrictsService, DistrictsService>();
             services.AddScoped<ISchoolsService, SchoolsService>();
-            
+            services.AddScoped<IAddressesService, AddressesService>();
+            services.AddScoped<ICandidatesService, CandidatesService>();
+            services.AddScoped<IParentsService, ParentsService>();
+            services.AddScoped<ISearchService, SearchService>();
+            services.AddScoped<IQuestionsService, QuestionsService>();
+            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<ICalculatorService, CalculatorService>();
+            services.AddScoped<ICloudinaryService, CloudinaryService>();
+            services.AddScoped<ICriteriasService, CriteriasService>();
+
             // Identity stores
             //services.AddTransient<IUserStore<SystemUser>, ApplicationUserStore>();
             //services.AddTransient<IRoleStore<ApplicationRole>, ApplicationRoleStore>();
@@ -77,7 +85,7 @@
 
         public void Dispose()
         {
-            DbContext.Database.EnsureDeleted();
+            this.DbContext.Database.EnsureDeleted();
             this.SetServices();
         }
     }

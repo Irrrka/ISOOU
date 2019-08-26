@@ -45,14 +45,15 @@
             services.AddDbContext<ISOOUDbContext>(
                 options => options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
 
-            Account cloudinaryCredentils = new Account(
-                this.configuration["Cloudinary:CloudName"],
-                this.configuration["Cloudinary:ApiKey"],
-                this.configuration["Cloudinary:ApiSecrets"]);
+            Account cloudinaryCredentials = new Account(
+                this.configuration["CloudinarySettings:CloudName"],
+                this.configuration["CloudinarySettings:ApiKey"],
+                this.configuration["CloudinarySettings:ApiSecret"]);
 
-            Cloudinary cloudinaryUtility = new Cloudinary(cloudinaryCredentils);
+            Cloudinary cloudinaryUtility = new Cloudinary(cloudinaryCredentials);
 
             services.AddSingleton(cloudinaryUtility);
+
 
             services
                 .AddIdentity<SystemUser, SystemRole>(options =>
@@ -116,7 +117,7 @@
             services.AddTransient<ICandidatesService, CandidatesService>();
             services.AddTransient<IParentsService, ParentsService>();
             services.AddTransient<ISearchService, SearchService>();
-            services.AddTransient<IUsersService, UsersService>();
+            services.AddTransient<IQuestionsService, QuestionsService>();
             services.AddTransient<IAdminService, AdminService>();
             services.AddTransient<IAddressesService, AddressesService>();
             services.AddTransient<ICalculatorService, CalculatorService>();

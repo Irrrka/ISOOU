@@ -37,18 +37,6 @@
             this.admissionProcedureRepository = admissionProcedureRepository;
         }
 
-        public async Task<QuestionServiceModel> ReadLastMessage()
-        {
-            var message = await this.questionsRepository
-                .All()
-                .Include(u=>u.User)
-                .OrderByDescending(x => x.CreatedOn)
-                .To<QuestionServiceModel>()
-                .FirstOrDefaultAsync();
-
-            return message;
-        }
-
         public async Task<bool> AdmissionProcedure()
         {
             AdmissionProcedure admissionProcedure = new AdmissionProcedure

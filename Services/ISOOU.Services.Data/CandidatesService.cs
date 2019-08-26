@@ -235,6 +235,7 @@
         {
             var file = input.Application;
             var url = await this.claudinaryService.UploadDocument(file, Guid.NewGuid().ToString());
+
             var candidate = this.candidateApplicationsRepository.All()
                 .FirstOrDefault(c => c.CandidateId == input.CandidateId);
             var candidateId = candidate.CandidateId;

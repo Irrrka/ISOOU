@@ -11,6 +11,7 @@
     using ISOOU.Web.ViewModels;
     using ISOOU.Web.ViewModels.Search;
 
+    //TODO Refactor ServiceModel!!!
     public class SearchService : ISearchService
     {
         private readonly ISchoolsService schoolsService;
@@ -31,7 +32,6 @@
 
             CoreValidator.EnsureNotNull(schools, GlobalConstants.SchoolNotFound);
 
-           
             List<SchoolForSearchResultViewModel> schoolsVM = this.GetSchoolsViewModel(schools);
 
             var searchFreeSpotsResultViewModel = new SearchFreeSpotsResultViewModel()
