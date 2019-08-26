@@ -75,6 +75,29 @@
                 () => this.DistrictsServiceMock.GetDistrictById(id));
     }
 
+        [Fact]
+        public async Task GetDistrictsByName_WithExistingName_ShouldReturnDistrictByName()
+        {
+            this.SeedTestData(this.DbContext);
+
+            DistrictServiceModel expected = this.DbContext.Districts.To<DistrictServiceModel>().First();
+            DistrictServiceModel actual = await this.DistrictsServiceMock.GetDistrictByName(expected.Name);
+
+            Assert.True(
+                        expected.Name == actual.Name,
+                        "DistrictsService GetDistrictByName() not works properly!");
+        }
+
+        [Fact]
+        public async Task GetDistrictsByName_WithNonExistingName_ShouldThrowNullReferenceException()
+        {
+            this.SeedTestData(this.DbContext);
+
+            string name = "Панчарево";
+            await Assert.ThrowsAsync<NullReferenceException>(
+                () => this.DistrictsServiceMock.GetDistrictByName(name));
+        }
+
         private void SeedTestData(ISOOUDbContext context)
         {
             context.Districts.AddRange(this.GetTestData());
