@@ -1,14 +1,15 @@
 ﻿namespace ISOOU.Web.ViewModels.Users
 {
     using System.ComponentModel.DataAnnotations;
+    using AutoMapper;
     using ISOOU.Common;
     using ISOOU.Data.Models;
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
 
-    public class EditCandidateInputModel : IMapFrom<CandidateServiceModel>, IMapTo<CandidateServiceModel>
+    public class EditCandidateInputModel : IMapFrom<CandidateServiceModel>, IMapTo<CandidateServiceModel>, IHaveCustomMappings
     {
-        public int Id { get; set; }
+        public int CandidateId { get; set; }
 
 
         public string UCN { get; set; }
@@ -49,5 +50,14 @@
         public string FatherFullName { get; set; }
 
         public string UserName { get; set; }
+
+        public void CreateMappings(IProfileExpression configuration)
+        {
+            configuration
+                  .CreateMap<CandidateServiceModel, EditCandidateInputModel>()
+                  .ForMember(
+                       destination => destination.CandidateId,
+                       opts => opts.MapFrom(origin => origin.Id));
+        }
     }
 }

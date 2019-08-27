@@ -6,54 +6,26 @@
     <section class="ftco-heading-2" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-1 border-right-1">
-                    <ul class="nav nav-pills mt-2 nav-justified flex-col">
-                        <li class="nav-item">
-                            <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Profile" asp-route-id="@Model.CandidateId">
-                                Профил
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Criteria" asp-route-id="@Model.CandidateId">
-                                Критерии / точки
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="AddApplications" asp-route-id="@Model.CandidateId">
-                                Кандидатури
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Documents" asp-route-id="@Model.CandidateId">
-                                Качи документи
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Edit" asp-route-id="@Model.CandidateId">
-                                Редактирай профил
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-md-8 offset-2">
-                    <div class="container justify-content-end mt-2">
-                        <div class="alert alert-info">
-                            Кандидатстването може да стане както на място в училище, така и тук! 
-                             Моля изпратете Вашето заявление в pdf-формат!
+                <partial name="_MenuPartialView" model="Model">
+                    <div class="col-md-8 offset-2">
+                        <div class="container justify-content-end mt-2">
+                            <div class="alert alert-info">
+                                Кандидатстването може да стане както на място в училище, така и тук!
+                                Моля изпратете Вашето заявление в pdf-формат!
+                            </div>
+
+                            <form asp-area="Users" asp-controller="Candidate" asp-action="Documents" method="post" enctype="multipart/form-data">
+
+                                <input hidden value="@Model.CandidateId" asp-for="CandidateId">
+                                <label asp-for="Application">
+                                    <strong>Заявление за първо желание</strong>
+                                    <input asp-for="Application" type="file" id="applicationId">
+                                    <span asp-validation-for="Application" class="text-danger"></span>
+                                    <input type="submit" class="btn btn-secondary py-3 px-4" value="Изпрати документи" />
+                                </label>
+                            </form>
                         </div>
-
-                        <form asp-area="Users" asp-controller="Candidate" asp-action="Documents" method="post" enctype="multipart/form-data">
-
-                            <input hidden value="@Model.CandidateId" asp-for="CandidateId">
-                            <label asp-for="Application">
-                                <strong>Заявление за първо желание</strong>
-                                <input asp-for="Application" type="file" id="applicationId">
-                                <span asp-validation-for="Application" class="text-danger"></span>
-                                <input type="submit" class="btn btn-secondary py-3 px-4" value="Изпрати документи" />
-                            </label>
-                        </form>
                     </div>
-                </div>
             </div>
         </div>
     </section>

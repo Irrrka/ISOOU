@@ -1,0 +1,29 @@
+﻿<div class="col-md-1 border-right-1">
+    <ul class="nav nav-pills mt-2 nav-justified flex-col">
+        <li class="nav-item mt-0.5">
+            <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Profile" asp-route-id="@Model.CandidateId">
+                Профил
+            </a>
+        </li>
+        <li class="nav-item mt-1">
+            <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Criteria" asp-route-id="@Model.CandidateId">
+                Критерии / точки
+            </a>
+        </li>
+        <li class="nav-item mt-1">
+            <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="AddApplications" asp-route-id="@Model.CandidateId">
+                Кандидатури
+            </a>
+        </li>
+        <li class="nav-item mt-1">
+            <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Documents" asp-route-id="@Model.CandidateId">
+                Качи документи
+            </a>
+        </li>
+        <li class="nav-item mt-1">
+            <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Edit" asp-route-id="@Model.CandidateId">
+                Редактирай профил
+            </a>
+        </li>
+    </ul>
+</div>

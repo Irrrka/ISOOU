@@ -6,7 +6,7 @@
     using ISOOU.Services.Mapping;
     using System.Collections.Generic;
 
-    public class ParentServiceModel : IMapFrom<Parent>, IMapTo<Parent>, IHaveCustomMappings
+    public class ParentServiceModel : IMapFrom<Parent>, IMapTo<Parent>
     {
         public int Id { get; set; }
 
@@ -40,9 +40,5 @@
 
         public ICollection<CandidateServiceModel> Candidates { get; set; }
 
-        public void CreateMappings(IProfileExpression configuration)
-        {
-            
-        }
     }
 }

@@ -2,12 +2,14 @@
 {
     using System.ComponentModel.DataAnnotations;
     using AutoMapper;
-    using ISOOU.Data.Models;
+
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
 
     public class DeleteCandidateViewModel : IMapFrom<CandidateServiceModel>, IHaveCustomMappings
     {
+        public int CandidateId { get; set; }
+
         [Display(Name = "Име")]
         public string FirstName { get; set; }
 

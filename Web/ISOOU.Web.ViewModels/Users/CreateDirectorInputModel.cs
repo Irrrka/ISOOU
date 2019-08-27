@@ -1,5 +1,6 @@
 ﻿namespace ISOOU.Web.ViewModels.Users
 {
+    using ISOOU.Common;
     using System.ComponentModel.DataAnnotations;
 
     public class CreateDirectorInputModel
@@ -17,6 +18,7 @@
         [Required]
         [StringLength(10, MinimumLength = 10)]
         [Display(Name = "ЕГН")]
+        [CorrectUCNAttribute]
         public string UCN { get; set; }
 
         [Required]

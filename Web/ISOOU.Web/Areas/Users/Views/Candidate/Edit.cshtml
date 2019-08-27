@@ -8,35 +8,7 @@
 <section class="ftco-heading-2" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-1 border-right-1">
-                <ul class="nav nav-pills mt-2 nav-justified flex-col">
-                    <li class="nav-item">
-                        <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Profile" asp-route-id="@Model.Id">
-                            Профил
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Criteria" asp-route-id="@Model.Id">
-                            Критерии / точки
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="AddApplications" asp-route-id="@Model.Id">
-                            Кандидатури
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Documents" asp-route-id="@Model.Id">
-                            Качи документи
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Edit" asp-route-id="@Model.Id">
-                            Редактирай профил
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <partial name="_MenuPartialView" model="Model">
                 <div class="col-md-6 mt-2">
                     <form id="edit-candidate" method="post">
                         <div class="form-inline mt-1 justify-content-end">
@@ -116,14 +88,14 @@
                         <div class="form-inline mt-2 justify-content-end">
                             <input type="submit" class="btn btn-secondary py-3 px-4" value="Запиши" />
                             <div class="col-2">
-                                <a class="btn btn-danger py-3 px-4" asp-area="Users" asp-controller="Candidate" asp-action="Delete" asp-route-id="@Model.Id">
+                                <a class="btn btn-danger py-3 px-4" asp-area="Users" asp-controller="Candidate" asp-action="Delete" asp-route-id="@Model.CandidateId">
                                     Изтрий
                                 </a>
                             </div>
                         </div>
                     </form>
                 </div>
-            </div>
+        </div>
         </div>
     </div>
 </section>

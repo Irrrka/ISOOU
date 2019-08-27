@@ -3,6 +3,7 @@
     using System;
     using System.ComponentModel.DataAnnotations;
     using AutoMapper;
+    using ISOOU.Common;
     using ISOOU.Data.Models;
     using ISOOU.Data.Models.Enums;
     using ISOOU.Services.Mapping;
@@ -30,6 +31,7 @@
         [Required]
         [StringLength(10, MinimumLength = 10)]
         [Display(Name = "ЕГН")]
+        [CorrectUCNAttribute]
         public string UCN { get; set; }
 
         [DataType(DataType.PhoneNumber)]

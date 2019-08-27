@@ -1,4 +1,4 @@
-﻿namespace ISOOU.Common
+﻿    namespace ISOOU.Common
 {
     using System.ComponentModel.DataAnnotations;
     using System.Linq;

@@ -97,7 +97,7 @@
             School schoolToEdit = await this.schoolRepository
                                .All()
                                .FirstOrDefaultAsync(s => s.Id == user.DirectorsSchoolId);
-            //var districtFromDb = await this.districtsService.GetDistrictById(schoolToEdit.DistrictId);
+            var districtFromDb = await this.districtsService.GetDistrictById(schoolToEdit.DistrictId);
 
             if (schoolToEdit == null)
             {
@@ -105,7 +105,7 @@
             }
 
             var model = schoolToEdit.To<SchoolServiceModel>();
-            //model.District = districtFromDb;
+            model.District = districtFromDb;
             return model;
         }
 
@@ -113,7 +113,7 @@
         {
             var schoolFromDb = await this.schoolRepository
                .All()
-               .FirstOrDefaultAsync(x => x.Id == id);
+               .SingleOrDefaultAsync(x => x.Id == id);
 
             if (schoolFromDb == null)
             {

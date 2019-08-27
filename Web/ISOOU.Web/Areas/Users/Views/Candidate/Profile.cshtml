@@ -8,52 +8,24 @@
 <section class="ftco-heading-2" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-1 border-right-1">
-                <ul class="nav nav-pills mt-2 nav-justified flex-col">
-                    <li class="nav-item">
-                        <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Profile" asp-route-id="@Model.CandidateId">
-                            Профил
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Criteria" asp-route-id="@Model.CandidateId">
-                            Критерии / точки
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="AddApplications" asp-route-id="@Model.CandidateId">
-                            Кандидатури
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Documents" asp-route-id="@Model.CandidateId">
-                            Качи документи
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Edit" asp-route-id="@Model.CandidateId">
-                            Редактирай профил
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-md-8 offset-2">
-                <div class="container justify-content-end mt-2">
-                    @if (Model.ProcedureStatus == "Finished")
-                    {
-                        @if (Model.CandidateStatus == "Admitted")
+            <partial name="_MenuPartialView" model="Model">
+                <div class="col-md-8 offset-2">
+                    <div class="container justify-content-end mt-2">
+                        @if (Model.ProcedureStatus == "Finished")
                         {
-                            <div class="alert alert-info">
-                                @Model.CandidateName е приет/а!
-                            </div>
+                            @if (Model.CandidateStatus == "Admitted")
+                            {
+                                <div class="alert alert-info">
+                                    @Model.CandidateName е приет/а!
+                                </div>
+                            }
+                            else if (Model.CandidateStatus == "NotAdmitted")
+                            {
+                                <div class="alert alert-danger">
+                                    @Model.CandidateName не е приет/а!
+                                </div>
+                            }
                         }
-                        else if (Model.CandidateStatus == "NotAdmitted")
-                        {
-                            <div class="alert alert-danger">
-                                @Model.CandidateName не е приет/а!
-                            </div>
-                        }
-                    }
                         <div class="alert alert-warning mt-3">
                             Кандидатури за следващото класиране
                         </div>
@@ -88,8 +60,8 @@
                                 </tbody>
                             }
                         </table>
+                    </div>
                 </div>
-            </div>
-        </div>
+</div>
     </div>
 </section>
