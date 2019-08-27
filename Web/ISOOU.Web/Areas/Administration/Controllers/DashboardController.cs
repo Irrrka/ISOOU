@@ -44,6 +44,11 @@
                 model = message.To<ContactFormViewModel>();
             }
 
+            if (message.SystemUserId == null)
+            {
+                model.UserEmail = "Unregistered user";
+            }
+
             model.AdmissionProcedureStatus = this.adminService.GetProcedureStatus();
 
             return this.View(model);

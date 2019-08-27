@@ -1,10 +1,15 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using ISOOU.Data.Common.Repositories;
+using ISOOU.Data.Models;
 using ISOOU.Services.Data.Contracts;
+using ISOOU.Services.Mapping;
+using ISOOU.Services.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,10 +18,12 @@ namespace ISOOU.Services.Data
     public class CloudinaryService : ICloudinaryService
     {
         private readonly Cloudinary cloudinaryUtility;
+        private readonly IRepository<Document> documentsRepository;
 
-        public CloudinaryService(Cloudinary cloudinaryUtility)
+        public CloudinaryService(Cloudinary cloudinaryUtility, IRepository<Document> documentsRepository)
         {
             this.cloudinaryUtility = cloudinaryUtility;
+            this.documentsRepository = documentsRepository;
         }
 
         public async Task<string> UploadDocument(IFormFile docFile, string fileName)
@@ -44,6 +51,15 @@ namespace ISOOU.Services.Data
 
             return uploadResult?.SecureUri.AbsoluteUri;
 
+        }
+
+        public IQueryable<DocumentServiceModel> ViewDocuments(int schoolId)
+        {
+            var documents = this.documentsRepository.All()
+                .Where(s => s.SchoolId == schoolId)
+                .To<DocumentServiceModel>();
+
+            return documents;
         }
     }
 }

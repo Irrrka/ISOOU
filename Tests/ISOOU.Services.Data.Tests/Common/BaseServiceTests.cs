@@ -2,7 +2,8 @@
 {
     using System;
     using System.Reflection;
-
+    using AutoMapper.Configuration;
+    using CloudinaryDotNet;
     using ISOOU.Data;
     using ISOOU.Data.Common.Repositories;
     using ISOOU.Data.Models;
@@ -21,7 +22,6 @@
         protected BaseServiceTests()
         {
             var services = this.SetServices();
-
             this.ServiceProvider = services.BuildServiceProvider();
             this.DbContext = this.ServiceProvider.GetRequiredService<ISOOUDbContext>();
         }

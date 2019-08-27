@@ -60,14 +60,14 @@
 
             var parents = this.parentsService.GetParents(userIdentity);
 
-            if (parents.FirstOrDefault().User.UserName != this.User.Identity.Name)
-            {
-                return this.View("_AccessDenied");
-            }
-
             if (parents.ToList().Count <= 1)
             {
                 return this.BadRequest(GlobalConstants.TwoParents);
+            }
+
+            if (parents.FirstOrDefault().User.UserName != this.User.Identity.Name)
+            {
+                return this.View("_AccessDenied");
             }
 
             var motherFullName = await this.parentsService
@@ -276,9 +276,16 @@
         }
 
         [HttpGet]
-        public IActionResult Documents(int id, CreateDocumentInputModel input)
+        public async Task<IActionResult> Documents(int id, CreateDocumentInputModel input)
         {
             input.CandidateId = id;
+            var candidate = await this.candidatesService.GetCandidateById(id);
+
+            if (candidate.Applications.Count == 0)
+            {
+                return this.BadRequest(GlobalConstants.ApplicationsNotFound);
+            }
+
             return this.View(input);
         }
 
@@ -290,7 +297,12 @@
                 return this.NotFound(GlobalConstants.DocumentNotFound);
             }
 
-            await this.candidatesService.CreateDocumentSubmission(input);
+            if (!input.Application.FileName.Contains(".pdf"))
+            {
+                return this.BadRequest(GlobalConstants.DocumentNotSupport);
+            }
+
+            await this.candidatesService.CreateDocument(input);
 
             return this.Redirect("/");
         }
@@ -343,7 +355,17 @@
                 return this.View("_AccessDenied");
             }
 
-            var allSchools = this.schoolsService
+            IQueryable<SchoolServiceModel> allSchools = null;
+
+            if (candidate.MotherId == 1 || candidate.MotherId == 2
+                || candidate.FatherId == 1 || candidate.FatherId == 2)
+            {
+                allSchools = this.schoolsService
+                .GetAllSchools();
+            }
+            else
+            {
+                allSchools = this.schoolsService
                 .GetAllSchools()
                 .Where(x => x.District.Id == candidate.Mother.Address.PermanentDistrictId
                     || x.District.Id == candidate.Mother.Address.CurrentDistrictId
@@ -351,6 +373,7 @@
                     || x.District.Id == candidate.Father.Address.CurrentDistrictId
                     || x.District.Id == candidate.Mother.WorkDistrictId
                     || x.District.Id == candidate.Father.WorkDistrictId);
+            }
 
             this.ViewData["AllSchools"] = allSchools
                 .Select(p => new AddSchoolApplicationsViewModel { Id = p.Id, Name = p.Name, DistrictName = p.District.Name })

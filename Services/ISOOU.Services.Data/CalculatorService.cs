@@ -336,22 +336,22 @@
             return totalScores;
         }
 
-        public async Task<int> EditBasicScoresForManyBrothersAndSisters(int candidateId)
+        public async Task<bool> EditBasicScoresForManyBrothersAndSisters(int candidateId)
         {
-            var candidate = await this.candidatesRepository
-                               .All()
-                               .Include(c => c.Criterias)
-                               .FirstOrDefaultAsync(p => p.Id == candidateId);
+            //var candidate = await this.candidatesRepository
+            //                   .All()
+            //                   .Include(c => c.Criterias)
+            //                   .FirstOrDefaultAsync(p => p.Id == candidateId);
 
             var criteriaId = await this.criteriasService
                 .GetIdByCriteriaName(nameof(GlobalConstants.HasManyBrothersOrSistersCriteria));
-            var candCrit = this.criteriaForCandidatesRepository.All()
-                .Where(c => c.CandidateId == candidate.Id).ToList();
+            //var candCrit = this.criteriaForCandidatesRepository.All()
+            //    .Where(c => c.CandidateId == candidate.Id).ToList();
 
-            if (candCrit.Any(c => c.CriteriaId == criteriaId))
-            {
-                return candidate.BasicScores;
-            }
+            //if (candCrit.Any(c => c.CriteriaId == criteriaId))
+            //{
+            //    return candidate.BasicScores;
+            //}
 
             var criteriaForCandidate = new CriteriaForCandidate
             {
@@ -360,10 +360,10 @@
                 CriteriaId = criteriaId,
             };
             await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
-            await this.candidatesRepository.SaveChangesAsync();
+            var result = await this.candidatesRepository.SaveChangesAsync();
 
-            var basicScores = candidate.Criterias.Sum(x => x.Criteria.Scores);
-            return basicScores;
+            //var basicScores = candidate.Criterias.Sum(x => x.Criteria.Scores);
+            return result > 0;
         }
 
         public int CalculateCoeficientByYear(int yearOfBirth)

@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+
     using AutoMapper;
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
@@ -19,12 +20,13 @@
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            //configuration
-            //  .CreateMap<SchoolServiceModel, AdmitedCandidatesViewModel>()
-            //    .ForMember(
-            //       destination => destination.AdmittedCandidatesCandidateFullNameUCN,
-            //       opts => opts.MapFrom(origin => origin.AdmittedCandidates
-            //       .Select(x => x.Candidate.FullName + " " + x.Candidate.UCN)));
+            configuration
+              .CreateMap<SchoolServiceModel, NotAdmitedCandidatesViewModel>()
+              .ForMember(
+                   destination => destination.NotAdmittedCandidates,
+                   opts => opts.MapFrom(origin => origin.Candidates
+                   .Where(c => c.Candidate.Status == Data.Models.CandidateStatus.NotAdmitted)
+                   .Select(c => c.Candidate.FullName)));
         }
     }
 }

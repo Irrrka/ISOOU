@@ -75,7 +75,7 @@
         {
             var procedure = await this.admissionProcedureRepository.All()
                 .LastOrDefaultAsync();
-            procedure.Status = AdmissionProcedureStatus.Waiting;
+            procedure.Status = AdmissionProcedureStatus.Reverted;
             this.admissionProcedureRepository.Update(procedure);
             var result = await this.admissionProcedureRepository.SaveChangesAsync();
 
@@ -130,23 +130,5 @@
 
             return result > 0;
         }
-
-        private async Task<List<CandidateApplication>> FinishAdmissionProcedure(List<CandidateApplication> participatedCandidates)
-        {
-            foreach (var candidate in participatedCandidates)
-            {
-                var schoolId = candidate.SchoolId;
-                var freeSpots = (await this.schoolRepository.All().Where(s => s.Id == schoolId).FirstOrDefaultAsync()).FreeSpots;
-
-                var admitted = participatedCandidates.Take(freeSpots).ToList();
-                candidate.Candidate.Status = CandidateStatus.Admitted;
-
-                var notAdmitted = participatedCandidates.Skip(freeSpots).ToList();
-                candidate.Candidate.Status = CandidateStatus.NotAdmitted;
-            }
-
-            return participatedCandidates;
-        }
-
     }
 }

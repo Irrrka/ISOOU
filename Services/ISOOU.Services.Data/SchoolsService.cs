@@ -52,10 +52,8 @@
 
         public IQueryable<SchoolServiceModel> GetAllSchools()
         {
-            var schools = this.schoolRepository
-                .All()
-                .Include(c => c.Candidates)
-                .To<SchoolServiceModel>();
+            var schools = this.schoolRepository.All()
+                 .To<SchoolServiceModel>();
 
             return schools;
         }

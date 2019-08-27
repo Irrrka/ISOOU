@@ -1,18 +1,16 @@
 ﻿namespace ISOOU.Services.Data.Tests
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
     using ISOOU.Data;
-    using ISOOU.Services.Mapping;
     using ISOOU.Data.Models;
-    using Xunit;
     using ISOOU.Services.Data.Contracts;
-    using Microsoft.Extensions.DependencyInjection;
-    using System;
-    using ISOOU.Services.Models;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.DependencyInjection;
+    using Xunit;
 
     public class CriteriasServiceTests : BaseServiceTests
     {

@@ -6,6 +6,6 @@
     {
         Finished = 10,
         NotFinished = 0,
-        Waiting = 5,
+        Reverted = 5,
     }
 }

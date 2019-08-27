@@ -60,7 +60,7 @@
         public static readonly int SecondWishApplicationSchoolCriteria = 2;
         public static readonly int ThirdWishApplicationSchoolCriteria = 1;
 
-        // ExceptionMessages
+        //ExceptionMessages
         public static readonly string DistrictNotFound = "Моля изберете район";
         public static readonly string ParentNotFound = "Няма намерен родител";
         public static readonly string CandidateNotFound = "Няма намерен кандидате";
@@ -70,11 +70,14 @@
         public static readonly string UniqueParentRole = "Потребителят не може да въвежда две майки/бащи!";
         public static readonly string TwoParents = "Въведете двама родителя преди да въведете кандидат!";
         public static readonly string DocumentNotFound = "Не е намерен документ!";
+        public static readonly string DocumentNotSupport = "Моля изпратете Вашето заявление в pdf-формат!";
+        public static readonly string ApplicationsNotFound = "Моля въведете желаното училище преди да качите своето заявление!";
 
         //NullReference
         public static readonly string NullReferenceSchoolId = "School with id {0} not found.";
         public static readonly string NullReferenceDistrictId = "District with id {0} not found.";
         public static readonly string NullReferenceAddressId = "Address with id {0} not found.";
         public static readonly string NullReferenceCriteriaName = "Criteria with name {0} not found.";
+        public static readonly string NullReferenceParentId = "Parent with id {0} not found.";
     }
 }

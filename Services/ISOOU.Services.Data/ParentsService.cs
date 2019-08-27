@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
-
+    using ISOOU.Common;
     using ISOOU.Data.Common.Repositories;
     using ISOOU.Data.Models;
     using ISOOU.Data.Models.Enums;
@@ -38,7 +38,7 @@
         {
             if (parentServiceModel == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(parentServiceModel));
             }
 
             var userId = this.userManager.GetUserId(userIdentity);
@@ -115,10 +115,10 @@
         public async Task<bool> Edit(int id, ParentServiceModel parentServiceModel)
         {
             Parent parentToEdit = await this.parentsRepository.All()
-                             .FirstOrDefaultAsync(p => p.Id == parentServiceModel.Id);
+                             .FirstOrDefaultAsync(p => p.Id == id);
             if (parentToEdit == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(string.Format(GlobalConstants.NullReferenceParentId, id));
             }
 
             parentToEdit.WorkDistrictId = parentServiceModel.WorkDistrictId;
@@ -128,8 +128,8 @@
             parentToEdit.Address.PermanentCity = parentServiceModel.Address.PermanentCity;
             parentToEdit.Address.Current = parentServiceModel.Address.Current;
             parentToEdit.Address.Permanent = parentServiceModel.Address.Permanent;
-            var addressToEdit = (await this.parentsRepository.All()
-                                    .SingleOrDefaultAsync(a => a.AddressId == parentServiceModel.AddressId)).Address;
+            //var addressToEdit = (await this.parentsRepository.All()
+                      //              .SingleOrDefaultAsync(a => a.AddressId == parentServiceModel.AddressId)).Address;
 
             parentToEdit.FirstName = parentServiceModel.FirstName;
             parentToEdit.MiddleName = parentServiceModel.MiddleName;
@@ -140,7 +140,7 @@
             parentToEdit.UCN = parentToEdit.UCN;
             parentToEdit.Role = parentToEdit.Role;
 
-            await this.addressesService.UpdateRepository(addressToEdit);
+            //await this.addressesService.UpdateRepository(addressToEdit);
 
             this.parentsRepository.Update(parentToEdit);
             var result = await this.parentsRepository.SaveChangesAsync();
@@ -157,7 +157,7 @@
 
             if (parent == null)
             {
-                throw new ArgumentNullException(nameof(parent));
+                throw new ArgumentNullException(string.Format(GlobalConstants.NullReferenceParentId, id));
             }
 
             AddressDetailsServiceModel address = (await this.addressesService.GetAddressDetailsById(parent.AddressId))
@@ -165,19 +165,13 @@
 
             if (address == null)
             {
-                throw new ArgumentNullException(nameof(address));
+                throw new ArgumentNullException(string.Format(GlobalConstants.NullReferenceAddressId, address.Id));
             }
 
             DistrictServiceModel workDistrict = await this.districtsService.GetDistrictById(parent.WorkDistrictId);
 
-            if (workDistrict == null)
-            {
-                throw new ArgumentNullException(nameof(workDistrict));
-            }
-
             parent.WorkDistrict = workDistrict;
             parent.Address = address;
-
 
             return parent;
         }
@@ -191,7 +185,7 @@
 
             if (parentToDelete == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(string.Format(GlobalConstants.NullReferenceParentId, id));
             }
 
             parentToDelete.IsDeleted = true;

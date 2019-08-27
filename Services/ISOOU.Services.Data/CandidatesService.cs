@@ -20,12 +20,14 @@
     public class CandidatesService : ICandidatesService
     {
         private readonly UserManager<SystemUser> userManager;
-        private readonly IParentsService parentsService;
+
         private readonly IRepository<Candidate> candidatesRepository;
         private readonly IRepository<CandidateApplication> candidateApplicationsRepository;
-        private readonly ICriteriasService criteriasService;
-        private readonly IRepository<CandidateApplication> schoolCandidateRepository;
         private readonly IRepository<Document> documentRepository;
+        private readonly IRepository<CandidateApplication> schoolCandidateRepository;
+
+        private readonly IParentsService parentsService;
+        private readonly ICriteriasService criteriasService;
         private readonly ISchoolsService schoolService;
         private readonly ICalculatorService calculatorService;
         private readonly ICloudinaryService claudinaryService;
@@ -58,7 +60,7 @@
         {
             if (model == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(model));
             }
 
             var userId = this.userManager.GetUserId(userIdentity);
@@ -90,15 +92,18 @@
             result = await this.candidatesRepository.SaveChangesAsync();
 
             var brothersAndSusters = await this.candidatesRepository.All()
-                .Where(u => u.UserId == userId).ToListAsync();
+                .Where(u => u.UserId == userId)
+                .Include(c => c.Criterias)
+                .ToListAsync();
 
             if (brothersAndSusters.Count >= GlobalConstants.ChildrenInFamily)
             {
                 foreach (var bro in brothersAndSusters)
                 {
-                    if (bro.Id != candidateId && !bro.Criterias.Any(c => c.Name == nameof(GlobalConstants.HasManyBrothersOrSistersCriteria)))
+                    if (bro.Id != candidateId
+                        && !bro.Criterias.Any(c => c.Name == nameof(GlobalConstants.HasManyBrothersOrSistersCriteria)))
                     {
-                        bro.BasicScores = await this.calculatorService.EditBasicScoresForManyBrothersAndSisters(bro.Id);
+                        await this.calculatorService.EditBasicScoresForManyBrothersAndSisters(bro.Id);
                     }
                 }
             }
@@ -231,7 +236,7 @@
             return result > 0;
         }
 
-        public async Task<bool> CreateDocumentSubmission(CreateDocumentInputModel input)
+        public async Task<bool> CreateDocument(CreateDocumentInputModel input)
         {
             var file = input.Application;
             var url = await this.claudinaryService.UploadDocument(file, Guid.NewGuid().ToString());

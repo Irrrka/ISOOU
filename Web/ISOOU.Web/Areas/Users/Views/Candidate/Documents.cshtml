@@ -39,14 +39,14 @@
                     <div class="container justify-content-end mt-2">
                         <div class="alert alert-info">
                             Кандидатстването може да стане както на място в училище, така и тук! 
-                            Моля, изпратете Вашето заявление в pdf-формат!
+                             Моля изпратете Вашето заявление в pdf-формат!
                         </div>
 
                         <form asp-area="Users" asp-controller="Candidate" asp-action="Documents" method="post" enctype="multipart/form-data">
 
                             <input hidden value="@Model.CandidateId" asp-for="CandidateId">
                             <label asp-for="Application">
-                                Заявление
+                                <strong>Заявление за първо желание</strong>
                                 <input asp-for="Application" type="file" id="applicationId">
                                 <span asp-validation-for="Application" class="text-danger"></span>
                                 <input type="submit" class="btn btn-secondary py-3 px-4" value="Изпрати документи" />

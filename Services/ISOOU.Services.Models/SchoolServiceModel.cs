@@ -1,18 +1,15 @@
-﻿using System.Collections.Generic;
-
-using ISOOU.Data.Common.Models;
-using ISOOU.Data.Models;
-using ISOOU.Services.Mapping;
-
-namespace ISOOU.Services.Models
+﻿namespace ISOOU.Services.Models
 {
+    using System.Collections.Generic;
+
+    using ISOOU.Data.Models;
+    using ISOOU.Services.Mapping;
+
     public class SchoolServiceModel : IMapFrom<School>, IMapTo<School>
     {
         public SchoolServiceModel()
         {
             this.Candidates = new HashSet<CandidateApplicationServiceModel>();
-            //this.AdmittedNames = new HashSet<string>();
-            //this.NotAdmittedNames = new HashSet<string>();
         }
 
         public int Id { get; set; }
@@ -38,9 +35,5 @@ namespace ISOOU.Services.Models
         public int FreeSpots { get; set; }
 
         public ICollection<CandidateApplicationServiceModel> Candidates { get; set; }
-
-       // public ICollection<string> AdmittedNames { get; set; }
-
-//        public ICollection<string> NotAdmittedNames { get; set; }
     }
 }

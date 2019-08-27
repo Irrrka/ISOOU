@@ -17,17 +17,23 @@
     public class HomeController : DirectorsController
     {
         private readonly ISchoolsService schoolsService;
+        private readonly ICandidatesService candidatesService;
+        private readonly ICloudinaryService cloudinaryService;
         private readonly IDistrictsService districtsService;
         private readonly UserManager<SystemUser> userManager;
 
         public HomeController(
             ISchoolsService schoolsService,
             IDistrictsService districtsService,
+            ICloudinaryService cloudinaryService,
+            ICandidatesService candidatesService,
             UserManager<SystemUser> userManager)
         {
             this.schoolsService = schoolsService;
             this.districtsService = districtsService;
             this.userManager = userManager;
+            this.cloudinaryService = cloudinaryService;
+            this.candidatesService = candidatesService;
         }
 
         [HttpGet]
@@ -112,5 +118,26 @@
 
             return this.Redirect("/");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ViewDocuments()
+        {
+            var userIdentity = this.User.Identity.Name;
+
+            SchoolServiceModel directorsSchool = await this.schoolsService.GetSchoolForEdit(userIdentity);
+
+            if (directorsSchool == null)
+            {
+                return this.Redirect("/");
+            }
+
+            var documents = this.cloudinaryService
+                .ViewDocuments(directorsSchool.Id)
+                .To<ViewDocumentViewModel>()
+                .ToList();
+
+            return this.View(documents);
+        }
+
     }
 }

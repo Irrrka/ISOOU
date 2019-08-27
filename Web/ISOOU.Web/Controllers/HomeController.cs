@@ -102,41 +102,24 @@
         [Authorize]
         public IActionResult Admitted()
         {
-            //TODO NOTWORKING ANYMORE MAPPING ? OR BROKEN DB!!!
-            var schools = this.schoolsService.GetAllSchools().ToList();
-            
-            //var candidateApp = this.schoolsService.GetSchoolsAndCandidates().ToList();
+            var schools = this.schoolsService
+                .GetAllSchools()
+                .To<AdmitedCandidatesViewModel>()
+                .ToList();
 
-            List<AdmitedCandidatesViewModel> models =
-                new List<AdmitedCandidatesViewModel>();
-
-            foreach (var school in schools)
-            {
-                var candidates = school.Candidates.Where(s => s.Candidate.Status == CandidateStatus.Admitted);
-                var admittedCandidatesNames = candidates.Select(n => n.Candidate.FullName).ToList();
-                models.Add(new AdmitedCandidatesViewModel { Name = school.Name, AdmittedCandidates = admittedCandidatesNames});
-            }
-
-            return this.View(models);
+            return this.View(schools);
         }
 
         [HttpGet]
         [Authorize]
         public IActionResult NotAdmitted()
         {
-            var schools = this.schoolsService.GetAllSchools().ToList();
+            var schools = this.schoolsService
+               .GetAllSchools()
+               .To<NotAdmitedCandidatesViewModel>()
+               .ToList();
 
-            List<NotAdmitedCandidatesViewModel> models =
-                new List<NotAdmitedCandidatesViewModel>();
-
-            foreach (var school in schools)
-            {
-                var candidates = school.Candidates.Where(s => s.Candidate.Status == CandidateStatus.NotAdmitted);
-                var notAdmittedCandidatesNames = candidates.Select(n => n.Candidate.FullName).ToList();
-                models.Add(new NotAdmitedCandidatesViewModel { Name = school.Name, NotAdmittedCandidates = notAdmittedCandidatesNames });
-            }
-
-            return this.View(models);
+            return this.View(schools);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

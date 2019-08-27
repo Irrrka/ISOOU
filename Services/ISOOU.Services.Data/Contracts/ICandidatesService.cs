@@ -22,6 +22,6 @@
 
         Task<bool> AddApplications(int id, List<int> schoolApplicationIds);
 
-        Task<bool> CreateDocumentSubmission(CreateDocumentInputModel input);
+        Task<bool> CreateDocument(CreateDocumentInputModel input);
     }
 }

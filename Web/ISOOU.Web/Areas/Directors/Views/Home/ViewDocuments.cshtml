@@ -1,0 +1,57 @@
+﻿@using ISOOU.Web.ViewModels.Schools;
+
+@model IEnumerable<ViewDocumentViewModel>
+@{
+    this.ViewData["Title"] = "СЕКЦИЯ ДИРЕКТОРИ";
+}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                @if (Model == null)
+                {
+                    <div class="alert alert-info">
+                        Няма кандидати!
+                    </div>
+                }
+                else
+                {
+                    <table class="table table-bordered table-hover center">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Име</th>
+                                <th>Документ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var i = 1;
+                                foreach (var doc in Model)
+                                {
+                                    <tr>
+                                        <td class="ftco-animate" height="21" style="height:21px;">
+                                            @(i++)
+                                        </td>
+                                        <td class="ftco-animate" height="21" style="height:21px;">
+                                            @doc.CandidateFullName
+                                        </td>
+                                        <td class="ftco-animate" height="21" style="height:21px;">
+                                            <a href="@doc.Url">Виж</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+
+
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
