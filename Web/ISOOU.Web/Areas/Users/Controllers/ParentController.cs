@@ -24,7 +24,6 @@
         private readonly IDistrictsService districtsService;
         private readonly IAddressesService addressesService;
 
-
         public ParentController(
             IParentsService parentsService,
             IDistrictsService districtsService,
@@ -112,12 +111,11 @@
         [HttpGet(Name = "Edit")]
         public async Task<IActionResult> Edit(int id)
         {
-            var model = (await this.parentsService.GetParentById(id))
-                                        .To<EditParentInputModel>();
+            var parent = await this.parentsService.GetParentById(id);
 
-            if (model == null)
+            if (parent == null || parent.User.UserName != this.User.Identity.Name)
             {
-                return this.Redirect("/");
+                return this.View("_AccessDenied");
             }
 
             var allParentsRole = new List<string>() { "Майка", "Баща" };
@@ -128,6 +126,8 @@
 
             var allCityNames = new List<string>() { "София", "Друг" };
             this.ViewData["CityNames"] = allCityNames;
+
+            var model = parent.To<EditParentInputModel>();
 
             return this.View(model);
         }
@@ -157,14 +157,15 @@
             address.Current = input.AddressCurrent;
             address.CurrentCity = (CityName)Enum.Parse(typeof(CityName), input.AddressCurrentCity);
             address.CurrentDistrict = await this.districtsService.GetDistrictByName(input.AddressCurrentDistrictName);
+            address.CurrentDistrictId = address.CurrentDistrict.Id;
             address.PermanentCity = (CityName)Enum.Parse(typeof(CityName), input.AddressCurrentCity);
             address.PermanentDistrict = await this.districtsService.GetDistrictByName(input.AddressPermanentDistrictName);
+            address.PermanentDistrictId = address.PermanentDistrict.Id;
 
             DistrictServiceModel workDistrict = await this.districtsService.GetDistrictByName(input.WorkDistrictName);
 
             ClaimsPrincipal userIdentity = this.User;
 
-            //ParentServiceModel parent = parentToEdit.To<ParentServiceModel>();
             parentToEdit.FirstName = input.FirstName;
             parentToEdit.MiddleName = input.MiddleName;
             parentToEdit.LastName = input.LastName;
@@ -183,10 +184,11 @@
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var parentDeleteViewModel = (await this.parentsService.GetParentById(id)).To<DeleteParentViewModel>();
-            if (parentDeleteViewModel == null)
+            var parent = await this.parentsService.GetParentById(id);
+
+            if (parent == null || parent.User.UserName != this.User.Identity.Name)
             {
-                return this.Redirect($"Edit/{id}");
+                return this.View("_AccessDenied");
             }
 
             var allParentsRole = new List<string>() { "Майка", "Баща" };
@@ -203,7 +205,9 @@
 
             this.ViewData["CityNames"] = allCityNames;
 
-            return this.View(parentDeleteViewModel);
+            var model = parent.To<DeleteParentViewModel>();
+
+            return this.View(model);
         }
 
         [HttpPost]

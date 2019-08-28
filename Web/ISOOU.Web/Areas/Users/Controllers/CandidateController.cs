@@ -146,12 +146,11 @@
         [HttpGet("/Users/Candidate/Edit")]
         public async Task<IActionResult> Edit(int id)
         {
-            var model = (await this.candidatesService.GetCandidateById(id))
-                                    .To<EditCandidateInputModel>();
+            var candidate = await this.candidatesService.GetCandidateById(id);
 
-            if (model == null)
+            if (candidate == null || candidate.User.UserName != this.User.Identity.Name)
             {
-                return this.Redirect("/");
+                return this.View("_AccessDenied");
             }
 
             var motherFullName = await this.parentsService
@@ -176,6 +175,8 @@
 
             this.ViewData["Mother"] = motherList;
             this.ViewData["Father"] = fatherList;
+
+            var model = candidate.To<EditCandidateInputModel>();
 
             return this.View(model);
         }
@@ -227,6 +228,13 @@
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
+            var candidate = await this.candidatesService.GetCandidateById(id);
+
+            if (candidate == null || candidate.User.UserName != this.User.Identity.Name)
+            {
+                return this.View("_AccessDenied");
+            }
+
             var candidateDeleteViewModel = (await this.candidatesService.GetCandidateById(id))
                 .To<DeleteCandidateViewModel>();
 
@@ -281,6 +289,11 @@
             input.CandidateId = id;
             var candidate = await this.candidatesService.GetCandidateById(id);
 
+            if (candidate == null || candidate.User.UserName != this.User.Identity.Name)
+            {
+                return this.View("_AccessDenied");
+            }
+
             if (candidate.Applications.Count == 0)
             {
                 return this.BadRequest(GlobalConstants.ApplicationsNotFound);
@@ -310,17 +323,19 @@
         [HttpGet(Name = "Criteria")]
         public async Task<IActionResult> Criteria(int id)
         {
+            CandidateServiceModel candidate = await this.candidatesService.GetCandidateById(id);
+
+            if (candidate == null || candidate.User.UserName != this.User.Identity.Name)
+            {
+                return this.View("_AccessDenied");
+            }
+
             ScoresByCriteriasOnCandidateViewModel model =
                 new ScoresByCriteriasOnCandidateViewModel();
             model.CandidateId = id;
             model.ScoresByCriteria = new List<ScoreByCriteriaOnCandidateViewModel>();
 
             IEnumerable<CriteriaForCandidateServiceModel> criteriasOfCandidate = await this.criteriasService.GetCriteriasAndScoresByCandidateId(id);
-
-            if (criteriasOfCandidate.FirstOrDefault().Candidate.User.UserName != this.User.Identity.Name)
-            {
-                return this.View("_AccessDenied");
-            }
 
             IEnumerable<CriteriaServiceModel> allcriterias = await this.criteriasService.GetAllCriterias();
 
@@ -350,7 +365,7 @@
         {
             CandidateServiceModel candidate = await this.candidatesService.GetCandidateById(id);
 
-            if (candidate.User.UserName != this.User.Identity.Name)
+            if (candidate == null || candidate.User.UserName != this.User.Identity.Name)
             {
                 return this.View("_AccessDenied");
             }
@@ -446,10 +461,9 @@
         [HttpGet(Name = "Profile")]
         public async Task<IActionResult> Profile(int id)
         {
-
             CandidateServiceModel candidate = await this.candidatesService.GetCandidateById(id);
 
-            if (candidate.User.UserName != this.User.Identity.Name)
+            if (candidate == null || candidate.User.UserName != this.User.Identity.Name)
             {
                 return this.View("_AccessDenied");
             }

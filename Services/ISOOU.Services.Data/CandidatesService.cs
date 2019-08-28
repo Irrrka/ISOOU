@@ -116,14 +116,15 @@
             var candidate = await this.candidatesRepository
                                .All()
                                .To<CandidateServiceModel>()
+                               .Include(u => u.User)
                                .Include(x => x.Mother)
                                .ThenInclude(y => y.Address)
                                .Include(x => x.Father)
                                .ThenInclude(y => y.Address)
                                .Include(z => z.Applications)
-                               .Include(a => a.BasicScores)
-                               .Include(b => b.Criterias)
+                               .Include(c => c.Criterias)
                                .SingleOrDefaultAsync(p => p.Id == id);
+
             return candidate;
         }
 

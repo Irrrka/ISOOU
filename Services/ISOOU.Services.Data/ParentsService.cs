@@ -115,32 +115,36 @@
         public async Task<bool> Edit(int id, ParentServiceModel parentServiceModel)
         {
             Parent parentToEdit = await this.parentsRepository.All()
-                             .FirstOrDefaultAsync(p => p.Id == id);
+                                            .FirstOrDefaultAsync(p => p.Id == id);
             if (parentToEdit == null)
             {
                 throw new ArgumentNullException(string.Format(GlobalConstants.NullReferenceParentId, id));
             }
-
-            parentToEdit.WorkDistrictId = parentServiceModel.WorkDistrictId;
-            parentToEdit.Address.PermanentDistrictId = parentServiceModel.Address.PermanentDistrictId;
-            parentToEdit.Address.CurrentDistrictId = parentServiceModel.Address.CurrentDistrictId;
-            parentToEdit.Address.CurrentCity = parentServiceModel.Address.CurrentCity;
-            parentToEdit.Address.PermanentCity = parentServiceModel.Address.PermanentCity;
-            parentToEdit.Address.Current = parentServiceModel.Address.Current;
-            parentToEdit.Address.Permanent = parentServiceModel.Address.Permanent;
-            //var addressToEdit = (await this.parentsRepository.All()
-                      //              .SingleOrDefaultAsync(a => a.AddressId == parentServiceModel.AddressId)).Address;
 
             parentToEdit.FirstName = parentServiceModel.FirstName;
             parentToEdit.MiddleName = parentServiceModel.MiddleName;
             parentToEdit.LastName = parentServiceModel.LastName;
             parentToEdit.PhoneNumber = parentServiceModel.PhoneNumber;
             parentToEdit.WorkName = parentServiceModel.WorkName;
+            parentToEdit.WorkDistrictId = parentServiceModel.WorkDistrictId;
 
             parentToEdit.UCN = parentToEdit.UCN;
             parentToEdit.Role = parentToEdit.Role;
 
-            //await this.addressesService.UpdateRepository(addressToEdit);
+            var addressToEdit = (await this.parentsRepository.All()
+                                    .SingleOrDefaultAsync(a => a.AddressId == parentServiceModel.AddressId)).Address;
+
+            //var currDistrictId = addressToEdit.CurrentDistrictId;
+            //var permDistrictId = addressToEdit.PermanentDistrictId;
+
+            addressToEdit.PermanentDistrictId = parentServiceModel.Address.PermanentDistrictId;
+            addressToEdit.CurrentDistrictId = parentServiceModel.Address.CurrentDistrictId;
+            addressToEdit.CurrentCity = parentServiceModel.Address.CurrentCity;
+            addressToEdit.PermanentCity = parentServiceModel.Address.PermanentCity;
+            addressToEdit.Current = parentServiceModel.Address.Current;
+            addressToEdit.Permanent = parentServiceModel.Address.Permanent;
+
+            await this.addressesService.UpdateRepository(addressToEdit);
 
             this.parentsRepository.Update(parentToEdit);
             var result = await this.parentsRepository.SaveChangesAsync();
@@ -150,28 +154,28 @@
 
         public async Task<ParentServiceModel> GetParentById(int id)
         {
-            ParentServiceModel parent = (await this.parentsRepository.All()
-                .ToListAsync())
-                .FirstOrDefault(p => p.Id == id)
-                .To<ParentServiceModel>();
+            var parent = await this.parentsRepository.All()
+                                            .To<ParentServiceModel>()
+                                            .Include(u => u.User)
+                                            .Include(a => a.Address)
+                                            .ThenInclude(d => d.CurrentDistrict)
+                                            .Include(a => a.Address)
+                                            .ThenInclude(d => d.PermanentDistrict)
+                                            .Include(w => w.WorkDistrict)
+                                            .SingleOrDefaultAsync(p => p.Id == id);
 
-            if (parent == null)
-            {
-                throw new ArgumentNullException(string.Format(GlobalConstants.NullReferenceParentId, id));
-            }
+            //AddressDetailsServiceModel address = (await this.addressesService.GetAddressDetailsById(parent.AddressId))
+            //                                        .To<AddressDetailsServiceModel>();
 
-            AddressDetailsServiceModel address = (await this.addressesService.GetAddressDetailsById(parent.AddressId))
-                                                    .To<AddressDetailsServiceModel>();
+            //if (address == null)
+            //{
+            //    throw new ArgumentNullException(string.Format(GlobalConstants.NullReferenceAddressId, address.Id));
+            //}
 
-            if (address == null)
-            {
-                throw new ArgumentNullException(string.Format(GlobalConstants.NullReferenceAddressId, address.Id));
-            }
+            //DistrictServiceModel workDistrict = await this.districtsService.GetDistrictById(parent.WorkDistrictId);
 
-            DistrictServiceModel workDistrict = await this.districtsService.GetDistrictById(parent.WorkDistrictId);
-
-            parent.WorkDistrict = workDistrict;
-            parent.Address = address;
+            //parent.WorkDistrict = workDistrict;
+            //parent.Address = address;
 
             return parent;
         }
