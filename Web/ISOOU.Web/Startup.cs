@@ -1,5 +1,6 @@
 ﻿namespace ISOOU.Web
 {
+    using System.Globalization;
     using System.Reflection;
     using AutoMapper;
     using CloudinaryDotNet;
@@ -54,6 +55,12 @@
 
             services.AddSingleton(cloudinaryUtility);
 
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.SetDefaultCulture("en");
+                options.AddSupportedCultures("en", "bg");
+                options.AddSupportedUICultures("en", "bg");
+            });
 
             services
                 .AddIdentity<SystemUser, SystemRole>(options =>
