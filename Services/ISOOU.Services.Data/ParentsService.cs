@@ -152,6 +152,7 @@
             return result > 0;
         }
 
+        //TODO cache
         public async Task<ParentServiceModel> GetParentById(int id)
         {
             var parent = await this.parentsRepository.All()

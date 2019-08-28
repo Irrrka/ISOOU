@@ -14,6 +14,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    //TODO Refactor SearchFunctionality
     public class SearchController : BaseController
     {
         private readonly ISearchService searchService;
@@ -36,37 +37,47 @@
         [HttpGet]
         public IActionResult FreeSpots()
         {
-            var allPossibleYears = this.calculatorService.GetAllPossibleYearsToApply();
-            this.ViewData["Years"] = allPossibleYears;
-
-            var allDistricts = this.districtsService.GetAllDistricts().ToList().To<SearchDistrictViewModel>();
-            this.ViewData["Districts"] = allDistricts;
+            var allDistricts = this.districtsService.GetAllDistricts().To<SearchDistrictViewModel>();
+            this.ViewData["Districts"] = allDistricts.ToList();
 
             return this.View();
         }
 
-        //TODO Route WIth Params!!!
         [HttpPost]
-        //[Route("/Search/FreeSpots/{selectedYearOfBirth}&{selectedDistrictId}")]
         public async Task<IActionResult> FreeSpots(SearchFreeSpotsInputModel input)
         {
             if (!this.ModelState.IsValid)
             {
-                var allPossibleYears = this.calculatorService.GetAllPossibleYearsToApply();
-                this.ViewData["Years"] = allPossibleYears;
-
-                var allDistricts = this.districtsService.GetAllDistricts().ToList().To<SearchDistrictViewModel>();
-                this.ViewData["Districts"] = allDistricts;
+                var allDistricts = this.districtsService.GetAllDistricts().To<SearchDistrictViewModel>();
+                this.ViewData["Districts"] = allDistricts.ToList();
 
                 return this.View();
             }
 
-            int selectedYearOfBirth = input.SelectedYearOfBirth;
-            int selectedDistrictId = input.SelectedDistrictId;
+            List<int> districtIds = new List<int>();
 
-            var result = await this.searchService.GetSearchResult(selectedDistrictId, selectedYearOfBirth);
+            //Permanent
+            if (!districtIds.Contains(input.SelectedPermanentDistrictId))
+            {
+                districtIds.Add(input.SelectedPermanentDistrictId);
+            }
 
-            return this.View("FreeSpotsByYearAndByDistrict", result);
+            //Current
+            if (!districtIds.Contains(input.SelectedCurrentDistrictId))
+            {
+                districtIds.Add(input.SelectedCurrentDistrictId);
+            }
+
+            //Work
+            if (!districtIds.Contains(input.SelectedWorkDistrictId))
+            {
+                districtIds.Add(input.SelectedWorkDistrictId);
+            }
+
+            var result = await this.searchService
+                                    .GetSearchResult(districtIds);
+
+            return this.View("FreeSpotsByDistrict", result);
         }
     }
 }

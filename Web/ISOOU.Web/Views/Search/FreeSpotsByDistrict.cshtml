@@ -1,0 +1,60 @@
+﻿@using ISOOU.Web.ViewModels.Search;
+
+@model SearchFreeSpotsResultViewModel
+
+@{
+    ViewData["Title"] = $"Свободни места по райони";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="ftco-section img" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
+    <div class="container bg">
+
+        @if (Model.SchoolsVM.Count == 0)
+        {
+            <h4 class="ftco-heading-2">НЯМА СВОБОДНИ МЕСТА ЗА ПОКАЗВАНЕ</h4>
+        }
+        else
+        {
+            <h4 class="ftco-heading-2">
+                СВОБОДНИ МЕСТА В РАЙОН/И
+                @{
+                    foreach (var district in Model.Districts)
+                    {
+                        <i>@district</i>
+                    }
+                }
+             </h4>
+                <table class="table px-4 py-3">
+                    <thead class="py-2 bg">
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">
+                                СВОБОДНИ МЕСТА
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @{
+                            @if (Model.SchoolsVM.Count != 0)
+                            {
+                                @foreach (var school in Model.SchoolsVM)
+                                {
+                                    <tr height="21" style="height:21px;">
+                                        <td height="21" style="height:21px;border-top:none;">
+                                            <a href="/Schools/Details/@school.Id">@school.Name</a>
+                                        </td>
+                                        <td height="21" style="height:21px;border-top:none;">
+                                            @school.FreeSpots
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+                }
+        </div>
+</section>
+

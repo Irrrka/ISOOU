@@ -123,6 +123,7 @@
 
                 this.ViewData["Mother"] = motherList;
                 this.ViewData["Father"] = fatherList;
+
                 return this.View(input);
             }
 
@@ -421,7 +422,7 @@
             //    });
             #endregion
             //First wish
-            if (input.FirstWishSchool!=null)
+            if (input.FirstWishSchool != null)
             {
                 int firstWishSchoolId = await this.schoolsService
                                            .GetSchoolIdByName(input.FirstWishSchool);

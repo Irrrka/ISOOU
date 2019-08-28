@@ -7,85 +7,40 @@
     using ISOOU.Common;
     using ISOOU.Data.Models;
     using ISOOU.Services.Data.Contracts;
+    using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
     using ISOOU.Web.ViewModels;
     using ISOOU.Web.ViewModels.Search;
 
-    //TODO Refactor ServiceModel!!!
+    //TODO Refactor ServiceModel
     public class SearchService : ISearchService
     {
         private readonly ISchoolsService schoolsService;
-        private readonly ICalculatorService calculatorService;
 
         public SearchService(
-            ISchoolsService schoolsService,
-            ICalculatorService calculatorService)
+            ISchoolsService schoolsService)
         {
             this.schoolsService = schoolsService;
-            this.calculatorService = calculatorService;
         }
 
-        public async Task<SearchFreeSpotsResultViewModel> GetSearchResult(int districtId, int year)
+        public async Task<SearchFreeSpotsResultViewModel> GetSearchResult(List<int> districtIds)
         {
-            IQueryable<SchoolServiceModel> schools = await this.schoolsService
-                .GetAllSchoolsByDistrictId(districtId);
+            var result = new SearchFreeSpotsResultViewModel();
 
-            CoreValidator.EnsureNotNull(schools, GlobalConstants.SchoolNotFound);
-
-            List<SchoolForSearchResultViewModel> schoolsVM = this.GetSchoolsViewModel(schools);
-
-            var searchFreeSpotsResultViewModel = new SearchFreeSpotsResultViewModel()
+            for (int i = 0; i < districtIds.Count; i++)
             {
-                DistrictName = schools.Select(d => d.District.Name).FirstOrDefault(),
-                YearOfBirth = year,
-                Result = this.GetFreeSpotsBySchool(schoolsVM, year),
-            };
-
-            return searchFreeSpotsResultViewModel;
-        }
-
-        private Dictionary<SchoolForSearchResultViewModel, int> GetFreeSpotsBySchool(List<SchoolForSearchResultViewModel> schoolsVM, int year)
-        {
-            int coefByYear = this.calculatorService.CalculateCoeficientByYear(year);
-
-            var result = new Dictionary<SchoolForSearchResultViewModel, int>();
-
-            foreach (var school in schoolsVM)
-            {
-                if (!result.ContainsKey(school))
-                {
-                    result.Add(school, school.FreeSpots);
-                }
-
+                var schoolsVM = (await this.schoolsService
+                                           .GetAllSchoolsByDistrictId(districtIds[i]))
+                                           .To<SchoolForSearchResultViewModel>();
+                result.SchoolsVM.AddRange(schoolsVM);
+                var districtName = schoolsVM.Select(d => d.DistrictName).FirstOrDefault();
+                result.Districts.Add(districtName);
             }
+
+            result.Districts.Distinct();
+            result.SchoolsVM.Distinct();
 
             return result;
-        }
-
-        private List<SchoolForSearchResultViewModel> GetSchoolsViewModel(IQueryable<SchoolServiceModel> schools)
-        {
-            var schoolsVM = new List<SchoolForSearchResultViewModel>();
-
-            foreach (var school in schools)
-            {
-                var schoolForSearchResultViewModel = new SchoolForSearchResultViewModel()
-                {
-                    Id = school.Id,
-                    Name = school.Name,
-                    Address = school.Address,
-                    DirectorName = school.DirectorName,
-                    DistrictName = school.District.Name,
-                    Email = school.Email,
-                    PhoneNumber = school.PhoneNumber,
-                    UrlOfMap = school.URLOfMap,
-                    UrlOfSchool = school.URLOfSchool,
-                    FreeSpots = school.FreeSpots,
-                };
-
-                schoolsVM.Add(schoolForSearchResultViewModel);
-            }
-
-            return schoolsVM;
         }
     }
 }

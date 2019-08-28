@@ -1,24 +1,16 @@
-﻿namespace ISOOU.Web.ViewModels.Search
-{
-    using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 
-    using ISOOU.Data.Models;
-    using ISOOU.Services.Mapping;
-
-    public class SearchFreeSpotsInputModel : IMapFrom<Candidate>, IMapFrom<District>
+namespace ISOOU.Web.ViewModels.Search
+{ 
+    public class SearchFreeSpotsInputModel
     {
-        public SearchFreeSpotsInputModel()
-        {
-            this.YearOfBirths = new List<int>();
-            this.Districts = new List<string>();
-        }
+        [Display(Name = "Район по постоянен адрес")]
+        public int SelectedPermanentDistrictId { get; set; } = 0;
 
-        public List<int> YearOfBirths { get; set; }
+        [Display(Name = "Район по настоящ")]
+        public int SelectedCurrentDistrictId { get; set; } = 0;
 
-        public int SelectedYearOfBirth { get; set; }
-
-        public List<string> Districts { get; set; }
-
-        public int SelectedDistrictId { get; set; }
+        [Display(Name = "Район по месторабота")]
+        public int SelectedWorkDistrictId { get; set; } = 0;
     }
 }

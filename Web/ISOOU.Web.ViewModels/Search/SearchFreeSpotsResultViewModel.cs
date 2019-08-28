@@ -3,19 +3,16 @@
     using System.Collections.Generic;
 
     public class SearchFreeSpotsResultViewModel
-    { 
-
+    {
         public SearchFreeSpotsResultViewModel()
         {
-            this.Result = new Dictionary<SchoolForSearchResultViewModel, int>();
+            this.SchoolsVM = new List<SchoolForSearchResultViewModel>();
+            this.Districts = new List<string>();
         }
 
-        public string DistrictName { get; set; }
+        public List<string> Districts { get; set; }
 
-        public int YearOfBirth { get; set; }
+        public List<SchoolForSearchResultViewModel> SchoolsVM { get; set; }
 
-        public List<SchoolForSearchResultViewModel> Schools { get; set; }
-
-        public Dictionary<SchoolForSearchResultViewModel, int> Result { get; set; }
     }
 }

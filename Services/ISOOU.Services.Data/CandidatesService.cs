@@ -111,6 +111,7 @@
             return result > 0;
         }
 
+        //TODO cache
         public async Task<CandidateServiceModel> GetCandidateById(int id)
         {
             var candidate = await this.candidatesRepository

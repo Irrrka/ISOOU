@@ -3,39 +3,58 @@
 @model SearchFreeSpotsInputModel
 
 @{
-    ViewData["Title"] = $"Свободни места по район и по година";
+    ViewData["Title"] = $"Свободни места по район";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-    <section class="ftco-section img" id="section-search" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
+    <section class="ftco-section img" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
         <div class="container">
             <div id="searchForm" class="row justify-content-center">
                 <div class="col-md-6 py-5 px-md-5 bg">
                     <div class="heading-section heading-section-black ftco-animate mb-5">
-                        <span class="subheading">Въведете година на раждане и район по постоянен адрес</span>
+                        <span class="subheading">Въведете район по постоянен, настоящ адрес или месторабота</span>
                         <form asp-area="" asp-controller="Search" asp-action="FreeSpots" method="post">
-                            <hr />
                             <div class="row d-flex">
                                 <div class="form-group col-10">
                                     <div class="form-group">
-                                        <label asp-for="SelectedDistrictId">РАЙОН</label>
-                                        <select class="form-control text-primary" asp-for="SelectedDistrictId">
-                                            <option selected disabled>---Изберете район---</option>
+                                        <label asp-for="SelectedPermanentDistrictId">РАЙОН по постоянен адрес</label>
+                                        <select class="form-control text-primary" asp-for="SelectedPermanentDistrictId">
+                                            <option value="18">Неизвестен</option>
                                             @foreach (var district in (IEnumerable<ISOOU.Web.ViewModels.Search.SearchDistrictViewModel>)this.ViewData["Districts"])
                                             {
                                                 <option value="@district.Id">@district.Name</option>
                                             }
                                         </select>
-                                        <span asp-validation-for="SelectedDistrictId" class="text-danger"></span>
-                                    
-                                        <label asp-for="SelectedYearOfBirth">НАБОР</label>
-                                        <select class="form-control text-primary" asp-for="SelectedYearOfBirth">
-                                            <option selected disabled>---Изберете набор---</option>
-                                            @foreach (var year in (IEnumerable<int>)this.ViewData["Years"])
+                                        <span asp-validation-for="SelectedPermanentDistrictId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row d-flex">
+                                <div class="form-group col-10">
+                                    <div class="form-group">
+                                        <label asp-for="SelectedCurrentDistrictId">РАЙОН по настоящ адрес</label>
+                                        <select class="form-control text-primary" asp-for="SelectedCurrentDistrictId">
+                                            <option value="18">Неизвестен</option>
+                                            @foreach (var district in (IEnumerable<ISOOU.Web.ViewModels.Search.SearchDistrictViewModel>)this.ViewData["Districts"])
                                             {
-                                                <option value="@year">@year</option>
+                                                <option value="@district.Id">@district.Name</option>
                                             }
                                         </select>
-                                        <span asp-validation-for="SelectedYearOfBirth" class="text-danger"></span>
+                                        <span asp-validation-for="SelectedCurrentDistrictId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row d-flex">
+                                <div class="form-group col-10">
+                                    <div class="form-group">
+                                        <label asp-for="SelectedWorkDistrictId">РАЙОН по месторабота</label>
+                                        <select class="form-control text-primary" asp-for="SelectedWorkDistrictId">
+                                            <option value="18">Неизвестен</option>
+                                            @foreach (var district in (IEnumerable<ISOOU.Web.ViewModels.Search.SearchDistrictViewModel>)this.ViewData["Districts"])
+                                            {
+                                                <option value="@district.Id">@district.Name</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="SelectedWorkDistrictId" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
