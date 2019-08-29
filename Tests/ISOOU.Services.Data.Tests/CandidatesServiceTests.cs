@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
     using ISOOU.Data;
@@ -20,13 +19,14 @@
         private ICandidatesService CandidatesServiceMock =>
             this.ServiceProvider.GetRequiredService<ICandidatesService>();
 
-        //Task<bool> Create(ClaimsPrincipal userIdentity, CandidateServiceModel model);
-        //IQueryable<CandidateServiceModel> GetCandidates();
-        //Task<CandidateServiceModel> GetCandidateById(int id);
-        //Task<bool> Edit(int id, ClaimsPrincipal userIdentity, CandidateServiceModel candidateServiceModel);
-        //Task<bool> Delete(int id);
-        //Task<bool> AddApplications(int id, List<int> schoolApplicationIds);
+        //TODO How to test with Cloudinary
+
         //Task<bool> CreateDocumentSubmission(CreateDocumentInputModel input);
+
+        //Task<bool> Create(ClaimsPrincipal userIdentity, CandidateServiceModel model);
+        //Task<bool> Edit(int id, ClaimsPrincipal userIdentity, CandidateServiceModel candidateServiceModel);
+
+        //Task<bool> AddApplications(int id, List<int> schoolApplicationIds);
 
         [Fact]
         public async Task GetCandidateById_WithCorrectInputData_ShouldReturnCandidate()
@@ -60,14 +60,61 @@
         [Fact]
         public async Task GetCandidateById_WithInCorrectId_ShouldReturnNullRef()
         {
-            this.SeedTestData(this.DbContext);
-
             int id = 100;
-            await Assert.ThrowsAsync<ArgumentNullException>(
-                () => this.CandidatesServiceMock.GetCandidateById(id));
+            var candidate = await this.CandidatesServiceMock.GetCandidateById(id);
+            Assert.True(
+                        candidate == null,
+                        "CandidatesService GetCandidateById() not works properly!");
         }
 
+        [Fact]
+        public void GetCandidates_WithSeededData_ShouldReturnCandidateList()
+        {
+            this.SeedTestData(this.DbContext);
 
+            var expected = this.DbContext.Candidates.To<CandidateServiceModel>().ToList();
+
+            var actual = this.CandidatesServiceMock.GetCandidates().ToList();
+
+            Assert.True(
+                        expected.Count == actual.Count,
+                        "CandidatesService GetCandidates() not works properly!");
+        }
+
+        [Fact]
+        public void GetCandidates_WithNoCandidates_ShouldReturnEmptyList()
+        {
+            var actual = this.CandidatesServiceMock.GetCandidates().ToList();
+
+            Assert.True(
+                        actual.Count == 0,
+                        "CandidatesService GetCandidates() not works properly!");
+        }
+
+        [Fact]
+        public void Delete_WithSeededData_ShouldDeleteCandidate()
+        {
+            this.SeedTestData(this.DbContext);
+
+            var candidateTodelete = this.DbContext.Candidates.To<CandidateServiceModel>().First().Id;
+
+            var actual = this.CandidatesServiceMock.Delete(candidateTodelete);
+            var deletedCandidate = this.DbContext.Candidates.To<CandidateServiceModel>()
+                                            .FirstOrDefault(i=>i.Id == candidateTodelete);
+
+            Assert.True(
+                        deletedCandidate == null,
+                        "CandidatesService Delete() not works properly!");
+        }
+
+        [Fact]
+        public async Task Delete_WithIncorrectData_ShouldThrowNullRef()
+        {
+            int id = 100;
+            var candidate = await this.CandidatesServiceMock.Delete(id);
+            await Assert.ThrowsAsync<ArgumentNullException>(
+                        () => this.CandidatesServiceMock.Delete(id));
+        }
 
         private void SeedTestData(ISOOUDbContext context)
         {

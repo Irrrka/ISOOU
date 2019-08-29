@@ -9,7 +9,6 @@
     using ISOOU.Services.Models;
     using ISOOU.Services.Mapping;
     using ISOOU.Web.Areas.Users.Controllers;
-    using ISOOU.Web.Areas.Users.Models;
     using ISOOU.Web.ViewModels.Users;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;

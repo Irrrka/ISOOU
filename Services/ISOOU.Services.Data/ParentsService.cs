@@ -1,6 +1,7 @@
 ﻿namespace ISOOU.Services.Data
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -134,9 +135,6 @@
             var addressToEdit = (await this.parentsRepository.All()
                                     .SingleOrDefaultAsync(a => a.AddressId == parentServiceModel.AddressId)).Address;
 
-            //var currDistrictId = addressToEdit.CurrentDistrictId;
-            //var permDistrictId = addressToEdit.PermanentDistrictId;
-
             addressToEdit.PermanentDistrictId = parentServiceModel.Address.PermanentDistrictId;
             addressToEdit.CurrentDistrictId = parentServiceModel.Address.CurrentDistrictId;
             addressToEdit.CurrentCity = parentServiceModel.Address.CurrentCity;
@@ -144,7 +142,7 @@
             addressToEdit.Current = parentServiceModel.Address.Current;
             addressToEdit.Permanent = parentServiceModel.Address.Permanent;
 
-            await this.addressesService.UpdateRepository(addressToEdit);
+            var addressResult = await this.addressesService.UpdateRepository(addressToEdit);
 
             this.parentsRepository.Update(parentToEdit);
             var result = await this.parentsRepository.SaveChangesAsync();
@@ -164,19 +162,6 @@
                                             .ThenInclude(d => d.PermanentDistrict)
                                             .Include(w => w.WorkDistrict)
                                             .SingleOrDefaultAsync(p => p.Id == id);
-
-            //AddressDetailsServiceModel address = (await this.addressesService.GetAddressDetailsById(parent.AddressId))
-            //                                        .To<AddressDetailsServiceModel>();
-
-            //if (address == null)
-            //{
-            //    throw new ArgumentNullException(string.Format(GlobalConstants.NullReferenceAddressId, address.Id));
-            //}
-
-            //DistrictServiceModel workDistrict = await this.districtsService.GetDistrictById(parent.WorkDistrictId);
-
-            //parent.WorkDistrict = workDistrict;
-            //parent.Address = address;
 
             return parent;
         }

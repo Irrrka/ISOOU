@@ -4,15 +4,11 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using ISOOU.Common;
-    using ISOOU.Data.Models;
     using ISOOU.Services.Data.Contracts;
     using ISOOU.Services.Mapping;
-    using ISOOU.Services.Models;
     using ISOOU.Web.ViewModels;
     using ISOOU.Web.ViewModels.Search;
 
-    //TODO Refactor ServiceModel
     public class SearchService : ISearchService
     {
         private readonly ISchoolsService schoolsService;

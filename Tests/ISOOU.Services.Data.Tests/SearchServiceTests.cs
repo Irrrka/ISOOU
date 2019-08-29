@@ -9,6 +9,7 @@
     using ISOOU.Services.Data.Contracts;
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
+    using ISOOU.Web.ViewModels.Search;
     using Microsoft.Extensions.DependencyInjection;
     using Xunit;
 
@@ -24,16 +25,64 @@
             this.ServiceProvider.GetRequiredService<ISchoolsService>();
 
 
-        [Theory]
-        [InlineData(2012, 2)]
-        [InlineData(2013, 1)]
-        public async Task GetSearchResult_WithCorrectInputData_ShouldReturnCorrectData(int year, int distriId)
+        [Fact]
+        public async Task GetSearchResult_WithCorrectInputData_ShouldReturnSearchResult()
         {
             this.SeedTestData(this.DbContext);
-            var schools = this.DbContext.Schools.To<SchoolServiceModel>().ToList();
-            //TODO
-            //NEED REFACTOR
+            var permanentDistrictId = this.DbContext.Schools.Select(d => d.DistrictId).First();
+            var currentDistrictId = this.DbContext.Schools.Select(d => d.DistrictId).Last();
+            var districtsIds = new List<int> { permanentDistrictId, currentDistrictId };
+            var schools = new List<string>();
+
+            foreach (var id in districtsIds)
+            {
+                schools.Add(this.DbContext.Schools.FirstOrDefault(d => d.DistrictId == id).Name);
+            }
+
+            var actual = await this.SearchServiceMock.GetSearchResult(districtsIds);
+
+            foreach (var data in actual.SchoolsVM)
+            {
+                Assert.True(
+                        schools.Contains(data.Name),
+                        "SearchService GetSearchResult() not works properly!");
+            }
         }
+
+        [Fact]
+        public async Task GetSearchResult_WithNoInputData_ShouldReturnEmptyList()
+        {
+            this.SeedTestData(this.DbContext);
+            this.DbContext.Districts.Add(new District { Id = 1000, Name = "Неизвестен" });
+            await this.DbContext.SaveChangesAsync();
+
+            var workDistrictId = 1000;
+            var districtsIds = new List<int> { workDistrictId };
+            //var schools = new List<string>();
+
+            var actual = await this.SearchServiceMock.GetSearchResult(districtsIds);
+
+            Assert.True(
+                    actual.SchoolsVM.Count == 0,
+                    "SearchService GetSearchResult() not works properly!");
+        }
+
+        [Fact]
+        public async Task GetSearchResult_WithRepeatedInputData_ShouldReturnDistinctListt()
+        {
+            this.SeedTestData(this.DbContext);
+            var permanentDistrictId = this.DbContext.Schools.Select(d => d.DistrictId).First();
+            var currentDistrictId = this.DbContext.Schools.Select(d => d.DistrictId).First();
+            var districtsIds = new List<int> { permanentDistrictId, currentDistrictId };
+            var expected = this.DbContext.Schools.Where(d => d.DistrictId == permanentDistrictId).ToList();
+
+            var actual = await this.SearchServiceMock.GetSearchResult(districtsIds);
+            //???
+            Assert.True(
+                    actual.SchoolsVM.Count == expected.Count,
+                    "SearchService GetSearchResult() not works properly!");
+        }
+
 
         private void SeedTestData(ISOOUDbContext context)
         {
@@ -43,9 +92,6 @@
 
         private List<School> GetTestData()
         {
-            var district1 = new District { Id = 77, Name = "Капана" };
-            var district2 = new District { Id = 88, Name = "Меден Рудник" };
-
             return new List<School>
             {
                 new School
@@ -54,7 +100,7 @@
                     Address = "ул. Хан Крум",
                     DirectorName = "Мария Мария",
                     PhoneNumber = "02/000001",
-                    District = district1,
+                    District = new District { Id = 77, Name = "Капана" },
                 },
                 new School
                 {
@@ -62,7 +108,7 @@
                     Address = "ул. Хан Кру2",
                     DirectorName = "Мария Мария Mariq",
                     PhoneNumber = "02/0011101",
-                    District = district1,
+                    District = new District { Id = 88, Name = "Меден Рудник" },
                 },
                 new School
                 {
@@ -70,15 +116,7 @@
                     Address = "ул. Хан Кру22",
                     DirectorName = "Мария Мария Mariq Мария",
                     PhoneNumber = "02/111111",
-                    District = district2,
-                },
-                new School
-                {
-                    Name = "110то",
-                    Address = "ул. Хан Кру222",
-                    DirectorName = "Мария Мария Mariq Мария Мария",
-                    PhoneNumber = "02/111111",
-                    District = district2,
+                    District = new District { Id = 99, Name = "Железен Рудник" },
                 },
             };
         }

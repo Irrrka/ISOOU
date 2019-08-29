@@ -56,8 +56,6 @@
 
             var result = await this.StartAdmissionProcedure(admissionProcedure);
 
-            //admissionProcedure.ParticipatedCandidates = await this.FinishAdmissionProcedure(admissionProcedure.ParticipatedCandidates.ToList());
-
             return result;
         }
 

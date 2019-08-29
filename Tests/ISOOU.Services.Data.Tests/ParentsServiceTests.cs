@@ -9,9 +9,8 @@
     using ISOOU.Data;
     using ISOOU.Data.Models;
     using ISOOU.Services.Data.Contracts;
-    using ISOOU.Services.Models;
     using ISOOU.Services.Mapping;
-
+    using ISOOU.Services.Models;
     using Microsoft.Extensions.DependencyInjection;
     using Xunit;
 
@@ -20,14 +19,13 @@
         private IParentsService ParentssServiceMock =>
             this.ServiceProvider.GetRequiredService<IParentsService>();
 
+        //TODO How to test with ClaimsPrincipal
+
         //Task<bool> Create(ClaimsPrincipal userIdentity, ParentServiceModel parentServiceModel);
         //IQueryable<ParentServiceModel> GetParents(ClaimsPrincipal userIdentity);
         //IQueryable<ParentServiceModel> GetParentsWithOtherAndNull(ClaimsPrincipal userIdentity);
         //Task<string> GetParentFullNameByRole(ClaimsPrincipal userIdentity, ParentRole role);
         //Task<int> GetParentIdByFullName(ClaimsPrincipal userIdentity, string fullName);
-        //Task<ParentServiceModel> GetParentById(int id);
-        //Task<bool> Edit(int id, ParentServiceModel parentServiceModel);
-        //Task<bool> Delete(int id);
         //Task<string> GetParentsRoleByUser(ClaimsPrincipal userIdentity);
 
         [Fact]
@@ -54,13 +52,15 @@
         }
 
         [Fact]
-        public async Task GetParentById_WithInCorrectId_ShouldReturnNullRef()
+        public async Task GetParentById_WithInCorrectId_ShouldReturnNull()
         {
             this.SeedTestData(this.DbContext);
 
             int id = 100;
-            await Assert.ThrowsAsync<ArgumentNullException>(
-                () => this.ParentssServiceMock.GetParentById(id));
+            var parent = await this.ParentssServiceMock.GetParentById(id);
+            Assert.True(
+                       parent == null,
+                       "ParentsService GetParentById() not works properly!");
         }
 
         [Fact]

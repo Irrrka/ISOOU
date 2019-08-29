@@ -1,10 +1,8 @@
 ﻿namespace ISOOU.Web.ViewModels
 {
-    using System.Collections.Generic;
     using AutoMapper;
     using ISOOU.Services.Mapping;
     using ISOOU.Services.Models;
-    using ISOOU.Web.ViewModels.Schools;
 
     public class SchoolForSearchResultViewModel : IMapFrom<SchoolServiceModel>, IMapTo<SchoolServiceModel>, IHaveCustomMappings
     {

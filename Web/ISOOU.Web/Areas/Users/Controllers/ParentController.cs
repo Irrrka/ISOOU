@@ -21,17 +21,20 @@
     {
 
         private readonly IParentsService parentsService;
+        private readonly ICandidatesService candidatesService;
         private readonly IDistrictsService districtsService;
         private readonly IAddressesService addressesService;
 
         public ParentController(
             IParentsService parentsService,
             IDistrictsService districtsService,
-            IAddressesService addressesService)
+            IAddressesService addressesService,
+            ICandidatesService candidatesService)
         {
             this.parentsService = parentsService;
             this.districtsService = districtsService;
             this.addressesService = addressesService;
+            this.candidatesService = candidatesService;
         }
 
         [HttpGet(Name = "Create")]
@@ -177,6 +180,13 @@
             parentToEdit.Role = (ParentRole)Enum.Parse(typeof(ParentRole), input.ParentRole);
 
             await this.parentsService.Edit(id, parentToEdit);
+
+            var candidatesOfParents = this.candidatesService.GetCandidatesOfParent(id).ToList();
+
+            foreach (var candidate in candidatesOfParents)
+            {
+                await this.candidatesService.EditDataFromParents(candidate.Id);
+            }
 
             return this.Redirect("/");
         }

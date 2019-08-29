@@ -67,10 +67,9 @@
                     Name = nameof(GlobalConstants.HasAllTheImmunizations),
                     CandidateId = candidateId,
                     CriteriaId = criteriaId,
-                    // SchId = 0,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
-                await this.candidatesRepository.SaveChangesAsync();
+                await this.criteriaForCandidatesRepository.SaveChangesAsync();
             }
 
             if (candidate.Desease == true)
@@ -82,10 +81,9 @@
                     Name = nameof(GlobalConstants.HasDeseasCriteria),
                     CandidateId = candidateId,
                     CriteriaId = criteriaId,
-                    //  SchId = 0,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
-                await this.candidatesRepository.SaveChangesAsync();
+                await this.criteriaForCandidatesRepository.SaveChangesAsync();
             }
 
             if (candidate.SEN == true)
@@ -97,10 +95,9 @@
                     Name = nameof(GlobalConstants.HasSENCriteria),
                     CandidateId = candidateId,
                     CriteriaId = criteriaId,
-                    //  SchId = 0,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
-                await this.candidatesRepository.SaveChangesAsync();
+                await this.criteriaForCandidatesRepository.SaveChangesAsync();
             }
 
             if (candidate.KinderGarten != null)
@@ -112,10 +109,9 @@
                     Name = nameof(GlobalConstants.HasVisitKGCriteria),
                     CandidateId = candidateId,
                     CriteriaId = criteriaId,
-                    //  SchId = 0,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
-                await this.candidatesRepository.SaveChangesAsync();
+                await this.criteriaForCandidatesRepository.SaveChangesAsync();
             }
 
             if ((motherFullName == ParentRole.Няма.ToString() && fatherFullName == ParentRole.Няма.ToString())
@@ -130,7 +126,7 @@
                     CriteriaId = criteriaId,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
-                await this.candidatesRepository.SaveChangesAsync();
+                await this.criteriaForCandidatesRepository.SaveChangesAsync();
             }
             else if ((motherFullName == ParentRole.Няма.ToString() || fatherFullName == ParentRole.Няма.ToString())
             || (motherFullName == ParentRole.Друг.ToString() || fatherFullName == ParentRole.Друг.ToString()))
@@ -144,7 +140,7 @@
                     CriteriaId = criteriaId,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
-                await this.candidatesRepository.SaveChangesAsync();
+                await this.criteriaForCandidatesRepository.SaveChangesAsync();
             }
 
             if (candidate.Mother.WorkName != null)
@@ -158,7 +154,7 @@
                     CriteriaId = criteriaId,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
-                await this.candidatesRepository.SaveChangesAsync();
+                await this.criteriaForCandidatesRepository.SaveChangesAsync();
             }
 
             if (candidate.Father.WorkName != null)
@@ -172,7 +168,7 @@
                     CriteriaId = criteriaId,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
-                await this.candidatesRepository.SaveChangesAsync();
+                await this.criteriaForCandidatesRepository.SaveChangesAsync();
             }
 
             if (candidate.Mother.Address.PermanentCity == CityName.София || candidate.Father.Address.PermanentCity == CityName.София)
@@ -186,7 +182,7 @@
                     CriteriaId = criteriaId,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
-                await this.candidatesRepository.SaveChangesAsync();
+                await this.criteriaForCandidatesRepository.SaveChangesAsync();
             }
             else if (candidate.Mother.Address.CurrentCity == CityName.София || candidate.Father.Address.CurrentCity == CityName.София)
             {
@@ -199,7 +195,7 @@
                     CriteriaId = criteriaId,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
-                await this.candidatesRepository.SaveChangesAsync();
+                await this.criteriaForCandidatesRepository.SaveChangesAsync();
             }
 
             if (brothersOrSisters.Count >= GlobalConstants.ChildrenInFamily)
@@ -213,7 +209,7 @@
                     CriteriaId = criteriaId,
                 };
                 await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
-                await this.candidatesRepository.SaveChangesAsync();
+                await this.criteriaForCandidatesRepository.SaveChangesAsync();
             }
 
             var basicScores = candidate.Criterias.Sum(x => x.Criteria.Scores);
@@ -299,7 +295,7 @@
 
             return criteriaScores;
         }
-
+        //TODO Scalability
         public int CalculateAdditionalScoresForNumberOfWish(int numOfWish)
         {
             int result = 0;

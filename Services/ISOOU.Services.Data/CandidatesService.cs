@@ -145,7 +145,7 @@
                                                     .FirstOrDefaultAsync(p => p.Id == id);
             if (candidateToEdit == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(string.Format(GlobalConstants.NullReferenceCandidateId, id));
             }
 
             var userId = this.userManager.GetUserId(userIdentity);
@@ -169,7 +169,40 @@
             var result = await this.candidatesRepository.SaveChangesAsync();
 
             await this.criteriasService.DeleteCriteriasByCandidateId(candidateToEdit.Id);
-            await this.calculatorService.CalculateBasicScoresByCriteria(candidateToEdit.Id);
+            int basicScores = await this.calculatorService.CalculateBasicScoresByCriteria(id);
+            candidateToEdit.BasicScores = basicScores;
+
+            this.candidatesRepository.Update(candidateToEdit);
+            result = await this.candidatesRepository.SaveChangesAsync();
+
+            return result > 0;
+        }
+
+        public IQueryable<CandidateServiceModel> GetCandidatesOfParent(int parentId)
+        {
+            var candidatesOfParents = this.candidatesRepository.All()
+                                            .Where(p => p.MotherId == parentId || p.FatherId == parentId)
+                                            .To<CandidateServiceModel>();
+
+            return candidatesOfParents;
+        }
+
+        public async Task<bool> EditDataFromParents(int id)
+        {
+            Candidate candidateToEdit = await this.candidatesRepository.All()
+                                                    .FirstOrDefaultAsync(p => p.Id == id);
+            if (candidateToEdit == null)
+            {
+                throw new ArgumentNullException(string.Format(GlobalConstants.NullReferenceCandidateId, id));
+            }
+
+            await this.criteriasService.DeleteCriteriasByCandidateId(candidateToEdit.Id);
+            int basicScores = await this.calculatorService.CalculateBasicScoresByCriteria(id);
+            candidateToEdit.BasicScores = basicScores;
+
+            this.candidatesRepository.Update(candidateToEdit);
+            var result = await this.candidatesRepository.SaveChangesAsync();
+
             return result > 0;
         }
 
@@ -181,7 +214,7 @@
 
             if (candidateToDelete == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(string.Format(GlobalConstants.NullReferenceCandidateId, id));
             }
 
             candidateToDelete.IsDeleted = true;
@@ -199,7 +232,7 @@
 
             if (candidateFomDb == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(string.Format(GlobalConstants.NullReferenceCandidateId, id));
             }
 
             var result = 0;

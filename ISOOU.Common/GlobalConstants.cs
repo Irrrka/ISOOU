@@ -79,5 +79,6 @@
         public static readonly string NullReferenceAddressId = "Address with id {0} not found.";
         public static readonly string NullReferenceCriteriaName = "Criteria with name {0} not found.";
         public static readonly string NullReferenceParentId = "Parent with id {0} not found.";
+        public static readonly string NullReferenceCandidateId = "Candidate with id {0} not found.";
     }
 }

@@ -1,26 +1,22 @@
 ﻿namespace ISOOU.Web.Areas.Users
 {
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
 
+    using ISOOU.Common;
     using ISOOU.Data.Models;
     using ISOOU.Data.Models.Enums;
     using ISOOU.Services.Data.Contracts;
-    using ISOOU.Services.Models;
     using ISOOU.Services.Mapping;
+    using ISOOU.Services.Models;
     using ISOOU.Web.Areas.Users.Controllers;
-    using ISOOU.Web.Areas.Users.Models;
+    using ISOOU.Web.ViewModels.Schools;
     using ISOOU.Web.ViewModels.Users;
-    using ISOOU.Web.ViewModels.Districts;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
-    using System;
-    using System.Collections.Generic;
-    using ISOOU.Web.ViewModels.Schools;
-    using ISOOU.Web.ViewModels.Search;
-    using ISOOU.Common;
-    using System.Security.Claims;
 
     public class CandidateController : UserController
     {
@@ -487,8 +483,8 @@
                 model.ScoresByApplications.Add(schApp.School.Name, totalScores);
             }
 
-            var sortedApplications = model.ScoresByApplications.OrderByDescending(x=>x.Value);
-            model.ScoresByApplications = sortedApplications.ToDictionary(x=>x.Key, y=>y.Value);
+            var sortedApplications = model.ScoresByApplications.OrderByDescending(x => x.Value);
+            model.ScoresByApplications = sortedApplications.ToDictionary(x => x.Key, y => y.Value);
 
             return this.View(model);
         }

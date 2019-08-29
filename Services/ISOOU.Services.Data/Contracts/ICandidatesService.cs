@@ -18,6 +18,10 @@
 
         Task<bool> Edit(int id, ClaimsPrincipal userIdentity, CandidateServiceModel candidateServiceModel);
 
+        IQueryable<CandidateServiceModel> GetCandidatesOfParent(int parentId);
+
+        Task<bool> EditDataFromParents(int id);
+
         Task<bool> Delete(int id);
 
         Task<bool> AddApplications(int id, List<int> schoolApplicationIds);

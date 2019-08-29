@@ -1,17 +1,18 @@
-﻿using ISOOU.Common;
-using ISOOU.Data.Common.Repositories;
-using ISOOU.Services.Data.Contracts;
-using ISOOU.Services.Mapping;
-using ISOOU.Services.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ISOOU.Data.Models
+﻿namespace ISOOU.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using ISOOU.Common;
+    using ISOOU.Data.Common.Repositories;
+    using ISOOU.Services.Data.Contracts;
+    using ISOOU.Services.Mapping;
+    using ISOOU.Services.Models;
+    using Microsoft.EntityFrameworkCore;
+
     public class CriteriasService : ICriteriasService
     {
         private readonly IRepository<Criteria> criteriasRepository;
