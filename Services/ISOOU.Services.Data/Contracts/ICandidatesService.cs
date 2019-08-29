@@ -20,8 +20,6 @@
 
         IQueryable<CandidateServiceModel> GetCandidatesOfParent(int parentId);
 
-        Task<bool> EditDataFromParents(int id);
-
         Task<bool> Delete(int id);
 
         Task<bool> AddApplications(int id, List<int> schoolApplicationIds);

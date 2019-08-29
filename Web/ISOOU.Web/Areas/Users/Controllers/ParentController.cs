@@ -22,6 +22,7 @@
 
         private readonly IParentsService parentsService;
         private readonly ICandidatesService candidatesService;
+        private readonly ICalculatorService calculatorService;
         private readonly IDistrictsService districtsService;
         private readonly IAddressesService addressesService;
 
@@ -29,11 +30,13 @@
             IParentsService parentsService,
             IDistrictsService districtsService,
             IAddressesService addressesService,
+            ICalculatorService calculatorService,
             ICandidatesService candidatesService)
         {
             this.parentsService = parentsService;
             this.districtsService = districtsService;
             this.addressesService = addressesService;
+            this.calculatorService = calculatorService;
             this.candidatesService = candidatesService;
         }
 
@@ -185,7 +188,7 @@
 
             foreach (var candidate in candidatesOfParents)
             {
-                await this.candidatesService.EditDataFromParents(candidate.Id);
+                await this.calculatorService.EditBasicScoresByCriteria(candidate.Id);
             }
 
             return this.Redirect("/");

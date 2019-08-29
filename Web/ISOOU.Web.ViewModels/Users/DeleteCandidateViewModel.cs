@@ -10,6 +10,8 @@
     {
         public int CandidateId { get; set; }
 
+        public string CandidateName { get; set; }
+
         [Display(Name = "Име")]
         public string FirstName { get; set; }
 

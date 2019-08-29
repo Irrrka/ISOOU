@@ -14,6 +14,8 @@ namespace ISOOU.Web.ViewModels.Users
 
         public int CandidateId { get; set; }
 
+        public string CandidateName { get; set; }
+
         public List<ScoreByCriteriaOnCandidateViewModel> ScoresByCriteria { get; set; }
     }
 }

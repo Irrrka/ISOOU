@@ -11,26 +11,24 @@
     {
         public int CandidateId { get; set; }
 
+        public string CandidateName{ get; set; }
 
+        [Display(Name = "ЕГН*")]
         public string UCN { get; set; }
-
-
-        public int YearOfBirth { get; set; }
-
 
         [Required]
         [StringLength(20, MinimumLength = 2)]
-        [Display(Name = "Име")]
+        [Display(Name = "Име*")]
         public string FirstName { get; set; }
 
         [Required]
-        [StringLength(20, MinimumLength = 4)]
-        [Display(Name = "Презиме")]
+        [StringLength(20)]
+        [Display(Name = "Презиме*")]
         public string MiddleName { get; set; }
 
         [Required]
         [StringLength(40, MinimumLength = 4)]
-        [Display(Name = "Фамилия")]
+        [Display(Name = "Фамилия*")]
         public string LastName { get; set; }
 
         [Display(Name = "Име на посещавана ДГ")]

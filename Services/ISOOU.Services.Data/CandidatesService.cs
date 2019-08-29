@@ -71,7 +71,6 @@
                 MiddleName = model.MiddleName,
                 LastName = model.LastName,
                 UCN = model.UCN,
-                YearOfBirth = model.YearOfBirth,
                 UserId = userId,
                 MotherId = model.MotherId,
                 FatherId = model.FatherId,
@@ -91,6 +90,7 @@
             this.candidatesRepository.Update(candidate);
             result = await this.candidatesRepository.SaveChangesAsync();
 
+            //Refactor:SeparateMethod
             var brothersAndSusters = await this.candidatesRepository.All()
                 .Where(u => u.UserId == userId)
                 .Include(c => c.Criterias)
@@ -111,7 +111,7 @@
             return result > 0;
         }
 
-        //TODO cache
+        //TODO cache / Mapping goes Last!!!
         public async Task<CandidateServiceModel> GetCandidateById(int id)
         {
             var candidate = await this.candidatesRepository
@@ -152,7 +152,6 @@
 
             candidateToEdit.UserId = userId;
             candidateToEdit.UCN = candidateToEdit.UCN;
-            candidateToEdit.YearOfBirth = candidateToEdit.YearOfBirth;
 
             candidateToEdit.Desease = candidateServiceModel.Desease;
             candidateToEdit.SEN = candidateServiceModel.SEN;
@@ -185,25 +184,6 @@
                                             .To<CandidateServiceModel>();
 
             return candidatesOfParents;
-        }
-
-        public async Task<bool> EditDataFromParents(int id)
-        {
-            Candidate candidateToEdit = await this.candidatesRepository.All()
-                                                    .FirstOrDefaultAsync(p => p.Id == id);
-            if (candidateToEdit == null)
-            {
-                throw new ArgumentNullException(string.Format(GlobalConstants.NullReferenceCandidateId, id));
-            }
-
-            await this.criteriasService.DeleteCriteriasByCandidateId(candidateToEdit.Id);
-            int basicScores = await this.calculatorService.CalculateBasicScoresByCriteria(id);
-            candidateToEdit.BasicScores = basicScores;
-
-            this.candidatesRepository.Update(candidateToEdit);
-            var result = await this.candidatesRepository.SaveChangesAsync();
-
-            return result > 0;
         }
 
         public async Task<bool> Delete(int id)

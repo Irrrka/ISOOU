@@ -20,5 +20,7 @@ namespace ISOOU.Services.Data.Contracts
         int CalculateTotalScoreForTheAdmissionProcedure(int candidateId, int schoolId);
 
         Task<bool> EditBasicScoresForManyBrothersAndSisters(int candidateId);
+
+        Task<bool> EditBasicScoresByCriteria(int candidateId);
     }
 }

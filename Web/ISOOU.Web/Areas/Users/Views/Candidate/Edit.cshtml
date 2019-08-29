@@ -1,6 +1,6 @@
 ﻿@model ISOOU.Web.ViewModels.Users.EditCandidateInputModel
 @{
-    ViewData["Title"] = "Деца";
+    ViewData["Title"] = "Редактиране на дете";
 
 }
 <section class="ftco-heading-2" style="background-image: url(/images/bg_4.jpg);" data-stellar-background-ratio="0.5">
@@ -29,11 +29,6 @@
                             <label asp-for="LastName"></label>
                             <input asp-for="LastName" value="@Model.LastName" />
                             <span asp-validation-for="LastName" class="text-danger"></span>
-                        </div>
-                        <div class="form-inline mt-1 justify-content-end">
-                            <label asp-for="YearOfBirth">Година на раждане</label>
-                            <input asp-for="YearOfBirth" value="@Model.YearOfBirth" disabled />
-                            <span asp-validation-for="YearOfBirth" class="text-danger"></span>
                         </div>
                         <div class="form-inline mt-1 justify-content-end">
                             <label asp-for="KinderGarten"></label>

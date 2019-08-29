@@ -18,6 +18,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
+    //TODO cache CandidateId, CandidateName
     public class CandidateController : UserController
     {
         private readonly UserManager<SystemUser> userManager;
@@ -174,7 +175,7 @@
             this.ViewData["Father"] = fatherList;
 
             var model = candidate.To<EditCandidateInputModel>();
-
+            model.CandidateName = candidate.FullName;
             return this.View(model);
         }
 
@@ -232,10 +233,10 @@
                 return this.View("_AccessDenied");
             }
 
-            var candidateDeleteViewModel = (await this.candidatesService.GetCandidateById(id))
+            var model = (await this.candidatesService.GetCandidateById(id))
                 .To<DeleteCandidateViewModel>();
 
-            if (candidateDeleteViewModel == null)
+            if (model == null)
             {
                 return this.Redirect($"Edit/{id}");
             }
@@ -262,8 +263,8 @@
 
             this.ViewData["Mother"] = motherList;
             this.ViewData["Father"] = fatherList;
-
-            return this.View(candidateDeleteViewModel);
+            model.CandidateName = candidate.FullName;
+            return this.View(model);
         }
 
         [HttpPost]
@@ -295,7 +296,7 @@
             {
                 return this.BadRequest(GlobalConstants.ApplicationsNotFound);
             }
-
+            input.CandidateName = candidate.FullName;
             return this.View(input);
         }
 
@@ -336,7 +337,6 @@
 
             IEnumerable<CriteriaServiceModel> allcriterias = await this.criteriasService.GetAllCriterias();
 
-
             foreach (var criteriaOfCandidate in criteriasOfCandidate)
             {
                 ScoreByCriteriaOnCandidateViewModel criteriaModel =
@@ -353,7 +353,7 @@
 
                 model.ScoresByCriteria.Add(criteriaModel);
             }
-
+            model.CandidateName = candidate.FullName;
             return this.View(model);
         }
 
@@ -393,7 +393,7 @@
 
             AddApplicationsInputModel model = new AddApplicationsInputModel();
             model.CandidateId = candidate.Id;
-
+            model.CandidateName = candidate.FullName;
             return this.View("AddApplications", model);
         }
 
@@ -485,7 +485,7 @@
 
             var sortedApplications = model.ScoresByApplications.OrderByDescending(x => x.Value);
             model.ScoresByApplications = sortedApplications.ToDictionary(x => x.Key, y => y.Value);
-
+            model.CandidateName = candidate.FullName;
             return this.View(model);
         }
     }

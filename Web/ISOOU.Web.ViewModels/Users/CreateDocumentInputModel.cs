@@ -16,6 +16,8 @@ namespace ISOOU.Web.ViewModels.Users
 
         public int CandidateId { get; set; }
 
+        public string CandidateName { get; set; }
+
         public int SchoolId { get; set; }
 
     }

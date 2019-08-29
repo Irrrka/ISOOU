@@ -2,7 +2,12 @@
     <ul class="nav nav-pills mt-2 nav-justified flex-col">
         <li class="nav-item mt-0.5">
             <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Profile" asp-route-id="@Model.CandidateId">
-                Профил
+                Профил - <strong>@Model.CandidateName</strong>
+            </a>
+        </li>
+        <li class="nav-item mt-1">
+            <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Edit" asp-route-id="@Model.CandidateId">
+                Редактирай профил
             </a>
         </li>
         <li class="nav-item mt-1">
@@ -18,11 +23,6 @@
         <li class="nav-item mt-1">
             <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Documents" asp-route-id="@Model.CandidateId">
                 Качи документи
-            </a>
-        </li>
-        <li class="nav-item mt-1">
-            <a class="btn btn-outline-primary" asp-area="Users" asp-controller="Candidate" asp-action="Edit" asp-route-id="@Model.CandidateId">
-                Редактирай профил
             </a>
         </li>
     </ul>

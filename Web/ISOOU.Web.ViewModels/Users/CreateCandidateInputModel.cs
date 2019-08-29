@@ -1,8 +1,9 @@
 ﻿namespace ISOOU.Web.ViewModels.Users
 {
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
+
     using AutoMapper;
+
     using ISOOU.Common;
     using ISOOU.Data.Models;
     using ISOOU.Services.Mapping;
@@ -14,30 +15,24 @@
 
         [Required]
         [StringLength(20, MinimumLength = 2)]
-        [Display(Name = "Име")]
+        [Display(Name = "Име*")]
         public string FirstName { get; set; }
 
         [Required]
-        [StringLength(20, MinimumLength = 4)]
-        [Display(Name = "Презиме")]
+        [StringLength(20)]
+        [Display(Name = "Презиме*")]
         public string MiddleName { get; set; }
 
         [Required]
         [StringLength(40, MinimumLength = 4)]
-        [Display(Name = "Фамилия")]
+        [Display(Name = "Фамилия*")]
         public string LastName { get; set; }
 
         [Required]
         [StringLength(10, MinimumLength = 10)]
-        [Display(Name = "ЕГН")]
+        [Display(Name = "ЕГН*")]
         [CorrectUCNAttribute]
         public string UCN { get; set; }
-
-        [Required]
-        [Display(Name = "Година на раждане")]
-        [CorrectYearAttribute]
-        [EqualUCNandYearOfBirthAttribute("UCN")]
-        public int YearOfBirth { get; set; }
 
         [Display(Name = "Име на посещавана ДГ")]
         public string KinderGarten { get; set; }

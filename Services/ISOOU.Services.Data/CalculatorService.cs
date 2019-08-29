@@ -356,9 +356,28 @@
                 CriteriaId = criteriaId,
             };
             await this.criteriaForCandidatesRepository.AddAsync(criteriaForCandidate);
-            var result = await this.candidatesRepository.SaveChangesAsync();
+            var result = await this.criteriaForCandidatesRepository.SaveChangesAsync();
 
             //var basicScores = candidate.Criterias.Sum(x => x.Criteria.Scores);
+            return result > 0;
+        }
+
+        public async Task<bool> EditBasicScoresByCriteria(int candidateId)
+        {
+            Candidate candidateToEdit = await this.candidatesRepository.All()
+                                                    .FirstOrDefaultAsync(p => p.Id == candidateId);
+            if (candidateToEdit == null)
+            {
+                throw new ArgumentNullException(string.Format(GlobalConstants.NullReferenceCandidateId, candidateId));
+            }
+
+            await this.criteriasService.DeleteCriteriasByCandidateId(candidateToEdit.Id);
+            int basicScores = await this.CalculateBasicScoresByCriteria(candidateId);
+            candidateToEdit.BasicScores = basicScores;
+
+            this.candidatesRepository.Update(candidateToEdit);
+            var result = await this.candidatesRepository.SaveChangesAsync();
+
             return result > 0;
         }
 
