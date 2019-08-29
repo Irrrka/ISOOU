@@ -18,7 +18,7 @@
 
         Task<bool> Edit(int id, ClaimsPrincipal userIdentity, CandidateServiceModel candidateServiceModel);
 
-        IQueryable<CandidateServiceModel> GetCandidatesOfParent(int parentId);
+        IQueryable<CandidateServiceModel> GetCandidatesOfParent(ClaimsPrincipal userIdentity, int parentId);
 
         Task<bool> Delete(int id);
 

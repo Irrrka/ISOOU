@@ -138,6 +138,25 @@
 
             await this.candidatesService.Create(userIdentity, model);
 
+            var candidatesOfMother = this.candidatesService.GetCandidatesOfParent(userIdentity, model.MotherId).ToList();
+            var candidatesOfFather = this.candidatesService.GetCandidatesOfParent(userIdentity, model.FatherId).ToList();
+
+            if (candidatesOfFather.Count >= GlobalConstants.ChildrenInFamily)
+            {
+                foreach (var candidate in candidatesOfFather)
+                {
+                    await this.calculatorService.EditBasicScoresByCriteria(candidate.Id);
+                }
+            }
+
+            if (candidatesOfMother.Count >= GlobalConstants.ChildrenInFamily)
+            {
+                foreach (var candidate in candidatesOfMother)
+                {
+                    await this.calculatorService.EditBasicScoresByCriteria(candidate.Id);
+                }
+            }
+
             return this.Redirect("/");
         }
 

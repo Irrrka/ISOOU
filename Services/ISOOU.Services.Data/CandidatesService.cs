@@ -90,24 +90,6 @@
             this.candidatesRepository.Update(candidate);
             result = await this.candidatesRepository.SaveChangesAsync();
 
-            //Refactor:SeparateMethod
-            var brothersAndSusters = await this.candidatesRepository.All()
-                .Where(u => u.UserId == userId)
-                .Include(c => c.Criterias)
-                .ToListAsync();
-
-            if (brothersAndSusters.Count >= GlobalConstants.ChildrenInFamily)
-            {
-                foreach (var bro in brothersAndSusters)
-                {
-                    if (bro.Id != candidateId
-                        && !bro.Criterias.Any(c => c.Name == nameof(GlobalConstants.HasManyBrothersOrSistersCriteria)))
-                    {
-                        await this.calculatorService.EditBasicScoresForManyBrothersAndSisters(bro.Id);
-                    }
-                }
-            }
-
             return result > 0;
         }
 
@@ -177,10 +159,12 @@
             return result > 0;
         }
 
-        public IQueryable<CandidateServiceModel> GetCandidatesOfParent(int parentId)
+        public IQueryable<CandidateServiceModel> GetCandidatesOfParent(ClaimsPrincipal userIdentity, int parentId)
         {
+            var userId = this.userManager.GetUserId(userIdentity);
             var candidatesOfParents = this.candidatesRepository.All()
                                             .Where(p => p.MotherId == parentId || p.FatherId == parentId)
+                                            .Where(u => u.UserId == userId)
                                             .To<CandidateServiceModel>();
 
             return candidatesOfParents;

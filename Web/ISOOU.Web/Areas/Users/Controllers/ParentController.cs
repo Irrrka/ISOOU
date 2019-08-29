@@ -184,7 +184,7 @@
 
             await this.parentsService.Edit(id, parentToEdit);
 
-            var candidatesOfParents = this.candidatesService.GetCandidatesOfParent(id).ToList();
+            var candidatesOfParents = this.candidatesService.GetCandidatesOfParent(userIdentity, id).ToList();
 
             foreach (var candidate in candidatesOfParents)
             {
