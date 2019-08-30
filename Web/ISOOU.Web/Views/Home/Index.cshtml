@@ -83,9 +83,12 @@
                                 @{
                                     var dateToParse = "15/09";
                                     var candidateDate = DateTime.ParseExact(dateToParse, "dd/MM", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None);
-                                    while (candidateDate.DayOfWeek != DayOfWeek.Monday)
+                                    if (candidateDate.DayOfWeek == DayOfWeek.Saturday || candidateDate.DayOfWeek == DayOfWeek.Sunday)
                                     {
-                                        candidateDate = candidateDate.AddDays(+1);
+                                         while (candidateDate.DayOfWeek != DayOfWeek.Monday)
+                                        {
+                                            candidateDate = candidateDate.AddDays(+1);
+                                        }
                                     }
 
                                     @candidateDate.ToShortDateString();
