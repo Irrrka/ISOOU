@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using ISOOU.Data.Models
+@using System.Globalization;
 
 @inject SignInManager<SystemUser> SignInManager
 @inject UserManager<SystemUser> UserManager
@@ -7,85 +8,93 @@
     this.ViewData["Title"] = "Информационна Система за Обслужване на Общинските Училища";
 }
 
-    <div class="container">
-        <section class="home-slider owl-carousel">
-            <div class="slider-item" style="background-image:url(images/bg_1.jpg);">
-                <div class="overlay"></div>
-                <div class="container">
-                    <div class="row no-gutters slider-text align-items-center justify-content-center" data-scrollax-parent="true">
-                        <div class="col-md-8 text-center ftco-animate">
-                            <h1 class="m-md-n4">Децата са най-добрите<span>изследователи на света</span></h1>
-                        </div>
+<div class="container">
+    <section class="home-slider owl-carousel">
+        <div class="slider-item" style="background-image:url(images/bg_1.jpg);">
+            <div class="overlay"></div>
+            <div class="container">
+                <div class="row no-gutters slider-text align-items-center justify-content-center" data-scrollax-parent="true">
+                    <div class="col-md-8 text-center ftco-animate">
+                        <h1 class="m-md-n4">Децата са най-добрите<span>изследователи на света</span></h1>
                     </div>
                 </div>
             </div>
-            <div class="slider-item" style="background-image:url(images/bg_2.jpg);">
-                <div class="overlay"></div>
-                <div class="container">
-                    <div class="row no-gutters slider-text align-items-center justify-content-center" data-scrollax-parent="true">
-                        <div class="col-md-8 text-center ftco-animate">
-                            <h1 class="m-md-n4">Намерете най-доброто място<span>за своето дете</span></h1>
-                        </div>
+        </div>
+        <div class="slider-item" style="background-image:url(images/bg_2.jpg);">
+            <div class="overlay"></div>
+            <div class="container">
+                <div class="row no-gutters slider-text align-items-center justify-content-center" data-scrollax-parent="true">
+                    <div class="col-md-8 text-center ftco-animate">
+                        <h1 class="m-md-n4">Намерете най-доброто място<span>за своето дете</span></h1>
                     </div>
                 </div>
             </div>
-        </section>
-        <section class="ftco-services ftco-no-pb">
-            <div class="container-wrap">
-                <div class="row no-gutters">
-                    <div class="col-md-3 d-flex services align-self-stretch pb-4 px-4 ftco-animate bg-primary">
-                        <div class="media block-6 d-block text-center">
-                            <div class="icon d-flex justify-content-center align-items-center">
-                                <span class="flaticon-teacher"></span>
-                            </div>
-                            <div class="media-body p-2 mt-3">
-                                <h3 class="heading">Избор на училище</h3>
-                                <p>
-                                    Информация за общинските училища и свободните места може да намерите от менюто.
-                                </p>
-                            </div>
+        </div>
+    </section>
+    <section class="ftco-services ftco-no-pb">
+        <div class="container-wrap">
+            <div class="row no-gutters">
+                <div class="col-md-3 d-flex services align-self-stretch pb-4 px-4 ftco-animate bg-primary">
+                    <div class="media block-6 d-block text-center">
+                        <div class="icon d-flex justify-content-center align-items-center">
+                            <span class="flaticon-teacher"></span>
+                        </div>
+                        <div class="media-body p-2 mt-3">
+                            <h3 class="heading">Избор на училище</h3>
+                            <p>
+                                Информация за общинските училища и свободните места може да намерите от менюто.
+                            </p>
                         </div>
                     </div>
-                    <div class="col-md-3 d-flex services align-self-stretch pb-4 px-4 ftco-animate bg-tertiary">
-                        <div class="media block-6 d-block text-center">
-                            <div class="icon d-flex justify-content-center align-items-center">
-                                <span class="flaticon-reading"></span>
-                            </div>
-                            <div class="media-body p-2 mt-3">
-                                <h3 class="heading">Критерии за прием</h3>
-                                <p>
-                                    Направете своята регистрация, въведете данни за родителите и децата, които ще кандидатстват, за да ви се калкулират точки по правилата за прием.
-                                </p>
-                            </div>
+                </div>
+                <div class="col-md-3 d-flex services align-self-stretch pb-4 px-4 ftco-animate bg-tertiary">
+                    <div class="media block-6 d-block text-center">
+                        <div class="icon d-flex justify-content-center align-items-center">
+                            <span class="flaticon-reading"></span>
+                        </div>
+                        <div class="media-body p-2 mt-3">
+                            <h3 class="heading">Критерии за прием</h3>
+                            <p>
+                                Направете своята регистрация, въведете данни за родителите и децата, които ще кандидатстват, за да ви се калкулират точки по правилата за прием.
+                            </p>
                         </div>
                     </div>
-                    <div class="col-md-3 d-flex services align-self-stretch pb-4 px-4 ftco-animate bg-fifth">
-                        <div class="media block-6 d-block text-center">
-                            <div class="icon d-flex justify-content-center align-items-center">
-                                <span class="flaticon-books"></span>
-                            </div>
-                            <div class="media-body p-2 mt-3">
-                                <h3 class="heading">Кандидатстване</h3>
-                                <p>Попълнете своите кандидатури и следете за текущите класирания.</p>
-                            </div>
+                </div>
+                <div class="col-md-3 d-flex services align-self-stretch pb-4 px-4 ftco-animate bg-fifth">
+                    <div class="media block-6 d-block text-center">
+                        <div class="icon d-flex justify-content-center align-items-center">
+                            <span class="flaticon-books"></span>
+                        </div>
+                        <div class="media-body p-2 mt-3">
+                            <h3 class="heading">Кандидатстване</h3>
+                            <p>Попълнете своите кандидатури и следете за текущите класирания.</p>
                         </div>
                     </div>
-                    <div class="col-md-3 d-flex services align-self-stretch pb-4 px-4 ftco-animate bg-quarternary">
-                        <div class="media block-6 d-block text-center">
-                            <div class="icon d-flex justify-content-center align-items-center">
-                                <span class="flaticon-diploma"></span>
-                            </div>
-                            <div class="media-body p-2 mt-3">
-                                <h3 class="heading">Започване</h3>
-                                <p>Първият учебен ден за @(DateTime.Now.Year)г. е 
- 
-                                    16
+                </div>
+                <div class="col-md-3 d-flex services align-self-stretch pb-4 px-4 ftco-animate bg-quarternary">
+                    <div class="media block-6 d-block text-center">
+                        <div class="icon d-flex justify-content-center align-items-center">
+                            <span class="flaticon-diploma"></span>
+                        </div>
+                        <div class="media-body p-2 mt-3">
+                            <h3 class="heading">Започване</h3>
+                            <p>
+                                Първият учебен ден за тази година е
+                                @{
+                                    var dateToParse = "15/09";
+                                    var candidateDate = DateTime.ParseExact(dateToParse, "dd/MM", System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None);
+                                    while (candidateDate.DayOfWeek != DayOfWeek.Monday)
+                                    {
+                                        candidateDate = candidateDate.AddDays(+1);
+                                    }
 
-                                Септември.</p>
-                            </div>
+                                    @candidateDate.ToShortDateString();
+                                }
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
+</div>
