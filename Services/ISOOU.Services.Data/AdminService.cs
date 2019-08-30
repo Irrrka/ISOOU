@@ -43,9 +43,9 @@
             {
                 StartApplyDocuments = DateTime.Today.AddDays(-10),
                 EndApplyDocuments = DateTime.Today.AddDays(-1),
-                RankingDate = DateTime.Today,
-                StartEnrollment = DateTime.Today.AddDays(1),
-                EndEnrollment = DateTime.Today.AddDays(8),
+                RankingDate = DateTime.Today.Date,
+                StartEnrollment = DateTime.Today.AddDays(1).Date,
+                EndEnrollment = DateTime.Today.AddDays(8).Date,
                 Status = AdmissionProcedureStatus.Finished,
                 Year = DateTime.Now.Year,
                 ParticipatedCandidates = new List<CandidateApplication>(),
@@ -59,14 +59,23 @@
             return result;
         }
 
-        public string GetProcedureStatus()
+        public async Task<AdmissionProcedureServiceModel> GetLastProcedure()
         {
-            var status = this.admissionProcedureRepository.All()
-                .OrderByDescending(d => d.Id)
-                .Select(s => s.Status)
-                .FirstOrDefault().ToString();
+            var procedure = await this.admissionProcedureRepository.All()
+                                    .OrderByDescending(d => d.Id)
+                                    .FirstOrDefaultAsync();
 
-            return status;
+            var model = new AdmissionProcedureServiceModel();
+
+            if (procedure != null)
+            {
+                model.Status = procedure.Status;
+                model.RankingDate = procedure.RankingDate.ToShortDateString();
+                model.StartEnrollment = procedure.StartEnrollment.ToShortDateString();
+                model.EndEnrollment = procedure.EndEnrollment.ToShortDateString();
+            }
+
+            return model;
         }
 
         public async Task<bool> RevertAdmissionProcedure()
@@ -91,23 +100,27 @@
                 throw new NullReferenceException();
             }
 
-            foreach (var school in schoolsFromDb)//107
+            foreach (var school in schoolsFromDb)
             {
                 var candidates = this.candidateApplicationRepository.All()
-                                     .Where(sc => sc.SchoolId == school.Id).ToList();//qvor kalin
+                                     .Include(c => c.Candidate)
+                                     .Where(sc => sc.SchoolId == school.Id).ToList();
 
-                int freeSpots = school.FreeSpots;//35
+                int freeSpots = school.FreeSpots;
 
-                if (candidates.Count != 0)//2
+                if (candidates.Count != 0)
                 {
-                    foreach (var candidate in candidates)//qvor kalin
+                    foreach (var candidate in candidates)
                     {
-                        var totalScores = this.calculatorService
-                            .CalculateTotalScoreForTheAdmissionProcedure(candidate.CandidateId, school.Id);//15 13
+                        if (candidate.Candidate.Status != CandidateStatus.Admitted && candidate.Candidate.IsDeleted == false)
+                        {
+                            var totalScores = this.calculatorService
+                            .CalculateTotalScoreForTheAdmissionProcedure(candidate.CandidateId, school.Id);
 
-                        candidate.TotalScoresForSchool = totalScores;
-                        this.candidateApplicationRepository.Update(candidate);
-                        await this.candidateApplicationRepository.SaveChangesAsync();
+                            candidate.TotalScoresForSchool = totalScores;
+                            this.candidateApplicationRepository.Update(candidate);
+                            await this.candidateApplicationRepository.SaveChangesAsync();
+                        }
                     }
 
                     var admittedcandidates = candidates.OrderByDescending(x => x.TotalScoresForSchool).Take(freeSpots).ToList();

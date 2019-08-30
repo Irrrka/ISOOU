@@ -25,7 +25,7 @@
                   .ForMember(
                        destination => destination.AdmittedCandidates,
                        opts => opts.MapFrom(origin => origin.Candidates
-                       .Where(c=>c.Candidate.Status == Data.Models.CandidateStatus.Admitted)
+                       .Where(c => c.Candidate.Status == Data.Models.CandidateStatus.Admitted)
                        .Select(c => c.Candidate.FullName)));
             }
         }

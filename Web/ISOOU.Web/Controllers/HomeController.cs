@@ -1,6 +1,5 @@
 ﻿namespace ISOOU.Web.Controllers
 {
-    using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -59,12 +58,12 @@
 
         public IActionResult Privacy() => this.View();
 
-        public IActionResult News()
+        public async Task<IActionResult> News()
         {
             SchoolsAdmissionProcedureResultViewModel model =
                 new SchoolsAdmissionProcedureResultViewModel();
 
-            model.Status = this.adminService.GetProcedureStatus();
+            model.Status = (await this.adminService.GetLastProcedure()).Status.ToString();
             return this.View(model);
         }
 

@@ -19,16 +19,16 @@
         public DateTime RankingDate { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime? StartApplyDocuments { get; set; }
+        public DateTime StartApplyDocuments { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime? EndApplyDocuments { get; set; }
+        public DateTime EndApplyDocuments { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime? StartEnrollment { get; set; }
+        public DateTime StartEnrollment { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime? EndEnrollment { get; set; }
+        public DateTime EndEnrollment { get; set; }
 
         public AdmissionProcedureStatus Status { get; set; } = AdmissionProcedureStatus.NotFinished;
 

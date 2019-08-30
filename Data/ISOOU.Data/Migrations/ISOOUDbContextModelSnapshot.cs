@@ -58,17 +58,17 @@ namespace ISOOU.Data.Migrations
 
                     b.Property<DateTime>("CreatedOn");
 
-                    b.Property<DateTime?>("EndApplyDocuments");
+                    b.Property<DateTime>("EndApplyDocuments");
 
-                    b.Property<DateTime?>("EndEnrollment");
+                    b.Property<DateTime>("EndEnrollment");
 
                     b.Property<DateTime?>("ModifiedOn");
 
                     b.Property<DateTime>("RankingDate");
 
-                    b.Property<DateTime?>("StartApplyDocuments");
+                    b.Property<DateTime>("StartApplyDocuments");
 
-                    b.Property<DateTime?>("StartEnrollment");
+                    b.Property<DateTime>("StartEnrollment");
 
                     b.Property<int>("Status");
 

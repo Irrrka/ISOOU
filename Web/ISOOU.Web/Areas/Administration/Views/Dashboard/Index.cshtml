@@ -1,4 +1,4 @@
-﻿@model ISOOU.Web.ViewModels.Home.ContactFormViewModel
+﻿@model ISOOU.Web.ViewModels.Home.DashboardViewModel
 @{
     this.ViewData["Title"] = "Administration dashboard";
 }
@@ -15,7 +15,7 @@
     <div class="row">
         <div class="col-md-12 d-flex">
             <div class="container-fluid d-flex justify-content-around">
-                @if (Model.AdmissionProcedureStatus != "Finished")
+                @if (Model.Status != "Finished")
                 {
                     <form asp-area="Administration" asp-controller="Dashboard" asp-action="StartProcedure" method="post">
                         <div class="row d-flex justify-content-around">
@@ -25,14 +25,44 @@
                 }
                 else
                 {
-                    <form asp-area="Administration" asp-controller="Dashboard" asp-action="Revert" method="post">
-                        <div class="row d-flex justify-content-around">
-                            <input type="submit" class="btn btn-danger py-3 px-4" value="ПРЕКРАТИ КЛАСИРАНЕ" />
+                    <div class="row d-flex justify-content-around">
+                        <table class="table table-borderless end">
+                            <tbody>
+                                <tr>
+                                    <td height="21" style="height:21px;">
+                                        <strong>Последно класиране</strong>
+                                    </td>
+                                    <td height="21" style="height:21px;">
+                                        <strong>@Model.RankingDate</strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td height="21" style="height:21px;">
+                                        <strong>Начало записване</strong>
+                                    </td>
+                                    <td height="21" style="height:21px;">
+                                        <strong>@Model.StartEnrollment</strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td height="21" style="height:21px;">
+                                        <strong>Край записване</strong>
+                                    </td>
+                                    <td height="21" style="height:21px;">
+                                        <strong>@Model.EndEnrollment</strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                         </div>
-                    </form>
-                }
-            </div>
-        </div>
+                        <form asp-area="Administration" asp-controller="Dashboard" asp-action="Revert" method="post">
+                            <div class="row d-flex justify-content-around">
+                                <input type="submit" class="btn btn-danger py-3 px-4" value="ПРЕКРАТИ КЛАСИРАНЕ" />
+                            </div>
+                        </form>
+                        }
+                    </div>
+                </div>
     </div>
     <hr />
     @{

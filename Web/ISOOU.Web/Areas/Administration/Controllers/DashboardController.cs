@@ -36,12 +36,12 @@
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            ContactFormViewModel model = new ContactFormViewModel();
+            DashboardViewModel model = new DashboardViewModel();
 
             QuestionServiceModel message = await this.questionsService.ReadLastMessage();
             if (message != null)
             {
-                model = message.To<ContactFormViewModel>();
+                model = message.To<DashboardViewModel>();
             }
 
             if (message.SystemUserId == null)
@@ -49,7 +49,11 @@
                 model.UserEmail = "Unregistered user";
             }
 
-            model.AdmissionProcedureStatus = this.adminService.GetProcedureStatus();
+            var admissionProcedureModel = await this.adminService.GetLastProcedure();
+            model.Status = admissionProcedureModel.Status.ToString();
+            model.RankingDate = admissionProcedureModel.RankingDate;
+            model.StartEnrollment = admissionProcedureModel.StartEnrollment;
+            model.EndEnrollment = admissionProcedureModel.EndEnrollment;
 
             return this.View(model);
         }

@@ -484,7 +484,7 @@
                 return this.View("_AccessDenied");
             }
 
-            var procedureStatus = this.adminService.GetProcedureStatus();
+            var procedureStatus = (await this.adminService.GetLastProcedure()).Status.ToString();
 
             CandidateProfileViewModel model = new CandidateProfileViewModel();
             model.CandidateId = id;

@@ -111,9 +111,6 @@
 
             SchoolServiceModel schoolToEdit = input.To<SchoolServiceModel>();
 
-            //DistrictServiceModel district = await this.districtsService.GetDistrictByName(input.DistrictName);
-            //schoolToEdit.District = district;
-
             this.schoolsService.EditSchool(id, schoolToEdit);
 
             return this.Redirect("/");

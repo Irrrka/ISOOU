@@ -10,17 +10,17 @@
 
         public int Year { get; set; }
 
-        public DateTime? RankingDate { get; set; }
+        public string RankingDate { get; set; }
 
-        public DateTime? StartApplyDocuments { get; set; }
+        public string StartApplyDocuments { get; set; }
 
-        public DateTime? EndApplyDocuments { get; set; }
+        public string EndApplyDocuments { get; set; }
 
-        public DateTime? StartEnrollment { get; set; }
+        public string StartEnrollment { get; set; }
 
-        public DateTime? EndEnrollment { get; set; }
+        public string EndEnrollment { get; set; }
 
-        public AdmissionProcedureStatus Status { get; set; } = AdmissionProcedureStatus.Finished;
+        public AdmissionProcedureStatus Status { get; set; } 
 
         public int SchoolId { get; set; }
 
