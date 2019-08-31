@@ -72,6 +72,7 @@
         public static readonly string DocumentNotFound = "Не е намерен документ!";
         public static readonly string DocumentNotSupport = "Моля изпратете Вашето заявление в pdf-формат!";
         public static readonly string ApplicationsNotFound = "Моля въведете желаното училище преди да качите своето заявление!";
+        public static readonly string ParentHasCandidates = "Родител не може да бъде изтрит, когато има въведени деца";
 
         //NullReference
         public static readonly string NullReferenceSchoolId = "School with id {0} not found.";

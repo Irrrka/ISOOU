@@ -26,7 +26,6 @@
 
         [Required]
         [StringLength(10)]
-        //TODO AddMoreValidation
         public string UCN { get; set; }
 
         [ForeignKey("User")]

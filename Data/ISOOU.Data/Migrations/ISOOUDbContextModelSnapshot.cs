@@ -129,8 +129,6 @@ namespace ISOOU.Data.Migrations
 
                     b.Property<string>("UserId");
 
-                    b.Property<int>("YearOfBirth");
-
                     b.HasKey("Id");
 
                     b.HasIndex("FatherId");

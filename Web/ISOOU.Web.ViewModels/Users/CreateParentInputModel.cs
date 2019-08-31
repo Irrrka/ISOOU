@@ -13,24 +13,24 @@
     {
         [Required]
         [StringLength(20, MinimumLength = 2)]
-        [Display(Name = "Име")]
+        [Display(Name = "Име*")]
         public string FirstName { get; set; }
 
         [Required]
         [StringLength(40, MinimumLength = 4)]
-        [Display(Name = "Презиме")]
+        [Display(Name = "Презиме*")]
         public string MiddleName { get; set; }
 
         [Required]
         [StringLength(40, MinimumLength = 4)]
-        [Display(Name = "Фамилия")]
+        [Display(Name = "Фамилия*")]
         public string LastName { get; set; }
 
         public string FullName => this.FirstName + " " + this.LastName;
 
         [Required]
         [StringLength(10, MinimumLength = 10)]
-        [Display(Name = "ЕГН")]
+        [Display(Name = "ЕГН*")]
         [CorrectUCNAttribute]
         public string UCN { get; set; }
 
@@ -39,15 +39,15 @@
         public string PhoneNumber { get; set; }
 
         [Required]
-        [Display(Name = "Град по постоянен адрес")]
+        [Display(Name = "Град по постоянен адрес*")]
         public string AddressPermanentCity { get; set; }
 
         [Required]
-        [Display(Name = "Постоянен адрес")]
+        [Display(Name = "Постоянен адрес*")]
         public string AddressPermanent { get; set; }
 
         [Required]
-        [Display(Name = "Район по постоянен адрес")]
+        [Display(Name = "Район по постоянен адрес*")]
         public string AddressPermanentDistrictName { get; set; }
 
         //[Required]

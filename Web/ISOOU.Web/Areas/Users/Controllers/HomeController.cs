@@ -52,14 +52,13 @@
                 })
                 .ToList();
 
-            var candidates = this.candidatesService.GetCandidates()
-                 .Where(x => x.User.UserName == this.User.Identity.Name)
-                .Select(c => new CandidatesHomeViewModel
-                {
-                    Id = c.Id,
-                    FullName = c.FirstName + " " + c.LastName,
-                })
-                .ToList();
+            var candidates = this.candidatesService.GetCandidates(userIdentity)
+                 .Select(p => new CandidatesHomeViewModel
+                 {
+                     Id = p.Id,
+                     FullName = p.FirstName + " " + p.LastName,
+                 })
+                 .ToList();
 
             var familyHomeViewModel = new FamilyHomeViewModel()
             {

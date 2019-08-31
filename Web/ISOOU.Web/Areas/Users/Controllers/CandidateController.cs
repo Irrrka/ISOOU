@@ -351,27 +351,45 @@
                 new ScoresByCriteriasOnCandidateViewModel();
             model.CandidateId = id;
             model.ScoresByCriteria = new List<ScoreByCriteriaOnCandidateViewModel>();
+            var schoolsCriteria = new List<ScoreByCriteriaOnCandidateViewModel>();
+            var basicCriteria = new List<ScoreByCriteriaOnCandidateViewModel>();
 
             IEnumerable<CriteriaForCandidateServiceModel> criteriasOfCandidate = await this.criteriasService.GetCriteriasAndScoresByCandidateId(id);
 
             IEnumerable<CriteriaServiceModel> allcriterias = await this.criteriasService.GetAllCriterias();
 
+
             foreach (var criteriaOfCandidate in criteriasOfCandidate)
             {
                 ScoreByCriteriaOnCandidateViewModel criteriaModel =
-                new ScoreByCriteriaOnCandidateViewModel();
+                                  new ScoreByCriteriaOnCandidateViewModel();
 
-                criteriaModel.CriteriaDisplayName = criteriaOfCandidate.Criteria.DisplayName;
-                criteriaModel.CriteriaScores = criteriaOfCandidate.Criteria.Scores;
-                if (criteriaOfCandidate.Sch != 0)
+                if (criteriaOfCandidate.Sch == 0)
                 {
-                    criteriaModel.SchoolName =
-                        criteriaOfCandidate.Candidate.Applications
-                        .FirstOrDefault(sch => sch.SchoolId == criteriaOfCandidate.Sch).School.Name;
+                    criteriaModel.CriteriaDisplayName = criteriaOfCandidate.Criteria.DisplayName;
+                    criteriaModel.CriteriaScores = criteriaOfCandidate.Criteria.Scores;
+                    basicCriteria.Add(criteriaModel);
                 }
-
-                model.ScoresByCriteria.Add(criteriaModel);
+                else if (criteriaOfCandidate.Sch != 0)
+                {
+                    var appIds = this.candidatesService.GetCandidateApplications(candidate.Id);
+                    foreach (var appId in appIds)
+                    {
+                        if (appId == criteriaOfCandidate.Sch)
+                        {
+                            criteriaModel.CriteriaDisplayName = criteriaOfCandidate.Criteria.DisplayName;
+                            criteriaModel.CriteriaScores = criteriaOfCandidate.Criteria.Scores;
+                            criteriaModel.SchoolName =
+                                (await this.schoolsService.GetSchoolDetailsById(criteriaOfCandidate.Sch)).Name;
+                            schoolsCriteria.Add(criteriaModel);
+                        }
+                    }
+                }
             }
+
+            model.ScoresByCriteria.AddRange(basicCriteria);
+            schoolsCriteria.Distinct();
+            model.ScoresByCriteria.AddRange(schoolsCriteria);
             model.CandidateName = candidate.FullName;
             return this.View(model);
         }
@@ -497,9 +515,10 @@
 
             foreach (var schApp in candidate.Applications)
             {
+                var schoolName = (await this.schoolsService.GetSchoolDetailsById(schApp.SchoolId)).Name;
                 int additionalScoresForApplication = schApp.AdditionalScoresForSchool;
                 totalScores = basicScores + additionalScoresForApplication;
-                model.ScoresByApplications.Add(schApp.School.Name, totalScores);
+                model.ScoresByApplications.Add(schoolName, totalScores);
             }
 
             var sortedApplications = model.ScoresByApplications.OrderByDescending(x => x.Value);

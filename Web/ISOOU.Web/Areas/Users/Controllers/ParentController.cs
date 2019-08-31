@@ -227,7 +227,39 @@
         [Route("/Users/Parent/Delete/{id}")]
         public async Task<IActionResult> DeleteConfirm(int id)
         {
-            await this.parentsService.Delete(id);
+            ClaimsPrincipal userIdentity = this.User;
+            //if (this.candidatesService.GetCandidatesOfParent(userIdentity, id).Count() == 0)
+            //{
+            //    await this.parentsService.Delete(id);
+            //}
+            //else
+            //{
+            //    return this.BadRequest(GlobalConstants.ParentHasCandidates);
+            //}
+
+            var candidates = this.candidatesService.GetCandidatesOfParent(userIdentity, id);
+            if (candidates.Count() != 0)
+            {
+                //foreach (var candidate in candidates)
+                //{
+                //    if (candidate.MotherId == id)
+                //    {
+                //        candidate.MotherId = 2;
+                //        candidate.Mother.Role = ParentRole.Няма;
+                //    }
+                //    else if (candidate.FatherId == id)
+                //    {
+                //        candidate.FatherId = 2;
+                //        candidate.Father.Role = ParentRole.Няма;
+                //    }
+
+                //    await this.candidatesService.UpdateRepository(candidate.Id);
+                //    await this.calculatorService.EditBasicScoresByCriteria(candidate.Id);
+
+                return this.BadRequest(GlobalConstants.ParentHasCandidates);
+             }
+
+                await this.parentsService.Delete(id);
 
             return this.Redirect("/");
         }

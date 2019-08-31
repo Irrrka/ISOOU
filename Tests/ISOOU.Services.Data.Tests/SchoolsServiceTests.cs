@@ -271,7 +271,6 @@
                 MiddleName = "Ivaylov",
                 LastName = "Marinov",
                 UCN = "1309070000",
-                YearOfBirth = 2013,
             };
             var candidate2 = new Candidate
             {
@@ -279,7 +278,6 @@
                 MiddleName = "Ivaylov",
                 LastName = "Ivanov",
                 UCN = "1307090000",
-                YearOfBirth = 2013,
             };
 
             return new List<School>

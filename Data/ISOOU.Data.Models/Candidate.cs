@@ -16,10 +16,6 @@
             this.Documents = new HashSet<Document>();
         }
 
-        [Required]
-        //TODO AddMoreValidation
-        public int YearOfBirth { get; set; }
-
         public string KinderGarten { get; set; }
 
         public bool SEN { get; set; }

@@ -50,7 +50,6 @@
         {
             var criterias = await this.criteriasForCandidatesRepository.All()
                 .Where(c => c.CandidateId == candidateId)
-                .To<CriteriaForCandidateServiceModel>()
                 .Include(x => x.Candidate)
                 .ThenInclude(y => y.Mother)
                 .Include(x => x.Candidate)
@@ -58,6 +57,7 @@
                 .Include(x => x.Candidate)
                 .ThenInclude(y => y.Applications)
                 .Include(x => x.Criteria)
+                .To<CriteriaForCandidateServiceModel>()
                 .ToListAsync();
 
             return criterias;

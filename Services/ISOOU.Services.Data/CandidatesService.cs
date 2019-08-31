@@ -96,9 +96,8 @@
         //TODO cache / Mapping goes Last!!!
         public async Task<CandidateServiceModel> GetCandidateById(int id)
         {
-            var candidate = await this.candidatesRepository
+            var candidate = (await this.candidatesRepository
                                .All()
-                               .To<CandidateServiceModel>()
                                .Include(u => u.User)
                                .Include(x => x.Mother)
                                .ThenInclude(y => y.Address)
@@ -106,18 +105,29 @@
                                .ThenInclude(y => y.Address)
                                .Include(z => z.Applications)
                                .Include(c => c.Criterias)
-                               .SingleOrDefaultAsync(p => p.Id == id);
+                               .SingleOrDefaultAsync(p => p.Id == id))
+                                                              .To<CandidateServiceModel>();
 
             return candidate;
         }
 
-        public IQueryable<CandidateServiceModel> GetCandidates()
+        public IQueryable<CandidateServiceModel> GetCandidates(ClaimsPrincipal userIdentity)
         {
+            var userId = this.userManager.GetUserId(userIdentity);
             var candidates = this.candidatesRepository
                 .All()
+                .Where(u => u.User.Id == userId)
                 .To<CandidateServiceModel>();
-
             return candidates;
+        }
+
+        public IEnumerable<int> GetCandidateApplications(int candidateId)
+        {
+            var appIds = this.candidateApplicationsRepository
+                .All()
+                .Where(c => c.CandidateId == candidateId)
+                .Select(s=>s.SchoolId).ToList();
+            return appIds;
         }
 
         public async Task<bool> Edit(int id, ClaimsPrincipal userIdentity, CandidateServiceModel candidateServiceModel)
@@ -256,6 +266,16 @@
             await this.documentRepository.AddAsync(document);
             var result = await this.documentRepository.SaveChangesAsync();
 
+            return result > 0;
+        }
+
+        public async Task<bool> UpdateRepository(int candidateId)
+        {
+            var candidate = await this.candidatesRepository
+               .All()
+               .FirstOrDefaultAsync(a => a.Id == candidateId);
+            this.candidatesRepository.Update(candidate);
+            var result = await this.candidatesRepository.SaveChangesAsync();
             return result > 0;
         }
     }

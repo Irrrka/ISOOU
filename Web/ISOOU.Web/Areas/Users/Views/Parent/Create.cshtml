@@ -105,7 +105,7 @@
                     <div class="form-inline mt-1 justify-content-end">
                         <label asp-for="WorkDistrictName"></label>
                         <select class="form-control text-primary" id="type" asp-for="WorkDistrictName">
-                            <option selected disabled>---Изберете район---</option>
+                            <option selected value="Неизвестен">---Изберете район---</option>
                             @foreach (var district in (IEnumerable<ISOOU.Web.ViewModels.Districts.CreateParentDistrictViewModel>)this.ViewData["districts"])
                             {
                                 <option>@district.Name</option>

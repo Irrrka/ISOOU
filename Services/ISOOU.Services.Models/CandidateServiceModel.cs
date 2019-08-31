@@ -22,8 +22,6 @@
 
         public SystemUserServiceModel User { get; set; }
 
-        public int YearOfBirth { get; set; }
-
         public string KinderGarten { get; set; }
 
         public bool SEN { get; set; }
