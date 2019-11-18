@@ -2,6 +2,7 @@
 
 # http://isoou.azurewebsites.net/
 testUser: test@test.bg pass: 123123
+testDirector: direktor107@direktorov.com pass:123123
 
 ## Description
 
