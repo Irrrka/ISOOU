@@ -1,7 +1,7 @@
 # ISOOU - Primary Schools Information System (Информационна система за Обслужване на Основните училища)
 
 # http://isoou.azurewebsites.net/
-testUser: test@test.com pass: 123123
+testUser: test@test.bg pass: 123123
 
 ## Description
 
